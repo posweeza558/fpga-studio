@@ -28,7 +28,7 @@
         <div class="flex items-center space-x-4">
             <!-- Slide Counter -->
             <div class="mono text-sm font-bold tracking-widest text-[#EAEAEA]">
-                <span id="current-slide-num">01</span> <span class="text-white/30">/</span> <span id="total-slide-num">08</span>
+                <span id="current-slide-num">01</span> <span class="text-white/30">/</span> <span id="total-slide-num">04</span>
             </div>
             <!-- Fullscreen Button -->
             <button onclick="toggleFullscreen()" class="p-2 rounded-full border border-[#282828] hover:border-[#484848] hover:bg-[#2A2A2A] transition text-xs mono text-[#B3B3B3]" title="Full Screen (F)">
@@ -73,344 +73,281 @@
 
                     <!-- Presenter List Bento -->
                     <div class="bento-card p-4 px-10 flex items-center space-x-8 text-xs mono text-[#B3B3B3]">
-                        <div>[ 01 ] VISION & HOOK</div>
+                        <div>[ 01 ] VISION & CHALLENGE</div>
                         <div class="text-white/20">•</div>
-                        <div>[ 02 ] PIPELINE & MMIO</div>
+                        <div>[ 02 ] ARCHITECTURE & FEATURES</div>
                         <div class="text-white/20">•</div>
-                        <div>[ 03 ] LIVE DEMO</div>
+                        <div>[ 03 ] C-TO-SILICON PIPELINE</div>
                         <div class="text-white/20">•</div>
-                        <div>[ 04 ] SUPERPOWERS & IMPACT</div>
+                        <div>[ 04 ] LIVE DEMO & HANDOVER</div>
                     </div>
                 </section>
-<section class="slide flex-col justify-center max-w-6xl w-full h-full" data-slide="2" data-speaker="SPEAKER 01 // THE CHALLENGE">
-                    <div class="flex items-center space-x-2 text-xs mono text-red-500 mb-2">
-                        <span class="glyph-red-dot"></span>
-                        <span>ORIGIN // โพสต์ที่จุดประกายโปรเจกต์นี้</span>
+<section class="slide flex-col justify-center max-w-6xl w-full h-full" data-slide="2" data-speaker="SPEAKER 01 & 02 // FEATURES">
+                    <div class="flex items-center space-x-2 text-xs mono text-[#1ED760] mb-2">
+                        <span class="glyph-green-dot"></span>
+                        <span>CORE ARCHITECTURE & THE CHALLENGE // ตอบโจทย์อาจารย์ครบทุกข้อ</span>
                     </div>
-                    <h2 class="text-4xl font-bold ndot uppercase tracking-tight text-white mb-6">
-                        อาจารย์ท้า... ใครทำได้จะให้เกรด A
+                    <h2 class="text-3xl md:text-4xl font-bold ndot uppercase tracking-tight text-white mb-5">
+                        ระบบและขุมพลังฟีเจอร์ของ FPGA STUDIO
                     </h2>
 
-                    <!-- Grid of 2 Professor Posts -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-[420px]">
-                        <!-- Post 1: Sep 13 -->
-                        <div class="bento-card p-5 flex flex-col justify-between">
+                    <!-- Bento Grid of Key Features -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        
+                        <!-- Col 1: Origin Challenge Card -->
+                        <div class="bento-card p-5 border-red-500/30 flex flex-col justify-between">
                             <div>
-                                <div class="flex justify-between items-center mb-3 border-b border-[#282828] pb-2">
-                                    <span class="mono text-xs text-[#B3B3B3]/60">POST 01 • 13 ก.ย.</span>
-                                    <span class="mono text-xs px-2 py-0.5 rounded bg-[#282828] text-[#EAEAEA]">3 ทางเลือก</span>
+                                <div class="flex justify-between items-center mb-2 pb-1.5 border-b border-[#282828]">
+                                    <span class="mono text-xs text-red-400 font-bold">THE CHALLENGE</span>
+                                    <span class="mono text-[10px] text-white/50">Sep 13 & 25</span>
                                 </div>
-                                <img src="assets/prof_post_sep13.png" alt="อาจารย์โพสต์ 13 ก.ย." class="w-full h-44 object-contain rounded-xl bg-black/40 border border-[#282828] mb-3" onerror="this.src='prof_post_sep13.png'">
-                                <ul class="text-xs space-y-1.5 text-[#B3B3B3]">
-                                    <li><span class="text-red-400 font-bold">1.</span> ทำวิดีโอสอนคูณ / หาร / ทศนิยม</li>
-                                    <li><span class="text-red-400 font-bold">2.</span> โปรแกรมคำนวณ Factorial + Python Simulator</li>
-                                    <li><span class="text-red-400 font-bold">3.</span> ทำฮาร์ดแวร์ FPGA วงจรคูณหาร ออก 7-Segment เลขฐานสิบ</li>
-                                </ul>
+                                <img src="assets/prof_post_sep25.png" alt="โพสต์อาจารย์" class="w-full h-28 object-contain rounded-xl bg-black/50 border border-[#282828] mb-2.5" onerror="this.src='prof_post_sep25.png'">
+                                <p class="text-xs text-[#EAEAEA] italic border-l-2 border-red-500 pl-2.5 py-0.5 leading-relaxed">
+                                    “หา Compiler แปลงภาษา C เป็น MIPS opcode รันบน MIPS CPU... ใครทำได้อาจารย์จะให้ A”
+                                </p>
                             </div>
-                            <div class="mono text-xs text-[#1ED760] bg-emerald-950/20 p-2 rounded-xl border border-[#1ED760]/30 text-center">
-                                ✔ พวกเราเลือกทำทั้ง 3 ข้อรวมเป็นระบบเดียว!
-                            </div>
-                        </div>
-
-                        <!-- Post 2: Sep 25 -->
-                        <div class="bento-card p-5 flex flex-col justify-between">
-                            <div>
-                                <div class="flex justify-between items-center mb-3 border-b border-[#282828] pb-2">
-                                    <span class="mono text-xs text-[#B3B3B3]/60">POST 02 • 25 ก.ย.</span>
-                                    <span class="mono text-xs px-2 py-0.5 rounded bg-red-900/40 text-red-300 font-bold">THE ULTIMATE GOAL</span>
-                                </div>
-                                <img src="assets/prof_post_sep25.png" alt="อาจารย์โพสต์ 25 ก.ย." class="w-full h-44 object-contain rounded-xl bg-black/40 border border-[#282828] mb-3" onerror="this.src='prof_post_sep25.png'">
-                                <blockquote class="text-xs text-[#EAEAEA] italic border-l-2 border-red-500 pl-3 py-1">
-                                    “หา Compiler แปลง high level (อย่างภาษา C) เป็น MIPS opcode หรือ micro Python ที่รันบน MIPS CPU... (ไว้ให้รุ่นน้องทำให้อีกสามรุ่นจะได้หรือเปล่าไม่รู้ ใครทำได้อาจารย์จะให้ A)”
-                                </blockquote>
-                            </div>
-                            <div class="mono text-xs text-red-400 bg-red-950/20 p-2 rounded-xl border border-red-500/20 text-center font-semibold">
+                            <div class="mono text-xs text-[#1ED760] bg-emerald-950/20 p-2 rounded-xl border border-[#1ED760]/30 text-center font-semibold mt-2">
                                 ⚡ วันนี้ไม่ต้องรอถึง 3 รุ่นครับ พวกเราทำเสร็จแล้ว!
                             </div>
                         </div>
+
+                        <!-- Col 2: Compiler & Virtual Board -->
+                        <div class="space-y-4 flex flex-col justify-between">
+                            <div class="bento-card p-4">
+                                <div class="flex items-center space-x-2 mb-1.5">
+                                    <span class="text-[#1ED760] text-lg">⚙️</span>
+                                    <h4 class="mono text-sm font-bold text-white">REAL GCC TOOLCHAIN BUNDLED</h4>
+                                </div>
+                                <p class="text-xs text-[#B3B3B3] leading-relaxed">
+                                    มี Real MIPS GCC 12.2 และ RISC-V GCC 15.2 ในตัว ไม่ใช่ตัวแปลงเทียม รองรับภาษา C, C++, Python (MicroPython) และ MIPS Assembly เต็มรูปแบบ
+                                </p>
+                            </div>
+                            <div class="bento-card p-4">
+                                <div class="flex items-center space-x-2 mb-1.5">
+                                    <span class="text-[#38BDF8] text-lg">🖥️</span>
+                                    <h4 class="mono text-sm font-bold text-white">VIRTUAL NEXYS A7 BOARD</h4>
+                                </div>
+                                <p class="text-xs text-[#B3B3B3] leading-relaxed">
+                                    จำลองฮาร์ดแวร์ Nexys A7: 16 สวิตช์, 16 LEDs, 8-Digit 7-Segment, 5 ปุ่มกด, UART Terminal Monitor สำหรับ <span class="mono text-white">printf</span>, และจอ VGA 640x480
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Col 3: Custom CPU & WSL Zero-Vivado -->
+                        <div class="space-y-4 flex flex-col justify-between">
+                            <div class="bento-card p-4 border-[#1ED760]/30">
+                                <div class="flex items-center space-x-2 mb-1.5">
+                                    <span class="text-[#1ED760] text-lg">🔌</span>
+                                    <h4 class="mono text-sm font-bold text-white">CUSTOM CPU & COMPILER IMPORT</h4>
+                                </div>
+                                <p class="text-xs text-[#B3B3B3] leading-relaxed">
+                                    ใครเขียน CPU Verilog/VHDL ในแล็บ โยนไฟล์เข้าโปรแกรมได้เลย มีระบบ **HDL AST Parser** ตรวจจับพอร์ตและ Pin Binding ผูกเข้ากับบอร์ดเสมือนอัตโนมัติ
+                                </p>
+                            </div>
+                            <div class="bento-card p-4">
+                                <div class="flex items-center space-x-2 mb-1.5">
+                                    <span class="text-amber-400 text-lg">⚡</span>
+                                    <h4 class="mono text-sm font-bold text-white">ZERO-VIVADO WSL SYNTHESIS</h4>
+                                </div>
+                                <p class="text-xs text-[#B3B3B3] leading-relaxed">
+                                    แก้ปัญหา Timing วงจรหาร Multi-Cycle (3.51 $\rightarrow$ 28.88 MHz) และเชื่อมต่อ **WSL + Yosys** สังเคราะห์ Bitstream แฟลชลงชิปจริงใน 1 วินาที ไม่ต้องลง Vivado 80GB
+                                </p>
+                            </div>
+                        </div>
+
                     </div>
                 </section>
-<section class="slide flex-col justify-center max-w-6xl w-full h-full" data-slide="3" data-speaker="SPEAKER 01 // THE ANSWER">
-                    <div class="flex items-center space-x-2 text-xs mono text-[#B3B3B3]/60 mb-2">
-                        <span>OUR PHILOSOPHY</span>
+<section class="slide flex-col justify-center max-w-6xl w-full h-full" data-slide="3" data-speaker="SPEAKER 02 & 03 // C-TO-SILICON">
+                    <div class="flex items-center space-x-2 text-xs mono text-[#38BDF8] mb-2">
+                        <span class="glyph-green-dot"></span>
+                        <span>SOFTWARE TO SILICON // กระบวนการแปลงภาษา C สู่สัญญาณฮาร์ดแวร์</span>
                     </div>
-                    <h2 class="text-4xl font-bold ndot uppercase tracking-tight text-white mb-2">
-                        เราไม่ได้แค่หาคอมไพเลอร์... แต่เราสร้าง IDE ทั้งระบบ!
-                    </h2>
-                    <p class="text-sm text-[#B3B3B3] mb-6">
-                        ถ้าแค่หา Compiler มาตัวเดียว มันยังใช้งานยากและไม่เห็นภาพ เราเลยสร้างสภาพแวดล้อมที่ครบวงจร
-                    </p>
-
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div class="bento-card p-5">
-                            <div class="text-2xl mb-3 text-[#1ED760]">⚙️</div>
-                            <h3 class="mono text-sm font-bold text-white mb-1.5">REAL GCC BUNDLED</h3>
-                            <p class="text-xs text-[#B3B3B3] leading-relaxed">
-                                มี Real MIPS GCC 12.2 และ RISC-V GCC 15.2 ในตัว ไม่ใช่ตัวแปลงเทียม รองรับ C / C++ / Python / ASM
-                            </p>
-                        </div>
-                        <div class="bento-card p-5">
-                            <div class="text-2xl mb-3 text-white">🖥️</div>
-                            <h3 class="mono text-sm font-bold text-white mb-1.5">VIRTUAL NEXYS A7</h3>
-                            <p class="text-xs text-[#B3B3B3] leading-relaxed">
-                                จำลองบอร์ดจริง 16 Switches, 16 LEDs, 8-Digit 7-Seg, UART Console, และหน้าจอ VGA 640x480
-                            </p>
-                        </div>
-                        <div class="bento-card p-5">
-                            <div class="text-2xl mb-3 text-[#1ED760]">🔌</div>
-                            <h3 class="mono text-sm font-bold text-white mb-1.5">CUSTOM CPU IMPORT</h3>
-                            <p class="text-xs text-[#B3B3B3] leading-relaxed">
-                                สามารถนำเข้าไฟล์ Verilog/VHDL ของใครก็ได้ มีตัวสแกนพอร์ตอัตโนมัติแล้วต่อเข้าบอร์ดเสมือนได้ทันที
-                            </p>
-                        </div>
-                        <div class="bento-card p-5">
-                            <div class="text-2xl mb-3 text-white">⚡</div>
-                            <h3 class="mono text-sm font-bold text-white mb-1.5">ZERO-VIVADO FLOW</h3>
-                            <p class="text-xs text-[#B3B3B3] leading-relaxed">
-                                สังเคราะห์ Bitstream ในเครื่องผ่าน WSL (Yosys) และแฟลชลง FPGA จริงได้ใน 1 วินาที ไม่ต้องลงโปรแกรม 80GB
-                            </p>
-                        </div>
-                    </div>
-                </section>
-<section class="slide flex-col justify-center max-w-6xl w-full h-full" data-slide="4" data-speaker="SPEAKER 02 // SOFTWARE TO HARDWARE">
-                    <div class="flex items-center space-x-2 text-xs mono text-[#B3B3B3]/60 mb-2">
-                        <span>PIPELINE DEEP DIVE</span>
-                    </div>
-                    <h2 class="text-4xl font-bold ndot uppercase tracking-tight text-white mb-6">
-                        เส้นทางภาษา C สู่ท่อส่งคำสั่งในชิป FPGA
+                    <h2 class="text-3xl md:text-4xl font-bold ndot uppercase tracking-tight text-white mb-5">
+                        C-TO-SILICON PIPELINE // จากโค้ด C สู่สัญญาณฮาร์ดแวร์จริง
                     </h2>
 
-                    <!-- Visual Flowchart -->
-                    <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mb-6">
-                        <div class="bento-card p-4 text-center">
+                    <!-- 5-Step Pipeline Flow -->
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mb-4">
+                        <div class="bento-card p-3.5 text-center">
                             <span class="mono text-xs text-red-400 block mb-1">01 • SOURCE</span>
-                            <h4 class="font-bold text-sm text-white mb-1">C / C++ Code</h4>
+                            <h4 class="font-bold text-sm text-white mb-0.5">ภาษา C / C++</h4>
                             <p class="text-[11px] text-[#B3B3B3] mono">main.c (nCk / Fibo)</p>
                         </div>
-                        <div class="bento-card p-4 text-center">
+                        <div class="bento-card p-3.5 text-center">
                             <span class="mono text-xs text-[#1ED760] block mb-1">02 • COMPILE</span>
-                            <h4 class="font-bold text-sm text-white mb-1">Real MIPS GCC</h4>
+                            <h4 class="font-bold text-sm text-white mb-0.5">Real MIPS GCC</h4>
                             <p class="text-[11px] text-[#B3B3B3] mono">-march=mips32 -EB</p>
                         </div>
-                        <div class="bento-card p-4 text-center">
+                        <div class="bento-card p-3.5 text-center">
                             <span class="mono text-xs text-[#38BDF8] block mb-1">03 • LINKING</span>
-                            <h4 class="font-bold text-sm text-white mb-1">Linker link.ld</h4>
+                            <h4 class="font-bold text-sm text-white mb-0.5">Linker link.ld</h4>
                             <p class="text-[11px] text-[#B3B3B3] mono">SP = 0x80010000</p>
                         </div>
-                        <div class="bento-card p-4 text-center">
+                        <div class="bento-card p-3.5 text-center">
                             <span class="mono text-xs text-amber-400 block mb-1">04 • MEMORY</span>
-                            <h4 class="font-bold text-sm text-white mb-1">BRAM Split</h4>
+                            <h4 class="font-bold text-sm text-white mb-0.5">BRAM Split</h4>
                             <p class="text-[11px] text-[#B3B3B3] mono">.text(0x0) .data(0x80M)</p>
                         </div>
-                        <div class="bento-card p-4 text-center border-red-500/40 bg-red-950/20">
-                            <span class="mono text-xs text-red-400 block mb-1">05 • HARDWARE</span>
-                            <h4 class="font-bold text-sm text-white mb-1">5-Stage Pipeline</h4>
-                            <p class="text-[11px] text-red-300 mono">IF-ID-EX-MEM-WB</p>
+                        <div class="bento-card p-3.5 text-center border-[#1ED760]/40 bg-emerald-950/20">
+                            <span class="mono text-xs text-[#1ED760] block mb-1">05 • HARDWARE</span>
+                            <h4 class="font-bold text-sm text-white mb-0.5">5-Stage Pipeline</h4>
+                            <p class="text-[11px] text-emerald-300 mono">IF-ID-EX-MEM-WB</p>
                         </div>
                     </div>
 
-                    <!-- Deep detail 2 columns -->
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="bento-card p-4">
-                            <div class="mono text-xs text-[#B3B3B3]/60 mb-1">BOOTSTRAPPING & STACK POINTER</div>
-                            <p class="text-xs text-[#EAEAEA] leading-relaxed">
-                                มีโค้ด <span class="mono text-white font-bold">start.S</span> วางอยู่ที่ Vector <span class="mono text-red-400">0x00000000</span> ทำหน้าที่ตั้งค่า Stack Pointer ไปที่จุดสูงสุดของ RAM (<span class="mono">0x80010000</span>) แล้วกระโดดเรียกฟังก์ชัน <span class="mono">main()</span> ของภาษา C ทันที
-                            </p>
+                    <!-- Bottom Details: Bootstrapping & MMIO Map -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        
+                        <!-- Bootstrapping / Memory card -->
+                        <div class="bento-card p-4 flex flex-col justify-between">
+                            <div>
+                                <span class="mono text-xs text-[#38BDF8] font-bold block mb-1.5">BOOTSTRAP & DATA RAM</span>
+                                <p class="text-xs text-[#B3B3B3] leading-relaxed mb-2">
+                                    มีโค้ด <span class="mono text-white font-bold">start.S</span> วางอยู่ที่ Vector <span class="mono text-red-400">0x00000000</span> คอยเซ็ต Stack Pointer ไปที่จุดสูงสุดของ RAM (<span class="mono text-white">0x80010000</span>)
+                                </p>
+                                <p class="text-xs text-[#B3B3B3] leading-relaxed">
+                                    และใช้ <span class="mono text-white font-bold">objcopy</span> สกัด Section <span class="mono text-amber-400">.data</span> (ตัวแปร Global/Static) บรรจุใส่ BRAM ที่ <span class="mono text-white">0x80000000</span> ทำให้รันภาษา C ได้ 100%
+                                </p>
+                            </div>
+                            <div class="mono text-[11px] text-white/50 bg-black/40 p-2 rounded-lg text-center mt-2 border border-[#282828]">
+                                stack_top = 0x80010000 // data = 0x80000000
+                            </div>
                         </div>
-                        <div class="bento-card p-4">
-                            <div class="mono text-xs text-[#B3B3B3]/60 mb-1">DATA RAM INITIALIZATION</div>
-                            <p class="text-xs text-[#EAEAEA] leading-relaxed">
-                                ใช้ <span class="mono text-white font-bold">objcopy</span> สกัดเฉพาะ Section <span class="mono text-red-400">.data</span> (ตัวแปร Global / Static / Constants) แปลงเป็นเวิร์ด 32 บิต บรรจุใส่ BRAM ที่ <span class="mono">0x80000000</span> อัตโนมัติ ทำให้รันโค้ดภาษา C ได้สมบูรณ์ 100%
-                            </p>
-                        </div>
-                    </div>
-                </section>
-<section class="slide flex-col justify-center max-w-6xl w-full h-full" data-slide="5" data-speaker="SPEAKER 02 // MMIO ARCHITECTURE">
-                    <div class="flex items-center space-x-2 text-xs mono text-[#B3B3B3]/60 mb-2">
-                        <span>HARDWARE BUS INTERFACE</span>
-                    </div>
-                    <h2 class="text-4xl font-bold ndot uppercase tracking-tight text-white mb-4">
-                        Memory-Mapped I/O // ที่อยู่สั่งงานฮาร์ดแวร์จริง
-                    </h2>
-                    <p class="text-sm text-[#B3B3B3] mb-6">
-                        CPU คุยกับโลกภายนอกผ่านตำแหน่ง Address Space ตามมาตรฐานของบอร์ด Digilent Nexys A7:
-                    </p>
 
-                    <div class="grid grid-cols-3 gap-4">
-                        <div class="bento-card p-4">
-                            <span class="mono text-xs text-red-400 font-bold block mb-1">0xF0000000 • WRITE</span>
-                            <h4 class="font-bold text-sm text-white mb-1">16 User LEDs</h4>
-                            <p class="text-xs text-[#B3B3B3]">ควบคุมไฟ LED 16 ดวงบนบอร์ด (`LED = 0xFF;`)</p>
+                        <!-- MMIO Map 1: LEDs, Switches, 7-Seg -->
+                        <div class="space-y-3">
+                            <div class="bento-card p-3 flex items-center justify-between">
+                                <div>
+                                    <span class="mono text-[11px] text-red-400 font-bold block">0xF0000000 • WRITE</span>
+                                    <h5 class="text-xs font-bold text-white">16 User LEDs</h5>
+                                </div>
+                                <span class="mono text-[11px] text-[#B3B3B3]">LED = 0xFF;</span>
+                            </div>
+                            <div class="bento-card p-3 flex items-center justify-between">
+                                <div>
+                                    <span class="mono text-[11px] text-[#1ED760] font-bold block">0xF0000004 • READ</span>
+                                    <h5 class="text-xs font-bold text-white">16 Slide Switches</h5>
+                                </div>
+                                <span class="mono text-[11px] text-[#B3B3B3]">val = SWITCH;</span>
+                            </div>
+                            <div class="bento-card p-3 flex items-center justify-between border-red-500/30">
+                                <div>
+                                    <span class="mono text-[11px] text-red-400 font-bold block">0xF0000008 • WRITE</span>
+                                    <h5 class="text-xs font-bold text-white">8-Digit 7-Segment</h5>
+                                </div>
+                                <span class="mono text-[11px] text-[#1ED760]">10 C 3 = 120</span>
+                            </div>
                         </div>
-                        <div class="bento-card p-4">
-                            <span class="mono text-xs text-[#1ED760] font-bold block mb-1">0xF0000004 • READ</span>
-                            <h4 class="font-bold text-sm text-white mb-1">16 Slide Switches</h4>
-                            <p class="text-xs text-[#B3B3B3]">อ่านสถานะสวิตช์ 16 ตัว (`val = SWITCH;`)</p>
+
+                        <!-- MMIO Map 2: Pushbuttons, UART, VGA -->
+                        <div class="space-y-3">
+                            <div class="bento-card p-3 flex items-center justify-between">
+                                <div>
+                                    <span class="mono text-[11px] text-[#1ED760] font-bold block">0xF000000C • READ</span>
+                                    <h5 class="text-xs font-bold text-white">5 Pushbuttons</h5>
+                                </div>
+                                <span class="mono text-[11px] text-[#B3B3B3]">BTNC / BTNU</span>
+                            </div>
+                            <div class="bento-card p-3 flex items-center justify-between border-[#1ED760]/30">
+                                <div>
+                                    <span class="mono text-[11px] text-amber-400 font-bold block">0xF0000010 • TX/RX</span>
+                                    <h5 class="text-xs font-bold text-white">UART Console (115200)</h5>
+                                </div>
+                                <span class="mono text-[11px] text-[#EAEAEA]">printf("Hello\n");</span>
+                            </div>
+                            <div class="bento-card p-3 flex items-center justify-between">
+                                <div>
+                                    <span class="mono text-[11px] text-[#38BDF8] font-bold block">0xFF000000 • VRAM</span>
+                                    <h5 class="text-xs font-bold text-white">VGA Framebuffer</h5>
+                                </div>
+                                <span class="mono text-[11px] text-[#B3B3B3]">640x480 Pixels</span>
+                            </div>
                         </div>
-                        <div class="bento-card p-4 border-red-500/30">
-                            <span class="mono text-xs text-red-400 font-bold block mb-1">0xF0000008 • WRITE</span>
-                            <h4 class="font-bold text-sm text-white mb-1">8-Digit 7-Segment</h4>
-                            <p class="text-xs text-[#B3B3B3]">ส่งเลขฐานสิบ/Hex ไปแสดงผลบนหน้าปัด 8 หลัก</p>
-                        </div>
-                        <div class="bento-card p-4">
-                            <span class="mono text-xs text-[#1ED760] font-bold block mb-1">0xF000000C • READ</span>
-                            <h4 class="font-bold text-sm text-white mb-1">5 Pushbuttons</h4>
-                            <p class="text-xs text-[#B3B3B3]">อ่านปุ่มกด 5 ทิศทาง (BTNC, BTNU, BTNL...)</p>
-                        </div>
-                        <div class="bento-card p-4">
-                            <span class="mono text-xs text-amber-400 font-bold block mb-1">0xF0000010 • READ/WRITE</span>
-                            <h4 class="font-bold text-sm text-white mb-1">UART Console TX/RX</h4>
-                            <p class="text-xs text-[#B3B3B3]">พอร์ตอนุกรม 115200 8N1 สำหรับทำ `printf()`</p>
-                        </div>
-                        <div class="bento-card p-4">
-                            <span class="mono text-xs text-[#38BDF8] font-bold block mb-1">0xFF000000 • VRAM</span>
-                            <h4 class="font-bold text-sm text-white mb-1">VGA Framebuffer</h4>
-                            <p class="text-xs text-[#B3B3B3]">หน้าจอภาพความละเอียด 640x480 พิกเซล</p>
-                        </div>
+
                     </div>
                 </section>
-<section class="slide flex-col justify-center max-w-6xl w-full h-full" data-slide="6" data-speaker="SPEAKER 03 // LIVE DEMO">
+<section class="slide flex-col justify-center max-w-6xl w-full h-full" data-slide="4" data-speaker="SPEAKER 03 & 04 // LIVE DEMO">
                     <div class="flex items-center space-x-2 text-xs mono text-red-500 mb-2">
                         <span class="glyph-red-dot"></span>
-                        <span>LIVE DEMONSTRATION</span>
+                        <span>LIVE VERIFICATION & GITHUB HANDOVER // ทดสอบบอร์ดจริง & แจกลิงก์</span>
                     </div>
-                    <h2 class="text-4xl font-bold ndot uppercase tracking-tight text-white mb-6">
-                        สาธิตการรันจริง: คำนวณคณิตศาสตร์ & ฮาร์ดแวร์ I/O
+                    <h2 class="text-3xl md:text-4xl font-bold ndot uppercase tracking-tight text-white mb-5">
+                        การทดสอบของจริง & สแกนทดลองใช้งาน
                     </h2>
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <!-- Case 1 -->
-                        <div class="bento-card p-5 border-red-500/30">
-                            <div class="mono text-xs text-red-400 mb-2 font-bold">[ DEMO 01 ]</div>
-                            <h3 class="text-lg font-bold text-white mb-2">คำนวณ nCk ออก 7-Segment</h3>
-                            <p class="text-xs text-[#B3B3B3] mb-4 leading-relaxed">
-                                รันโค้ดภาษา C คำนวณสูตรคอมบิเนชัน <span class="mono font-bold text-white">10 C 3 = 120</span> ผ่านตัวคูณฮาร์ดแวร์ วิ่งผ่าน 5-Stage Pipeline แสดงผลออกหลอด 7-Segment เป็นเลขฐานสิบสมบูรณ์แบบ
-                            </p>
-                            <div class="bg-black/60 p-3 rounded-xl border border-[#282828] mono text-xs text-center text-red-400 font-bold tracking-widest">
-                                RESULT: 0 0 0 0 0 1 2 0
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-stretch">
+                        
+                        <!-- Left 7 Cols: Live Demo Test Cases -->
+                        <div class="md:col-span-7 flex flex-col justify-between space-y-3">
+                            <div class="bento-card p-4 border-red-500/30">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="mono text-xs text-red-400 font-bold">[ TEST 01 ]</span>
+                                    <span class="mono text-[10px] text-emerald-400 bg-emerald-950/30 px-2 py-0.5 rounded border border-emerald-500/30">RUNNING LIVE</span>
+                                </div>
+                                <h4 class="text-sm font-bold text-white mb-1">คำนวณ nCk ในภาษา C ออก 7-Segment</h4>
+                                <p class="text-xs text-[#B3B3B3] leading-relaxed mb-2">
+                                    รันฟังก์ชันคำนวณสูตรคอมบิเนชัน <span class="mono font-bold text-white">10 C 3 = 120</span> ผ่านฮาร์ดแวร์ตัวคูณจริง วิ่งผ่าน 5-Stage Pipeline ผลลัพธ์ตัวเลข 120 สว่างบนหน้าปัด 7-Segment บอร์ด Nexys A7 ทันที
+                                </p>
+                                <div class="bg-black/60 p-2 rounded-lg border border-[#282828] mono text-xs text-center text-red-400 font-bold tracking-widest">
+                                    7-SEG OUTPUT: [ 0 0 0 0 0 1 2 0 ]
+                                </div>
+                            </div>
+
+                            <div class="bento-card p-4 border-[#1ED760]/30">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="mono text-xs text-[#1ED760] font-bold">[ TEST 02 ]</span>
+                                    <span class="mono text-[10px] text-white/50">I/O & SERIAL</span>
+                                </div>
+                                <h4 class="text-sm font-bold text-white mb-1">สวิตช์, ไฟ LED และ UART printf()</h4>
+                                <p class="text-xs text-[#B3B3B3] leading-relaxed">
+                                    สับสวิตช์บนบอร์ดจริง ไฟ LED สว่างตามสถานะบิตทันที และคำสั่ง <span class="mono text-white">printf()</span> ส่งสตรีมตัวอักษรวิ่งออกหน้าต่างคอนโซลแบบสดๆ ด้วยความเร็ว 115200 baud
+                                </p>
+                            </div>
+
+                            <div class="bento-card p-4">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="mono text-xs text-[#38BDF8] font-bold">[ TEST 03 ]</span>
+                                    <span class="mono text-[10px] text-[#38BDF8]">SPEED FLASH</span>
+                                </div>
+                                <h4 class="text-sm font-bold text-white mb-1">1-Second Live USB Board Upload</h4>
+                                <p class="text-xs text-[#B3B3B3] leading-relaxed">
+                                    กดปุ่มเดียวส่งไบนารีผ่านสาย Micro-USB เข้า Block RAM บนชิป Artix-7 จริงใน 1 วินาที โค้ดใหม่เริ่มทำงานทันทีโดยไม่ต้องรัน Vivado ให้เสียเวลา
+                                </p>
                             </div>
                         </div>
 
-                        <!-- Case 2 -->
-                        <div class="bento-card p-5">
-                            <div class="mono text-xs text-[#1ED760] mb-2 font-bold">[ DEMO 02 ]</div>
-                            <h3 class="text-lg font-bold text-white mb-2">InterSwitches & UART</h3>
-                            <p class="text-xs text-[#B3B3B3] mb-4 leading-relaxed">
-                                คลิกสับสวิตช์บนจอ ไฟ LED ติดตามบิตจริงทันที และรันคำสั่ง <span class="mono text-white">printf("Hello World\n")</span> ตัวอักษรวิ่งออกหน้าต่างคอนโซลแบบสดๆ
-                            </p>
-                            <div class="bg-black/60 p-3 rounded-xl border border-[#282828] mono text-xs text-[#1ED760]">
-                                > [UART Ready] 115200 baud<br>
-                                > Hello World from MIPS CPU!
+                        <!-- Right 5 Cols: QR Code & GitHub Link -->
+                        <div class="md:col-span-5 bento-card p-5 border-[#1ED760]/40 bg-[#161616]/90 flex flex-col items-center justify-between text-center">
+                            <div>
+                                <div class="flex items-center justify-center space-x-2 mono text-xs text-[#1ED760] font-bold mb-2">
+                                    <span class="glyph-green-dot"></span>
+                                    <span>SCAN TO DOWNLOAD & TEST</span>
+                                </div>
+                                <p class="text-xs text-[#B3B3B3] mb-3">
+                                    สแกน QR Code นี้เพื่อเปิด GitHub ดาวน์โหลดตัวติดตั้ง 599MB หรือดูโค้ดและคู่มือได้ทันที
+                                </p>
+                                
+                                <!-- High-Res QR Code Card -->
+                                <div class="bg-white p-3 rounded-2xl shadow-[0_0_30px_rgba(30,215,96,0.2)] inline-block mx-auto mb-3">
+                                    <img src="assets/github_qr.png" alt="GitHub Repo QR Code" class="w-44 h-44 object-contain" onerror="this.src='github_qr.png'">
+                                </div>
+
+                                <div class="mono text-xs text-white/90 font-semibold mb-1">
+                                    github.com/posweeza558/fpga-studio
+                                </div>
+                                <div class="flex justify-center gap-1.5 mono text-[10px] text-[#B3B3B3]">
+                                    <span class="px-2 py-0.5 rounded bg-black/40 border border-[#282828]">Setup.exe 599MB</span>
+                                    <span class="px-2 py-0.5 rounded bg-black/40 border border-[#282828]">Open Source</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 pt-3 border-t border-[#282828] w-full">
+                                <p class="mono text-xs text-[#1ED760] font-semibold leading-relaxed">
+                                    “พวกเราตอบโจทย์อาจารย์ครบทุกข้อ...<br>หวังว่าผลงานนี้จะคู่ควรกับเกรด A ของอาจารย์ครับ! 🙏”
+                                </p>
                             </div>
                         </div>
 
-                        <!-- Case 3 -->
-                        <div class="bento-card p-5">
-                            <div class="mono text-xs text-[#38BDF8] mb-2 font-bold">[ DEMO 03 ]</div>
-                            <h3 class="text-lg font-bold text-white mb-2">1-Sec Live Board Flashing</h3>
-                            <p class="text-xs text-[#B3B3B3] mb-4 leading-relaxed">
-                                โชว์การกดปุ่ม <span class="mono text-white font-bold">Upload to Board</span> ส่งไบนารีผ่านสาย Micro-USB เข้า Block RAM บนบอร์ด Nexys A7 จริง โดยไม่ต้องเสียเวลารัน Vivado 15 นาที
-                            </p>
-                            <div class="bg-black/60 p-3 rounded-xl border border-[#282828] mono text-xs text-center text-[#EAEAEA]">
-                                ⚡ UPLOAD COMPLETE (1.2s)
-                            </div>
-                        </div>
-                    </div>
-                </section>
-<section class="slide flex-col justify-center max-w-6xl w-full h-full" data-slide="7" data-speaker="SPEAKER 04 // PROJECT SUPERPOWERS">
-                    <div class="flex items-center space-x-2 text-xs mono text-[#B3B3B3]/60 mb-2">
-                        <span>SYSTEM CAPABILITIES</span>
-                    </div>
-                    <h2 class="text-4xl font-bold ndot uppercase tracking-tight text-white mb-6">
-                        ขุมพลังระดับลึกของ FPGA STUDIO
-                    </h2>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="bento-card p-5">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="mono text-xs text-red-400 font-bold">01 • EXTENSIBLE ENGINE</span>
-                                <span class="text-xs mono text-[#727272]">HDL ANALYZER</span>
-                            </div>
-                            <h4 class="text-lg font-bold text-white mb-1.5">Custom CPU & Compiler Import</h4>
-                            <p class="text-xs text-[#B3B3B3] leading-relaxed">
-                                ใครเขียน CPU Verilog/VHDL มา สามารถโยนไฟล์เข้าโปรแกรมได้เลย ระบบมี HDL AST Parser ตรวจจับพอร์ต Clock, Reset, Memory Bus อัตโนมัติ และสร้างหน้าต่าง Pin Binding แม็ปเข้าบอร์ดเสมือนให้ทันที!
-                            </p>
-                        </div>
-
-                        <div class="bento-card p-5">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="mono text-xs text-[#1ED760] font-bold">02 • DUAL ARCHITECTURE</span>
-                                <span class="text-xs mono text-[#727272]">MIPS + RISC-V</span>
-                            </div>
-                            <h4 class="text-lg font-bold text-white mb-1.5">รองรับทั้ง OpenMIPS และ RISC-V</h4>
-                            <p class="text-xs text-[#B3B3B3] leading-relaxed">
-                                ไม่ได้มีแค่ MIPS แต่เราใส่คอร์สถาปัตยกรรมยุคใหม่อย่าง **RISC-V (RV32IM)** พร้อมคอมไพเลอร์ GCC 15.2 มาให้ในตัว สามารถเขียนโค้ดภาษา C เดียวกันแล้วสลับเปรียบเทียบผลลัพธ์ของทั้ง 2 คอร์ได้ทันที
-                            </p>
-                        </div>
-
-                        <div class="bento-card p-5">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="mono text-xs text-[#38BDF8] font-bold">03 • TIMING OPTIMIZATION</span>
-                                <span class="text-xs mono text-[#727272]">RTL FIX</span>
-                            </div>
-                            <h4 class="text-lg font-bold text-white mb-1.5">วงจรหาร 32 ไซเคิล (3.51 $\rightarrow$ 28.88 MHz)</h4>
-                            <p class="text-xs text-[#B3B3B3] leading-relaxed">
-                                แก้ปัญหา Timing ระดับฮาร์ดแวร์ โดยแทนที่วงจรหารแบบทางเดินเดี่ยวด้วยโมดูล <span class="mono text-white">div.v</span> แบบ Multi-Cycle Restoring Divider ทำให้ความถี่พุ่งเกินเกณฑ์ 25 MHz ของ Nexys A7 ฉลุย
-                            </p>
-                        </div>
-
-                        <div class="bento-card p-5">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="mono text-xs text-amber-400 font-bold">04 • ZERO-VIVADO SYNTHESIS</span>
-                                <span class="text-xs mono text-[#727272]">OPENXC7 / WSL</span>
-                            </div>
-                            <h4 class="text-lg font-bold text-white mb-1.5">สังเคราะห์ Bitstream ในเครื่องผ่าน WSL</h4>
-                            <p class="text-xs text-[#B3B3B3] leading-relaxed">
-                                เชื่อมต่อ **Yosys + nextpnr-xilinx** สังเคราะห์โค้ด Verilog กลายเป็นไฟล์ <span class="mono text-white">.bit</span> ได้ในเครื่องตัวเองแบบออฟไลน์ 100% โดยไม่ต้องพึ่งพา Vivado ขนาด 80GB
-                            </p>
-                        </div>
-                    </div>
-                </section>
-<section class="slide flex-col justify-center max-w-6xl w-full h-full text-center" data-slide="8" data-speaker="SPEAKER 04 // THE GRAND FINALE">
-                    <div class="flex items-center justify-center space-x-2 text-xs mono text-red-500 mb-2">
-                        <span class="glyph-red-dot"></span>
-                        <span>MISSION ACCOMPLISHED</span>
-                    </div>
-                    <h2 class="text-5xl md:text-6xl font-bold ndot uppercase tracking-tight text-white mb-4">
-                        ตอบโจทย์อาจารย์ครบทุกข้อ... ส่งต่อให้รุ่นน้องใช้งานจริง
-                    </h2>
-                    <p class="text-sm md:text-base text-[#B3B3B3] max-w-3xl mx-auto mb-8">
-                        โปรเจกต์นี้ไม่ได้ทำเพื่อส่งแล้วจบ แต่ถูกสร้างขึ้นเป็นซอฟต์แวร์ที่พร้อมใช้งานจริงสำหรับภาควิชา
-                    </p>
-
-                    <!-- 3 Final Bento Highlights -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left max-w-5xl mx-auto mb-8">
-                        <div class="bento-card p-5">
-                            <div class="mono text-xs text-[#727272] mb-1.5">[ PACKAGING ]</div>
-                            <h4 class="text-base font-bold text-white mb-1">Installer 599 MB</h4>
-                            <p class="text-xs text-[#B3B3B3] leading-relaxed">
-                                ไฟล์ติดตั้งขนาดกะทัดรัด แตกไฟล์ GCC ทั้ง MIPS และ RISC-V พร้อม Bitstream ครบชุด ออฟไลน์ 100%
-                            </p>
-                        </div>
-                        <div class="bento-card p-5 border-[#484848]">
-                            <div class="mono text-xs text-[#1ED760] mb-1.5">[ OPEN SOURCE ]</div>
-                            <h4 class="text-base font-bold text-white mb-1">GitHub Repository</h4>
-                            <p class="text-xs text-[#B3B3B3] leading-relaxed mono">
-                                github.com/posweeza558/fpga-studio<br>
-                                พร้อมคู่มือสถาปัตยกรรม 10 หัวข้อเชิงลึก
-                            </p>
-                        </div>
-                        <div class="bento-card p-5 border-red-500/40 bg-red-950/20">
-                            <div class="mono text-xs text-red-400 mb-1.5">[ NEXT GENERATION ]</div>
-                            <h4 class="text-base font-bold text-white mb-1">รุ่นน้องไม่ต้องรอ 3 รุ่น!</h4>
-                            <p class="text-xs text-red-200/80 leading-relaxed">
-                                รุ่นน้องปีหน้าสามารถดาวน์โหลดโปรแกรมนี้ไปใช้เรียนวิชา Microprocessor ได้ทันทีตั้งแต่วันนี้
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="mono text-sm text-[#1ED760] font-semibold tracking-wider">
-                        “พวกเราตอบโจทย์อาจารย์ครบทุกข้อ หวังว่าโปรเจกต์นี้จะคู่ควรกับเกรด A ของอาจารย์ครับ ขอบคุณครับ! 🙏”
                     </div>
                 </section>
             </div>
@@ -431,7 +368,7 @@
 
     <!-- GENERATED SCRIPTS -->
     <script>
-        window.speakerScripts = {1: "【บทพูดเปิดตัว: แนะนำโปรเจกต์】\nสวัสดีครับอาจารย์และเพื่อนๆ ทุกคน วันนี้กลุ่มพวกเราขอเสนอ 'FPGA Studio' เครื่องมือพัฒนาและจำลองสถาปัตยกรรมคอมพิวเตอร์แบบ All-in-One ครับ", 2: "【บทพูดคนที่ 1: ขยี้โพสต์อาจารย์】\nจุดเริ่มต้นมาจากโพสต์ของอาจารย์ครับ ที่อาจารย์บอกว่า 'หา Compiler แปลงภาษา C เป็น MIPS opcode หรือ micro Python ที่รันบน MIPS CPU... ไม่รู้รุ่นน้องอีก 3 รุ่นจะทำได้ไหม ใครทำได้อาจารย์จะให้ A!'\nพวกเราเห็นโจทย์นี้แล้วรู้สึกว่าท้าทายมาก และพวกเราไม่ได้แค่ไปหา Compiler มาตัวเดียว แต่พวกเราสร้าง IDE ทั้งตัวขึ้นมาตอบโจทย์อาจารย์ครบทุกข้อเลยครับ!", 3: '【บทพูดคนที่ 1: ตอบโจทย์อาจารย์】\nใน FPGA Studio เราใส่ Real GCC Toolchain มาให้เสร็จสรรพ มี Virtual Board ที่จำลอง 7-Segment, สวิตช์, หลอดไฟ, และจอภาพ VGA และที่เด็ดที่สุดคือ เป็นระบบเปิดที่ใครมี CPU หรือ Compiler ของตัวเอง ก็สามารถกด Import เข้ามาเทสต์ในโปรแกรมนี้ได้เลยครับ', 4: '【บทพูดคนที่ 2: ท่อส่งภาษา C สู่ FPGA】\nมาดูกระบวนการทำงานข้างในกันครับ เมื่อเราเขียนภาษา C ตัวโปรแกรมจะเรียก MIPS GCC 12.2 คอมไพล์และลิงก์ด้วย link.ld โดยมี start.S คอยเซ็ต Stack Pointer ไปที่ 0x80010000 และดึงส่วน .data นำไปโหลดใส่ Data RAM อัตโนมัติ ทำให้รันโค้ดภาษา C ที่มีตัวแปร Static/Global ได้สมบูรณ์ 100% ครับ', 5: '【บทพูดคนที่ 2: Memory-Mapped I/O】\nCPU ติดต่อกับฮาร์ดแวร์ผ่านตำแหน่ง Address ของบอร์ด Nexys A7: อยากสั่งไฟ LED เขียนลง 0xF0000000, อยากอ่านสวิตช์ อ่านจาก 0xF0000004, อยากส่งตัวเลขออก 7-Segment ส่งไปที่ 0xF0000008, และอยากทำ printf พ่นตัวอักษร วนลูปส่งค่า ASCII เข้า 0xF0000010 (UART TX) ครับ', 6: '【บทพูดคนที่ 3: Live Demo】\nนี่คือการรันจริงครับ เราคำนวณ 10 C 3 = 120 ในภาษา C พอกดปุ่ม Run จะแตกเป็นตาราง Opcode 32 บิต ท่อส่งคำสั่ง 5-Stage ทำงานทีละไซเคิล และผลลัพธ์เลข 120 ติดสว่างบน 7-Segment แบบ Real-time! นอกจากนี้เรายังสามารถกดปุ่ม Upload to Board ยิงโค้ดใหม่ลงไปรันบนชิป FPGA บอร์ด Nexys A7 จริงได้ใน 1 วินาที โดยไม่ต้องเปิด Vivado ให้หนักเครื่องเลยครับ', 7: '【บทพูดคนที่ 4: ขุมพลังของโปรเจกต์】\nฟีเจอร์ไม้เด็ดของ FPGA Studio ที่พวกเราภูมิใจมากคือระบบ Custom CPU Import ครับ ใครมี CPU Verilog/VHDL ในแล็บ โยนไฟล์เข้ามาได้เลย ระบบเรามี HDL AST Parser ตรวจจับพอร์ตและ Pin Binding ให้อัตโนมัติ! นอกจากนี้ยังมีคอร์ RISC-V RV32IM ให้สลับเทียบกับ MIPS, มีการปรับปรุงวงจรหาร 32 ไซเคิลเพิ่มความเร็วคล็อกเป็น 28.88 MHz, และมีระบบ WSL สังเคราะห์ Bitstream ได้ในคอมตัวเอง 100% โดยไม่ต้องพึ่งพา Vivado 80GB ครับ', 8: '【บทพูดคนที่ 4: สรุปและส่งต่อให้รุ่นน้อง】\nสุดท้ายนี้ โปรเจกต์นี้ไม่ได้ทำแล้วทิ้ง แต่พวกเราได้แพ็กเกจเป็นตัวติดตั้ง Setup.exe ขนาด 599MB และเผยแพร่ Open-Source บน GitHub เรียบร้อยแล้ว เพื่อให้อาจารย์และรุ่นน้องในรุ่นต่อๆ ไป ดาวน์โหลดไปใช้เรียนและทำแล็บวิชานี้ได้จริงทันทีโดยไม่ต้องรอถึง 3 รุ่นครับ... พวกเราตอบโจทย์อาจารย์ครบทุกข้อ หวังว่าโปรเจกต์นี้จะคู่ควรกับเกรด A ของอาจารย์ครับ ขอบคุณครับ!'};
+        window.speakerScripts = {1: "【บทพูดเปิดตัว: แนะนำโปรเจกต์】\nสวัสดีครับอาจารย์และเพื่อนๆ ทุกคน วันนี้กลุ่มพวกเราขอเสนอ 'FPGA Studio' เครื่องมือพัฒนาและจำลองสถาปัตยกรรมคอมพิวเตอร์แบบ All-in-One ครับ", 2: "【บทพูดเพจ 2: ฟีเจอร์และตอบโจทย์อาจารย์】\nจุดเริ่มต้นมาจากโพสต์ของอาจารย์ครับ ที่บอกว่า 'หา Compiler แปลงภาษา C เป็น MIPS opcode หรือ micro Python ที่รันบน MIPS CPU... ไม่รู้รุ่นน้องอีก 3 รุ่นจะทำได้ไหม ใครทำได้อาจารย์จะให้ A!'\nพวกเราไม่ได้แค่ไปหา Compiler มาตัวเดียว แต่เราสร้าง IDE เต็มรูปแบบขึ้นมาตอบโจทย์อาจารย์ครบทุกมิติ มี Real GCC Toolchain ในตัว, มี Virtual Board จำลองสวิตช์ ไฟ LED และ 7-Segment, และเปิดให้ Import CPU Verilog/VHDL ของใครก็ได้เข้ามาเทสต์ได้ทันทีครับ!", 3: '【บทพูดเพจ 3: C-to-Silicon Pipeline】\nเมื่อเราเขียนภาษา C ตัว IDE จะเรียก MIPS GCC 12.2 คอมไพล์และลิงก์ด้วย link.ld โดยมี start.S คอยเซ็ต Stack Pointer ไปที่ 0x80010000 และดึงส่วน .data นำไปโหลดใส่ Data RAM อัตโนมัติ ทำให้รันภาษา C ได้สมบูรณ์แบบครับ\nและ CPU จะสั่งงานฮาร์ดแวร์ผ่านตำแหน่ง Address ของบอร์ด Nexys A7: อยากสั่งไฟ LED เขียนลง 0xF0000000, อ่านสวิตช์จาก 0xF0000004, แสดงผลเลขฐานสิบออก 7-Segment ผ่าน 0xF0000008, และพ่นข้อความ printf ออก UART Serial Monitor ผ่านตำแหน่ง 0xF0000010 ครับ', 4: '【บทพูดเพจ 4: ทดสอบของจริง & ส่งมอบผลงาน】\nและนี่คือการทดสอบบนบอร์ดจริงในห้องเรียนครับ เราคอมไพล์โค้ด 10 C 3 ผลลัพธ์ 120 ออก 7-Segment จริง, สับสวิตช์ไฟ LED ติดตามจริง, และกดอัปโหลดโค้ดใหม่ลงชิปได้ใน 1 วินาทีครับ\nสุดท้ายนี้ เราเปิดโปรเจกต์นี้เป็น Open-Source ทุกคนในห้องสามารถยกมือถือขึ้นมาสแกน QR Code เพื่อดาวน์โหลดตัวติดตั้ง Setup.exe ขนาด 599MB หรือนำโค้ดไปศึกษาต่อได้ทันทีตั้งแต่วันนี้โดยไม่ต้องรอถึง 3 รุ่นครับ... พวกเราตอบโจทย์อาจารย์ครบทุกข้อ หวังว่าโปรเจกต์นี้จะคู่ควรกับเกรด A ของอาจารย์ครับ ขอบคุณครับ!'};
     </script>
     <script src="js/presentation.js"></script>
 </body>

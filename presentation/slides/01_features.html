@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FPGA STUDIO — 02. FEATURES</title>
+    <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Prompt:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/nothing.css">
+</head>
+<body class="h-screen w-screen flex flex-col justify-between p-6 relative overflow-hidden">
+
+    <!-- Interactive Warping Dot Matrix Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- TOP BAR (CLEAN MINIMAL) -->
+    <header class="w-full flex items-center justify-between pb-4 border-b border-[#282828] z-20">
+        <div class="flex items-center space-x-3">
+            <span class="glyph-green-dot"></span>
+            <span class="mono text-xs text-[#EAEAEA] font-bold tracking-widest uppercase">FPGA STUDIO</span>
+            <span class="text-white/20 text-xs">|</span>
+            <span class="mono text-xs text-[#1ED760]">v4.3 RELEASE</span>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <div class="mono text-sm font-bold tracking-widest text-[#EAEAEA]">
+                <span id="current-slide-num">02</span> <span class="text-white/30">/</span> <span id="total-slide-num">04</span>
+            </div>
+            <button onclick="toggleFullscreen()" class="p-2 rounded-full border border-[#282828] hover:border-[#484848] hover:bg-[#2A2A2A] transition text-xs mono text-[#B3B3B3]" title="Full Screen (F)">
+                ⛶
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN SLIDE CONTAINER (CAROUSEL VIEWPORT) -->
+    <main class="flex-1 w-full flex items-center justify-center py-6 relative z-10 overflow-hidden">
+        <div id="carousel-viewport">
+            <div id="carousel-track">
+
+                <!-- ======================================================== -->
+                <!-- SLIDE 2: CORE ARCHITECTURE & FEATURES -->
+                <!-- ======================================================== -->
+                <section class="slide active flex-col justify-center max-w-6xl w-full h-full" data-slide="2" data-speaker="SPEAKER 01 & 02 // FEATURES">
+                    <div class="flex items-center space-x-2 text-xs mono text-[#1ED760] mb-2">
+                        <span class="glyph-green-dot"></span>
+                        <span>CORE ARCHITECTURE & THE CHALLENGE // ตอบโจทย์อาจารย์ครบทุกข้อ</span>
+                    </div>
+                    <h2 class="text-3xl md:text-4xl font-bold ndot uppercase tracking-tight text-white mb-5">
+                        ระบบและขุมพลังฟีเจอร์ของ FPGA STUDIO
+                    </h2>
+
+                    <!-- Bento Grid of Key Features -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        
+                        <!-- Col 1: Origin Challenge Card -->
+                        <div class="bento-card p-5 border-red-500/30 flex flex-col justify-between">
+                            <div>
+                                <div class="flex justify-between items-center mb-2 pb-1.5 border-b border-[#282828]">
+                                    <span class="mono text-xs text-red-400 font-bold">THE CHALLENGE</span>
+                                    <span class="mono text-[10px] text-white/50">Sep 13 & 25</span>
+                                </div>
+                                <img src="../assets/prof_post_sep25.png" alt="โพสต์อาจารย์" class="w-full h-28 object-contain rounded-xl bg-black/50 border border-[#282828] mb-2.5" onerror="this.src='prof_post_sep25.png'">
+                                <p class="text-xs text-[#EAEAEA] italic border-l-2 border-red-500 pl-2.5 py-0.5 leading-relaxed">
+                                    “หา Compiler แปลงภาษา C เป็น MIPS opcode รันบน MIPS CPU... ใครทำได้อาจารย์จะให้ A”
+                                </p>
+                            </div>
+                            <div class="mono text-xs text-[#1ED760] bg-emerald-950/20 p-2 rounded-xl border border-[#1ED760]/30 text-center font-semibold mt-2">
+                                ⚡ วันนี้ไม่ต้องรอถึง 3 รุ่นครับ พวกเราทำเสร็จแล้ว!
+                            </div>
+                        </div>
+
+                        <!-- Col 2: Compiler & Virtual Board -->
+                        <div class="space-y-4 flex flex-col justify-between">
+                            <div class="bento-card p-4">
+                                <div class="flex items-center space-x-2 mb-1.5">
+                                    <span class="text-[#1ED760] text-lg">⚙️</span>
+                                    <h4 class="mono text-sm font-bold text-white">REAL GCC TOOLCHAIN BUNDLED</h4>
+                                </div>
+                                <p class="text-xs text-[#B3B3B3] leading-relaxed">
+                                    มี Real MIPS GCC 12.2 และ RISC-V GCC 15.2 ในตัว ไม่ใช่ตัวแปลงเทียม รองรับภาษา C, C++, Python (MicroPython) และ MIPS Assembly เต็มรูปแบบ
+                                </p>
+                            </div>
+                            <div class="bento-card p-4">
+                                <div class="flex items-center space-x-2 mb-1.5">
+                                    <span class="text-[#38BDF8] text-lg">🖥️</span>
+                                    <h4 class="mono text-sm font-bold text-white">VIRTUAL NEXYS A7 BOARD</h4>
+                                </div>
+                                <p class="text-xs text-[#B3B3B3] leading-relaxed">
+                                    จำลองฮาร์ดแวร์ Nexys A7: 16 สวิตช์, 16 LEDs, 8-Digit 7-Segment, 5 ปุ่มกด, UART Terminal Monitor สำหรับ <span class="mono text-white">printf</span>, และจอ VGA 640x480
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Col 3: Custom CPU & WSL Zero-Vivado -->
+                        <div class="space-y-4 flex flex-col justify-between">
+                            <div class="bento-card p-4 border-[#1ED760]/30">
+                                <div class="flex items-center space-x-2 mb-1.5">
+                                    <span class="text-[#1ED760] text-lg">🔌</span>
+                                    <h4 class="mono text-sm font-bold text-white">CUSTOM CPU & COMPILER IMPORT</h4>
+                                </div>
+                                <p class="text-xs text-[#B3B3B3] leading-relaxed">
+                                    ใครเขียน CPU Verilog/VHDL ในแล็บ โยนไฟล์เข้าโปรแกรมได้เลย มีระบบ **HDL AST Parser** ตรวจจับพอร์ตและ Pin Binding ผูกเข้ากับบอร์ดเสมือนอัตโนมัติ
+                                </p>
+                            </div>
+                            <div class="bento-card p-4">
+                                <div class="flex items-center space-x-2 mb-1.5">
+                                    <span class="text-amber-400 text-lg">⚡</span>
+                                    <h4 class="mono text-sm font-bold text-white">ZERO-VIVADO WSL SYNTHESIS</h4>
+                                </div>
+                                <p class="text-xs text-[#B3B3B3] leading-relaxed">
+                                    แก้ปัญหา Timing วงจรหาร Multi-Cycle (3.51 $\rightarrow$ 28.88 MHz) และเชื่อมต่อ **WSL + Yosys** สังเคราะห์ Bitstream แฟลชลงชิปจริงใน 1 วินาที ไม่ต้องลง Vivado 80GB
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- SPEAKER CUES DRAWER (กดปุ่ม C เพื่อเปิด/ปิด) -->
+    <div id="cues-drawer" class="fixed bottom-10 left-1/2 -translate-x-1/2 max-w-4xl w-[92%] bento-card p-5 border-[#484848] shadow-2xl z-40 hidden transition-all">
+        <div class="flex justify-between items-center mb-2 border-b border-[#282828] pb-2">
+            <div class="flex items-center space-x-2">
+                <span class="glyph-red-dot"></span>
+                <span class="mono text-xs text-red-400 font-bold uppercase" id="cue-title">CUE SHEET (กดปุ่ม C)</span>
+            </div>
+            <button onclick="toggleCues()" class="text-xs mono text-white/50 hover:text-white">[ ปิด X ]</button>
+        </div>
+        <p id="cue-content" class="text-xs md:text-sm text-white/90 leading-relaxed whitespace-pre-line font-normal"></p>
+    </div>
+
+    <!-- SPEAKER SCRIPTS & NAVIGATION -->
+    <script>
+        window.prevSectionUrl = '00_cover.html';
+        window.nextSectionUrl = '02_c_pipeline.html';
+        window.speakerScripts = {
+            2: "【บทพูดเพจ 2: ฟีเจอร์และตอบโจทย์อาจารย์】\nจุดเริ่มต้นมาจากโพสต์ของอาจารย์ครับ ที่บอกว่า 'หา Compiler แปลงภาษา C เป็น MIPS opcode หรือ micro Python ที่รันบน MIPS CPU... ไม่รู้รุ่นน้องอีก 3 รุ่นจะทำได้ไหม ใครทำได้อาจารย์จะให้ A!'\nพวกเราไม่ได้แค่ไปหา Compiler มาตัวเดียว แต่เราสร้าง IDE เต็มรูปแบบขึ้นมาตอบโจทย์อาจารย์ครบทุกมิติ มี Real GCC Toolchain ในตัว, มี Virtual Board จำลองสวิตช์ ไฟ LED และ 7-Segment, และเปิดให้ Import CPU Verilog/VHDL ของใครก็ได้เข้ามาเทสต์ได้ทันทีครับ!"
+        };
+    </script>
+    <script src="../js/presentation.js"></script>
+</body>
+</html>

@@ -20,12 +20,12 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SLIDES_DIR = os.path.join(SCRIPT_DIR, "slides")
 OUTPUT_FILE = os.path.join(SCRIPT_DIR, "presentation_all.html")
 
+# 4 Streamlined Core Slides
 SLIDE_FILES = [
     "00_cover.html",
-    "01_speaker1_challenge.html",
-    "02_speaker2_pipeline.html",
-    "03_speaker3_demo.html",
-    "04_speaker4_superpowers.html"
+    "01_features.html",
+    "02_c_pipeline.html",
+    "03_live_demo.html"
 ]
 
 def compile_presentation():
@@ -64,24 +64,22 @@ def compile_presentation():
         sections = section_pattern.findall(content)
 
         for i, sec in enumerate(sections, start=1):
-            # Update data-slide attribute to global sequential slide number
             sec_updated = re.sub(r'data-slide="\d+"', f'data-slide="{current_global_slide}"', sec)
             
-            # Ensure only slide 1 has "active" initially
             if current_global_slide == 1:
                 if 'active' not in sec_updated.split('class="')[1].split('"')[0]:
                     sec_updated = sec_updated.replace('class="slide ', 'class="slide active ')
             else:
                 sec_updated = sec_updated.replace('active ', '').replace(' active', '')
 
-            # Fix relative image paths: ../assets/ -> assets/
             sec_updated = sec_updated.replace('../assets/', 'assets/')
             
             all_sections.append(sec_updated)
 
-            # Map cues
             if i in local_cues:
                 combined_scripts[current_global_slide] = local_cues[i]
+            elif current_global_slide in local_cues:
+                combined_scripts[current_global_slide] = local_cues[current_global_slide]
 
             current_global_slide += 1
 
@@ -91,7 +89,7 @@ def compile_presentation():
     css_rel = "css/nothing.css"
     js_rel = "js/presentation.js"
 
-    # Build final HTML with horizontal carousel viewport & track (no buttons, click anywhere)
+    # Build final HTML with horizontal carousel viewport & track (no buttons, progressive edge arrows)
     html_template = f"""<!DOCTYPE html>
 <html lang="th">
 <head>

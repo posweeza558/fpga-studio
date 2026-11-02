@@ -10,7 +10,7 @@
     --fpga-border-hover: #484848;
     
     --fpga-green: #1ED760;
-    --fpga-green-glow: rgba(30, 215, 96, 0.35);
+    --fpga-green-glow: rgba(30, 215, 96, 0.4);
     --fpga-red: #D71921;
     --fpga-red-glow: rgba(215, 25, 33, 0.4);
     --fpga-cyan: #38BDF8;
@@ -90,6 +90,32 @@ body {
     50% { opacity: 0.45; transform: scale(0.85); }
 }
 
+/* Dynamic Ambient Edge Arrows (ลูกศรขอบจอกว้างๆ เข้มขึ้นตามระยะเมาส์) */
+.edge-arrow {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 35;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.12s ease-out, transform 0.12s ease-out;
+    color: #1ED760;
+    filter: drop-shadow(0 0 20px rgba(30, 215, 96, 0.6));
+}
+
+.edge-arrow svg {
+    width: 56px;
+    height: 140px;
+}
+
+.edge-arrow-left {
+    left: 24px;
+}
+
+.edge-arrow-right {
+    right: 24px;
+}
+
 /* FPGA Studio Bento Elevated Card */
 .bento-card {
     background: var(--fpga-card);
@@ -136,11 +162,11 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 2.5rem;
+    padding: 0 2rem;
     box-sizing: border-box;
-    opacity: 0.2;
+    opacity: 0.18;
     transform: scale(0.93);
-    filter: blur(2px);
+    filter: blur(3px);
     transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), 
                 transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), 
                 filter 0.65s cubic-bezier(0.16, 1, 0.3, 1);

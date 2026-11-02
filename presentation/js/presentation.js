@@ -1,7 +1,8 @@
 /**
- * FPGA Studio - Keynote Presentation Engine (Nothing Phone Trailer / Carousel Edition)
+ * FPGA Studio - Keynote Presentation Engine (Nothing Phone Trailer & Carousel Edition)
  * - Seamless Horizontal Track Carousel (เลื่อนแนวนอนแบบเทรลเลอร์ Nothing Phone ไม่มีป็อปอัพเด้ง)
  * - Click anywhere to navigate (คลิกฝั่งซ้าย = ถอยหลัง / คลิกฝั่งขวา = เดินหน้า ไม่ต้องมีปุ่ม)
+ * - Progressive Ambient Edge Arrows (เมาส์เข้าใกล้ขอบฝั่งไหน ลูกศรจะค่อยๆ สว่างชัดขึ้นเรื่อยๆ)
  * - Micro Pupil Eye Tracking (จุดแดงขยับนิดเดียวฟีลลูกตามองตามเมาส์)
  * - Interactive Elastic Dot-Matrix Canvas Background
  */
@@ -31,6 +32,7 @@ let pupilY = 0;
 
 function initPresentation() {
     setupCarouselDOM();
+    setupEdgeArrows();
 
     const slides = document.querySelectorAll('.slide');
     totalSlides = slides.length;
@@ -52,7 +54,6 @@ function setupCarouselDOM() {
 
     let track = document.getElementById('carousel-track');
     if (!track) {
-        // Create viewport wrapper if missing
         let viewport = document.getElementById('carousel-viewport');
         if (!viewport) {
             viewport = document.createElement('div');
@@ -64,18 +65,43 @@ function setupCarouselDOM() {
         track.id = 'carousel-track';
         viewport.appendChild(track);
 
-        // Move all slide sections into the carousel track
         const slides = Array.from(main.querySelectorAll('.slide'));
         slides.forEach(s => track.appendChild(s));
     }
     carouselTrack = track;
 }
 
+function setupEdgeArrows() {
+    if (document.getElementById('edge-arrow-left')) return;
+
+    // Create Left Edge Arrow
+    const leftArrow = document.createElement('div');
+    leftArrow.id = 'edge-arrow-left';
+    leftArrow.className = 'edge-arrow edge-arrow-left';
+    leftArrow.innerHTML = `
+        <svg viewBox="0 0 64 140" fill="none" stroke="currentColor">
+            <path d="M48 20 L16 70 L48 120" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    `;
+
+    // Create Right Edge Arrow
+    const rightArrow = document.createElement('div');
+    rightArrow.id = 'edge-arrow-right';
+    rightArrow.className = 'edge-arrow edge-arrow-right';
+    rightArrow.innerHTML = `
+        <svg viewBox="0 0 64 140" fill="none" stroke="currentColor">
+            <path d="M16 20 L48 70 L16 120" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    `;
+
+    document.body.appendChild(leftArrow);
+    document.body.appendChild(rightArrow);
+}
+
 function updateSlide() {
     const slides = document.querySelectorAll('.slide');
     if (!slides.length) return;
 
-    // Cinematic horizontal track translation (Nothing Phone trailer sweep)
     if (carouselTrack) {
         const offsetPercent = (currentSlide - 1) * 100;
         carouselTrack.style.transform = `translate3d(-${offsetPercent}%, 0, 0)`;
@@ -89,13 +115,11 @@ function updateSlide() {
         }
     });
 
-    // Update Counter
     const curElem = document.getElementById('current-slide-num');
     if (curElem) {
         curElem.innerText = String(currentSlide).padStart(2, '0');
     }
 
-    // Update Speaker Cue Drawer
     const activeSlide = document.querySelector(`.slide[data-slide="${currentSlide}"]`);
     const speakerName = activeSlide ? activeSlide.getAttribute('data-speaker') || "PRESENTATION" : "PRESENTATION";
     
@@ -106,6 +130,9 @@ function updateSlide() {
         const scripts = window.speakerScripts || {};
         cueContent.innerText = scripts[currentSlide] || "ไม่มีสคริปต์ในสไลด์นี้";
     }
+
+    // Refresh arrows immediately on slide change
+    updateEdgeArrows(mouse.x);
 }
 
 function nextSlide() {
@@ -144,12 +171,49 @@ function toggleFullscreen() {
 }
 
 // ==============================================================================
-// 2. CLICK ANYWHERE NAVIGATION (คลิกฝั่งซ้าย = ย้อนกลับ, คลิกฝั่งขวา = เดินหน้า)
+// 2. DYNAMIC AMBIENT EDGE ARROWS & CLICK NAVIGATION
 // ==============================================================================
+
+function updateEdgeArrows(mouseX) {
+    const leftArrow = document.getElementById('edge-arrow-left');
+    const rightArrow = document.getElementById('edge-arrow-right');
+    if (!leftArrow || !rightArrow) return;
+
+    if (mouseX < 0) {
+        leftArrow.style.opacity = '0';
+        rightArrow.style.opacity = '0';
+        return;
+    }
+
+    const width = window.innerWidth;
+    const activationZone = width * 0.38; // 38% from edge starts fading in
+
+    // Left Arrow: increases intensity as cursor gets closer to the left edge
+    const canGoPrev = currentSlide > 1 || window.prevSectionUrl;
+    if (canGoPrev && mouseX < activationZone) {
+        const ratio = 1 - (mouseX / activationZone);
+        const opacity = Math.min(Math.pow(ratio, 1.2), 0.95);
+        leftArrow.style.opacity = opacity;
+        leftArrow.style.transform = `translateY(-50%) translateX(${-12 * (1 - ratio)}px)`;
+    } else {
+        leftArrow.style.opacity = '0';
+    }
+
+    // Right Arrow: increases intensity as cursor gets closer to the right edge
+    const canGoNext = currentSlide < totalSlides || window.nextSectionUrl;
+    const distFromRight = width - mouseX;
+    if (canGoNext && distFromRight < activationZone) {
+        const ratio = 1 - (distFromRight / activationZone);
+        const opacity = Math.min(Math.pow(ratio, 1.2), 0.95);
+        rightArrow.style.opacity = opacity;
+        rightArrow.style.transform = `translateY(-50%) translateX(${12 * (1 - ratio)}px)`;
+    } else {
+        rightArrow.style.opacity = '0';
+    }
+}
 
 function initGlobalClickNavigation() {
     window.addEventListener('click', (e) => {
-        // Ignore clicks on buttons, links, inputs, cues drawer, or if text is selected
         if (e.target.closest('button, a, input, select, textarea, #cues-drawer, [data-no-nav]')) {
             return;
         }
@@ -162,8 +226,8 @@ function initGlobalClickNavigation() {
         const screenWidth = window.innerWidth;
         const clickX = e.clientX;
 
-        // Left 42% = Previous Slide | Right 58% = Next Slide
-        if (clickX < screenWidth * 0.42) {
+        // Click Left 44% = Previous, Click Right 56% = Next
+        if (clickX < screenWidth * 0.44) {
             prevSlide();
         } else {
             nextSlide();
@@ -297,12 +361,14 @@ function initDotMatrixCanvas() {
         mouse.targetX = e.clientX;
         mouse.targetY = e.clientY;
         mouse.active = true;
+        updateEdgeArrows(e.clientX);
     });
 
     window.addEventListener('mouseleave', () => {
         mouse.targetX = -9999;
         mouse.targetY = -9999;
         mouse.active = false;
+        updateEdgeArrows(-9999);
     });
 
     function animate() {
@@ -362,7 +428,7 @@ function updatePupil() {
     const dy = (mouse.targetY !== -9999 ? mouse.targetY : centerY) - centerY;
     const dist = Math.sqrt(dx * dx + dy * dy);
 
-    // Subtle micro-pupil movement: strictly max 5.5px
+    // Micro movement limit: strictly max 5.5px
     const maxRadius = 5.5;
     const angle = Math.atan2(dy, dx);
 
