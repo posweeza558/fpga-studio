@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FPGA STUDIO — 03. SPEAKER 3 (LIVE DEMO)</title>
+    <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Prompt:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/nothing.css">
+</head>
+<body class="h-screen w-screen flex flex-col justify-between p-6 dot-matrix-bg relative">
+
+    <!-- TOP GLYPH BAR / STATUS HEADER -->
+    <header class="w-full flex items-center justify-between pb-4 border-b border-white/10 z-20">
+        <div class="flex items-center space-x-3">
+            <span class="glyph-red-dot"></span>
+            <span class="mono text-xs text-white/70 font-semibold tracking-widest uppercase">NOTHING (OS) // KEYNOTE SLIDES</span>
+            <span class="text-white/30 text-xs">|</span>
+            <span class="mono text-xs text-white/50">FPGA STUDIO v4.3</span>
+        </div>
+
+        <!-- Speaker Badge -->
+        <div id="speaker-badge" class="px-4 py-1.5 rounded-full border border-white/20 bg-white/5 text-xs font-medium mono tracking-wider flex items-center space-x-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+            <span id="speaker-text">SPEAKER 03 // LIVE DEMO</span>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <div class="mono text-sm font-bold tracking-widest text-white/90">
+                <span id="current-slide-num">01</span> <span class="text-white/30">/</span> <span id="total-slide-num">01</span>
+            </div>
+            <button onclick="toggleFullscreen()" class="p-2 rounded-full border border-white/10 hover:border-white/40 hover:bg-white/10 transition text-xs mono text-white/70" title="Full Screen (F)">
+                ⛶
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN SLIDE CONTAINER -->
+    <main class="flex-1 w-full flex items-center justify-center py-4 relative z-10 overflow-hidden">
+
+        <!-- ======================================================== -->
+        <!-- SLIDE: LIVE DEMO & VERIFICATION -->
+        <!-- ======================================================== -->
+        <section class="slide active flex-col justify-center max-w-6xl w-full h-full" data-slide="1" data-speaker="SPEAKER 03 // LIVE DEMO">
+            <div class="flex items-center space-x-2 text-xs mono text-red-500 mb-2">
+                <span class="glyph-red-dot"></span>
+                <span>LIVE DEMONSTRATION</span>
+            </div>
+            <h2 class="text-4xl font-bold ndot uppercase tracking-tight text-white mb-6">
+                สาธิตการรันจริง: คำนวณคณิตศาสตร์ & ฮาร์ดแวร์ I/O
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Case 1 -->
+                <div class="bento-card p-5 border-red-500/30">
+                    <div class="mono text-xs text-red-400 mb-2 font-bold">[ DEMO 01 ]</div>
+                    <h3 class="text-lg font-bold text-white mb-2">คำนวณ nCk ออก 7-Segment</h3>
+                    <p class="text-xs text-white/70 mb-4 leading-relaxed">
+                        รันโค้ดภาษา C คำนวณสูตรคอมบิเนชัน <span class="mono font-bold text-white">10 C 3 = 120</span> ผ่านตัวคูณฮาร์ดแวร์ วิ่งผ่าน 5-Stage Pipeline แสดงผลออกหลอด 7-Segment เป็นเลขฐานสิบสมบูรณ์แบบ
+                    </p>
+                    <div class="bg-black/60 p-3 rounded-xl border border-white/10 mono text-xs text-center text-red-400 font-bold tracking-widest">
+                        RESULT: 0 0 0 0 0 1 2 0
+                    </div>
+                </div>
+
+                <!-- Case 2 -->
+                <div class="bento-card p-5">
+                    <div class="mono text-xs text-white/40 mb-2 font-bold">[ DEMO 02 ]</div>
+                    <h3 class="text-lg font-bold text-white mb-2">Interactive Switches & UART</h3>
+                    <p class="text-xs text-white/70 mb-4 leading-relaxed">
+                        คลิกสับสวิตช์บนจอ ไฟ LED ติดตามบิตจริงทันที และรันคำสั่ง <span class="mono text-white">printf("Hello World\n")</span> ตัวอักษรวิ่งออกหน้าต่างคอนโซลแบบสดๆ
+                    </p>
+                    <div class="bg-black/60 p-3 rounded-xl border border-white/10 mono text-xs text-emerald-400">
+                        > [UART Ready] 115200 baud<br>
+                        > Hello World from MIPS CPU!
+                    </div>
+                </div>
+
+                <!-- Case 3 -->
+                <div class="bento-card p-5">
+                    <div class="mono text-xs text-white/40 mb-2 font-bold">[ DEMO 03 ]</div>
+                    <h3 class="text-lg font-bold text-white mb-2">1-Sec Live Board Flashing</h3>
+                    <p class="text-xs text-white/70 mb-4 leading-relaxed">
+                        โชว์การกดปุ่ม <span class="mono text-white font-bold">Upload to Board</span> ส่งไบนารีผ่านสาย Micro-USB เข้า Block RAM บนบอร์ด Nexys A7 จริง โดยไม่ต้องเสียเวลารัน Vivado 15 นาที
+                    </p>
+                    <div class="bg-black/60 p-3 rounded-xl border border-white/10 mono text-xs text-center text-white/80">
+                        ⚡ UPLOAD COMPLETE (1.2s)
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- SPEAKER CUES DRAWER -->
+    <div id="cues-drawer" class="fixed bottom-20 left-1/2 -translate-x-1/2 max-w-4xl w-[92%] bento-card p-5 border-white/30 shadow-2xl z-40 hidden transition-all">
+        <div class="flex justify-between items-center mb-2 border-b border-white/10 pb-2">
+            <div class="flex items-center space-x-2">
+                <span class="glyph-red-dot"></span>
+                <span class="mono text-xs text-red-400 font-bold uppercase" id="cue-title">SPEAKER 03 CUE SHEET</span>
+            </div>
+            <button onclick="toggleCues()" class="text-xs mono text-white/50 hover:text-white">[ ปิด X ]</button>
+        </div>
+        <p id="cue-content" class="text-xs md:text-sm text-white/90 leading-relaxed whitespace-pre-line font-normal"></p>
+    </div>
+
+    <!-- BOTTOM CONTROL BAR -->
+    <footer class="w-full flex items-center justify-between pt-4 border-t border-white/10 z-20">
+        <div class="mono text-[11px] text-white/40 hidden md:flex items-center space-x-3">
+            <span>[ ← ] PREV</span>
+            <span>[ → ] NEXT</span>
+            <span>[ SPACE ] ADVANCE</span>
+            <span>[ F ] FULLSCREEN</span>
+            <span>[ C ] CUES</span>
+        </div>
+
+        <button onclick="toggleCues()" class="px-4 py-2 rounded-full border border-red-500/40 bg-red-950/30 hover:bg-red-900/40 text-red-300 text-xs mono tracking-wider transition flex items-center space-x-2">
+            <span>🎙️</span>
+            <span>SPEAKER CUES (สคริปต์พูด)</span>
+        </button>
+
+        <div class="flex items-center space-x-3">
+            <button onclick="prevSlide()" class="px-5 py-2 rounded-full border border-white/20 bg-white/5 hover:bg-white/15 text-white mono text-xs tracking-wider transition">
+                ← PREV
+            </button>
+            <button onclick="nextSlide()" class="px-5 py-2 rounded-full bg-white text-black hover:bg-neutral-200 mono text-xs font-bold tracking-wider transition shadow-lg">
+                NEXT →
+            </button>
+        </div>
+    </footer>
+
+    <!-- SPEAKER SCRIPTS & NAVIGATION -->
+    <script>
+        window.prevSectionUrl = '02_speaker2_pipeline.html';
+        window.nextSectionUrl = '04_speaker4_superpowers.html';
+        window.speakerScripts = {
+            1: "【บทพูดคนที่ 3: Live Demo】\nนี่คือการรันจริงครับ เราคำนวณ 10 C 3 = 120 ในภาษา C พอกดปุ่ม Run จะแตกเป็นตาราง Opcode 32 บิต ท่อส่งคำสั่ง 5-Stage ทำงานทีละไซเคิล และผลลัพธ์เลข 120 ติดสว่างบน 7-Segment แบบ Real-time! นอกจากนี้เรายังสามารถกดปุ่ม Upload to Board ยิงโค้ดใหม่ลงไปรันบนชิป FPGA บอร์ด Nexys A7 จริงได้ใน 1 วินาที โดยไม่ต้องเปิด Vivado ให้หนักเครื่องเลยครับ"
+        };
+    </script>
+    <script src="../js/presentation.js"></script>
+</body>
+</html>

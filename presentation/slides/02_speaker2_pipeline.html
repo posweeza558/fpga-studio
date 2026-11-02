@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FPGA STUDIO — 02. SPEAKER 2 (PIPELINE & MMIO)</title>
+    <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Prompt:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/nothing.css">
+</head>
+<body class="h-screen w-screen flex flex-col justify-between p-6 dot-matrix-bg relative">
+
+    <!-- TOP GLYPH BAR / STATUS HEADER -->
+    <header class="w-full flex items-center justify-between pb-4 border-b border-white/10 z-20">
+        <div class="flex items-center space-x-3">
+            <span class="glyph-red-dot"></span>
+            <span class="mono text-xs text-white/70 font-semibold tracking-widest uppercase">NOTHING (OS) // KEYNOTE SLIDES</span>
+            <span class="text-white/30 text-xs">|</span>
+            <span class="mono text-xs text-white/50">FPGA STUDIO v4.3</span>
+        </div>
+
+        <!-- Speaker Badge -->
+        <div id="speaker-badge" class="px-4 py-1.5 rounded-full border border-white/20 bg-white/5 text-xs font-medium mono tracking-wider flex items-center space-x-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+            <span id="speaker-text">SPEAKER 02 // SOFTWARE TO HARDWARE</span>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <div class="mono text-sm font-bold tracking-widest text-white/90">
+                <span id="current-slide-num">01</span> <span class="text-white/30">/</span> <span id="total-slide-num">02</span>
+            </div>
+            <button onclick="toggleFullscreen()" class="p-2 rounded-full border border-white/10 hover:border-white/40 hover:bg-white/10 transition text-xs mono text-white/70" title="Full Screen (F)">
+                ⛶
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN SLIDE CONTAINER -->
+    <main class="flex-1 w-full flex items-center justify-center py-4 relative z-10 overflow-hidden">
+
+        <!-- ======================================================== -->
+        <!-- SLIDE 1: SOFTWARE TO HARDWARE PIPELINE -->
+        <!-- ======================================================== -->
+        <section class="slide active flex-col justify-center max-w-6xl w-full h-full" data-slide="1" data-speaker="SPEAKER 02 // SOFTWARE TO HARDWARE">
+            <div class="flex items-center space-x-2 text-xs mono text-white/40 mb-2">
+                <span>PIPELINE DEEP DIVE</span>
+            </div>
+            <h2 class="text-4xl font-bold ndot uppercase tracking-tight text-white mb-6">
+                เส้นทางภาษา C สู่ท่อส่งคำสั่งในชิป FPGA
+            </h2>
+
+            <!-- Visual Flowchart -->
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mb-6">
+                <div class="bento-card p-4 text-center">
+                    <span class="mono text-xs text-red-400 block mb-1">01 • SOURCE</span>
+                    <h4 class="font-bold text-sm text-white mb-1">C / C++ Code</h4>
+                    <p class="text-[11px] text-white/50 mono">main.c (nCk / Fibo)</p>
+                </div>
+                <div class="bento-card p-4 text-center">
+                    <span class="mono text-xs text-white/40 block mb-1">02 • COMPILE</span>
+                    <h4 class="font-bold text-sm text-white mb-1">Real MIPS GCC</h4>
+                    <p class="text-[11px] text-white/50 mono">-march=mips32 -EB</p>
+                </div>
+                <div class="bento-card p-4 text-center">
+                    <span class="mono text-xs text-white/40 block mb-1">03 • LINKING</span>
+                    <h4 class="font-bold text-sm text-white mb-1">Linker link.ld</h4>
+                    <p class="text-[11px] text-white/50 mono">SP = 0x80010000</p>
+                </div>
+                <div class="bento-card p-4 text-center">
+                    <span class="mono text-xs text-white/40 block mb-1">04 • MEMORY</span>
+                    <h4 class="font-bold text-sm text-white mb-1">BRAM Split</h4>
+                    <p class="text-[11px] text-white/50 mono">.text(0x0) .data(0x80M)</p>
+                </div>
+                <div class="bento-card p-4 text-center border-red-500/40 bg-red-950/20">
+                    <span class="mono text-xs text-red-400 block mb-1">05 • HARDWARE</span>
+                    <h4 class="font-bold text-sm text-white mb-1">5-Stage Pipeline</h4>
+                    <p class="text-[11px] text-red-300 mono">IF-ID-EX-MEM-WB</p>
+                </div>
+            </div>
+
+            <!-- Deep detail 2 columns -->
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bento-card p-4">
+                    <div class="mono text-xs text-white/40 mb-1">BOOTSTRAPPING & STACK POINTER</div>
+                    <p class="text-xs text-white/80 leading-relaxed">
+                        มีโค้ด <span class="mono text-white font-bold">start.S</span> วางอยู่ที่ Vector <span class="mono text-red-400">0x00000000</span> ทำหน้าที่ตั้งค่า Stack Pointer ไปที่จุดสูงสุดของ RAM (<span class="mono">0x80010000</span>) แล้วกระโดดเรียกฟังก์ชัน <span class="mono">main()</span> ของภาษา C ทันที
+                    </p>
+                </div>
+                <div class="bento-card p-4">
+                    <div class="mono text-xs text-white/40 mb-1">DATA RAM INITIALIZATION</div>
+                    <p class="text-xs text-white/80 leading-relaxed">
+                        ใช้ <span class="mono text-white font-bold">objcopy</span> สกัดเฉพาะ Section <span class="mono text-red-400">.data</span> (ตัวแปร Global / Static / Constants) แปลงเป็นเวิร์ด 32 บิต บรรจุใส่ BRAM ที่ <span class="mono">0x80000000</span> อัตโนมัติ ทำให้รันโค้ดภาษา C ได้สมบูรณ์ 100%
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- SLIDE 2: MMIO ARCHITECTURE -->
+        <!-- ======================================================== -->
+        <section class="slide flex-col justify-center max-w-6xl w-full h-full" data-slide="2" data-speaker="SPEAKER 02 // MMIO ARCHITECTURE">
+            <div class="flex items-center space-x-2 text-xs mono text-white/40 mb-2">
+                <span>HARDWARE BUS INTERFACE</span>
+            </div>
+            <h2 class="text-4xl font-bold ndot uppercase tracking-tight text-white mb-4">
+                Memory-Mapped I/O // ที่อยู่สั่งงานฮาร์ดแวร์จริง
+            </h2>
+            <p class="text-sm text-white/60 mb-6">
+                CPU คุยกับโลกภายนอกผ่านตำแหน่ง Address Space ตามมาตรฐานของบอร์ด Digilent Nexys A7:
+            </p>
+
+            <div class="grid grid-cols-3 gap-4">
+                <div class="bento-card p-4">
+                    <span class="mono text-xs text-red-400 font-bold block mb-1">0xF0000000 • WRITE</span>
+                    <h4 class="font-bold text-sm text-white mb-1">16 User LEDs</h4>
+                    <p class="text-xs text-white/60">ควบคุมไฟ LED 16 ดวงบนบอร์ด (`LED = 0xFF;`)</p>
+                </div>
+                <div class="bento-card p-4">
+                    <span class="mono text-xs text-emerald-400 font-bold block mb-1">0xF0000004 • READ</span>
+                    <h4 class="font-bold text-sm text-white mb-1">16 Slide Switches</h4>
+                    <p class="text-xs text-white/60">อ่านสถานะสวิตช์ 16 ตัว (`val = SWITCH;`)</p>
+                </div>
+                <div class="bento-card p-4 border-red-500/30">
+                    <span class="mono text-xs text-red-400 font-bold block mb-1">0xF0000008 • WRITE</span>
+                    <h4 class="font-bold text-sm text-white mb-1">8-Digit 7-Segment</h4>
+                    <p class="text-xs text-white/60">ส่งเลขฐานสิบ/Hex ไปแสดงผลบนหน้าปัด 8 หลัก</p>
+                </div>
+                <div class="bento-card p-4">
+                    <span class="mono text-xs text-emerald-400 font-bold block mb-1">0xF000000C • READ</span>
+                    <h4 class="font-bold text-sm text-white mb-1">5 Pushbuttons</h4>
+                    <p class="text-xs text-white/60">อ่านปุ่มกด 5 ทิศทาง (BTNC, BTNU, BTNL...)</p>
+                </div>
+                <div class="bento-card p-4">
+                    <span class="mono text-xs text-amber-400 font-bold block mb-1">0xF0000010 • READ/WRITE</span>
+                    <h4 class="font-bold text-sm text-white mb-1">UART Console TX/RX</h4>
+                    <p class="text-xs text-white/60">พอร์ตอนุกรม 115200 8N1 สำหรับทำ `printf()`</p>
+                </div>
+                <div class="bento-card p-4">
+                    <span class="mono text-xs text-blue-400 font-bold block mb-1">0xFF000000 • VRAM</span>
+                    <h4 class="font-bold text-sm text-white mb-1">VGA Framebuffer</h4>
+                    <p class="text-xs text-white/60">หน้าจอภาพความละเอียด 640x480 พิกเซล</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- SPEAKER CUES DRAWER -->
+    <div id="cues-drawer" class="fixed bottom-20 left-1/2 -translate-x-1/2 max-w-4xl w-[92%] bento-card p-5 border-white/30 shadow-2xl z-40 hidden transition-all">
+        <div class="flex justify-between items-center mb-2 border-b border-white/10 pb-2">
+            <div class="flex items-center space-x-2">
+                <span class="glyph-red-dot"></span>
+                <span class="mono text-xs text-red-400 font-bold uppercase" id="cue-title">SPEAKER 02 CUE SHEET</span>
+            </div>
+            <button onclick="toggleCues()" class="text-xs mono text-white/50 hover:text-white">[ ปิด X ]</button>
+        </div>
+        <p id="cue-content" class="text-xs md:text-sm text-white/90 leading-relaxed whitespace-pre-line font-normal"></p>
+    </div>
+
+    <!-- BOTTOM CONTROL BAR -->
+    <footer class="w-full flex items-center justify-between pt-4 border-t border-white/10 z-20">
+        <div class="mono text-[11px] text-white/40 hidden md:flex items-center space-x-3">
+            <span>[ ← ] PREV</span>
+            <span>[ → ] NEXT</span>
+            <span>[ SPACE ] ADVANCE</span>
+            <span>[ F ] FULLSCREEN</span>
+            <span>[ C ] CUES</span>
+        </div>
+
+        <button onclick="toggleCues()" class="px-4 py-2 rounded-full border border-red-500/40 bg-red-950/30 hover:bg-red-900/40 text-red-300 text-xs mono tracking-wider transition flex items-center space-x-2">
+            <span>🎙️</span>
+            <span>SPEAKER CUES (สคริปต์พูด)</span>
+        </button>
+
+        <div class="flex items-center space-x-3">
+            <button onclick="prevSlide()" class="px-5 py-2 rounded-full border border-white/20 bg-white/5 hover:bg-white/15 text-white mono text-xs tracking-wider transition">
+                ← PREV
+            </button>
+            <button onclick="nextSlide()" class="px-5 py-2 rounded-full bg-white text-black hover:bg-neutral-200 mono text-xs font-bold tracking-wider transition shadow-lg">
+                NEXT →
+            </button>
+        </div>
+    </footer>
+
+    <!-- SPEAKER SCRIPTS & NAVIGATION -->
+    <script>
+        window.prevSectionUrl = '01_speaker1_challenge.html';
+        window.nextSectionUrl = '03_speaker3_demo.html';
+        window.speakerScripts = {
+            1: "【บทพูดคนที่ 2: ท่อส่งภาษา C สู่ FPGA】\nมาดูกระบวนการทำงานข้างในกันครับ เมื่อเราเขียนภาษา C ตัวโปรแกรมจะเรียก MIPS GCC 12.2 คอมไพล์และลิงก์ด้วย link.ld โดยมี start.S คอยเซ็ต Stack Pointer ไปที่ 0x80010000 และดึงส่วน .data นำไปโหลดใส่ Data RAM อัตโนมัติ ทำให้รันโค้ดภาษา C ที่มีตัวแปร Static/Global ได้สมบูรณ์ 100% ครับ",
+            2: "【บทพูดคนที่ 2: Memory-Mapped I/O】\nCPU ติดต่อกับฮาร์ดแวร์ผ่านตำแหน่ง Address ของบอร์ด Nexys A7: อยากสั่งไฟ LED เขียนลง 0xF0000000, อยากอ่านสวิตช์ อ่านจาก 0xF0000004, อยากส่งตัวเลขออก 7-Segment ส่งไปที่ 0xF0000008, และอยากทำ printf พ่นตัวอักษร วนลูปส่งค่า ASCII เข้า 0xF0000010 (UART TX) ครับ"
+        };
+    </script>
+    <script src="../js/presentation.js"></script>
+</body>
+</html>

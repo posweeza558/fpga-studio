@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FPGA STUDIO — 01. SPEAKER 1 (VISION & CHALLENGE)</title>
+    <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Prompt:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/nothing.css">
+</head>
+<body class="h-screen w-screen flex flex-col justify-between p-6 dot-matrix-bg relative">
+
+    <!-- TOP GLYPH BAR / STATUS HEADER -->
+    <header class="w-full flex items-center justify-between pb-4 border-b border-white/10 z-20">
+        <div class="flex items-center space-x-3">
+            <span class="glyph-red-dot"></span>
+            <span class="mono text-xs text-white/70 font-semibold tracking-widest uppercase">NOTHING (OS) // KEYNOTE SLIDES</span>
+            <span class="text-white/30 text-xs">|</span>
+            <span class="mono text-xs text-white/50">FPGA STUDIO v4.3</span>
+        </div>
+
+        <!-- Speaker Badge -->
+        <div id="speaker-badge" class="px-4 py-1.5 rounded-full border border-white/20 bg-white/5 text-xs font-medium mono tracking-wider flex items-center space-x-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+            <span id="speaker-text">SPEAKER 01 // THE CHALLENGE</span>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <div class="mono text-sm font-bold tracking-widest text-white/90">
+                <span id="current-slide-num">01</span> <span class="text-white/30">/</span> <span id="total-slide-num">02</span>
+            </div>
+            <button onclick="toggleFullscreen()" class="p-2 rounded-full border border-white/10 hover:border-white/40 hover:bg-white/10 transition text-xs mono text-white/70" title="Full Screen (F)">
+                ⛶
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN SLIDE CONTAINER -->
+    <main class="flex-1 w-full flex items-center justify-center py-4 relative z-10 overflow-hidden">
+
+        <!-- ======================================================== -->
+        <!-- SLIDE 1: THE CHALLENGE -->
+        <!-- ======================================================== -->
+        <section class="slide active flex-col justify-center max-w-6xl w-full h-full" data-slide="1" data-speaker="SPEAKER 01 // THE CHALLENGE">
+            <div class="flex items-center space-x-2 text-xs mono text-red-500 mb-2">
+                <span class="glyph-red-dot"></span>
+                <span>ORIGIN // โพสต์ที่จุดประกายโปรเจกต์นี้</span>
+            </div>
+            <h2 class="text-4xl font-bold ndot uppercase tracking-tight text-white mb-6">
+                อาจารย์ท้า... ใครทำได้จะให้เกรด A
+            </h2>
+
+            <!-- Grid of 2 Professor Posts -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-[420px]">
+                <!-- Post 1: Sep 13 -->
+                <div class="bento-card p-5 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-3 border-b border-white/10 pb-2">
+                            <span class="mono text-xs text-white/40">POST 01 • 13 ก.ย.</span>
+                            <span class="mono text-xs px-2 py-0.5 rounded bg-white/10 text-white/80">3 ทางเลือก</span>
+                        </div>
+                        <img src="../assets/prof_post_sep13.png" alt="อาจารย์โพสต์ 13 ก.ย." class="w-full h-44 object-contain rounded-xl bg-black/40 border border-white/10 mb-3" onerror="this.src='prof_post_sep13.png'">
+                        <ul class="text-xs space-y-1.5 text-white/70">
+                            <li><span class="text-red-400 font-bold">1.</span> ทำวิดีโอสอนคูณ / หาร / ทศนิยม</li>
+                            <li><span class="text-red-400 font-bold">2.</span> โปรแกรมคำนวณ Factorial + Python Simulator</li>
+                            <li><span class="text-red-400 font-bold">3.</span> ทำฮาร์ดแวร์ FPGA วงจรคูณหาร ออก 7-Segment เลขฐานสิบ</li>
+                        </ul>
+                    </div>
+                    <div class="mono text-xs text-emerald-400 bg-emerald-950/20 p-2 rounded-xl border border-emerald-500/20 text-center">
+                        ✔ พวกเราเลือกทำทั้ง 3 ข้อรวมเป็นระบบเดียว!
+                    </div>
+                </div>
+
+                <!-- Post 2: Sep 25 -->
+                <div class="bento-card p-5 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-3 border-b border-white/10 pb-2">
+                            <span class="mono text-xs text-white/40">POST 02 • 25 ก.ย.</span>
+                            <span class="mono text-xs px-2 py-0.5 rounded bg-red-900/40 text-red-300 font-bold">THE ULTIMATE GOAL</span>
+                        </div>
+                        <img src="../assets/prof_post_sep25.png" alt="อาจารย์โพสต์ 25 ก.ย." class="w-full h-44 object-contain rounded-xl bg-black/40 border border-white/10 mb-3" onerror="this.src='prof_post_sep25.png'">
+                        <blockquote class="text-xs text-white/80 italic border-l-2 border-red-500 pl-3 py-1">
+                            “หา Compiler แปลง high level (อย่างภาษา C) เป็น MIPS opcode หรือ micro Python ที่รันบน MIPS CPU... (ไว้ให้รุ่นน้องทำให้อีกสามรุ่นจะได้หรือเปล่าไม่รู้ ใครทำได้อาจารย์จะให้ A)”
+                        </blockquote>
+                    </div>
+                    <div class="mono text-xs text-red-400 bg-red-950/20 p-2 rounded-xl border border-red-500/20 text-center font-semibold">
+                        ⚡ วันนี้ไม่ต้องรอถึง 3 รุ่นครับ พวกเราทำเสร็จแล้ว!
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- SLIDE 2: THE ANSWER -->
+        <!-- ======================================================== -->
+        <section class="slide flex-col justify-center max-w-6xl w-full h-full" data-slide="2" data-speaker="SPEAKER 01 // THE ANSWER">
+            <div class="flex items-center space-x-2 text-xs mono text-white/40 mb-2">
+                <span>OUR PHILOSOPHY</span>
+            </div>
+            <h2 class="text-4xl font-bold ndot uppercase tracking-tight text-white mb-2">
+                เราไม่ได้แค่หาคอมไพเลอร์... แต่เราสร้าง IDE ทั้งระบบ!
+            </h2>
+            <p class="text-sm text-white/60 mb-6">
+                ถ้าแค่หา Compiler มาตัวเดียว มันยังใช้งานยากและไม่เห็นภาพ เราเลยสร้างสภาพแวดล้อมที่ครบวงจร
+            </p>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bento-card p-5">
+                    <div class="text-2xl mb-3 text-red-500">⚙️</div>
+                    <h3 class="mono text-sm font-bold text-white mb-1.5">REAL GCC BUNDLED</h3>
+                    <p class="text-xs text-white/60 leading-relaxed">
+                        มี Real MIPS GCC 12.2 และ RISC-V GCC 15.2 ในตัว ไม่ใช่ตัวแปลงเทียม รองรับ C / C++ / Python / ASM
+                    </p>
+                </div>
+                <div class="bento-card p-5">
+                    <div class="text-2xl mb-3 text-white">🖥️</div>
+                    <h3 class="mono text-sm font-bold text-white mb-1.5">VIRTUAL NEXYS A7</h3>
+                    <p class="text-xs text-white/60 leading-relaxed">
+                        จำลองบอร์ดจริง 16 Switches, 16 LEDs, 8-Digit 7-Seg, UART Console, และหน้าจอ VGA 640x480
+                    </p>
+                </div>
+                <div class="bento-card p-5">
+                    <div class="text-2xl mb-3 text-red-500">🔌</div>
+                    <h3 class="mono text-sm font-bold text-white mb-1.5">CUSTOM CPU IMPORT</h3>
+                    <p class="text-xs text-white/60 leading-relaxed">
+                        สามารถนำเข้าไฟล์ Verilog/VHDL ของใครก็ได้ มีตัวสแกนพอร์ตอัตโนมัติแล้วต่อเข้าบอร์ดเสมือนได้ทันที
+                    </p>
+                </div>
+                <div class="bento-card p-5">
+                    <div class="text-2xl mb-3 text-white">⚡</div>
+                    <h3 class="mono text-sm font-bold text-white mb-1.5">ZERO-VIVADO FLOW</h3>
+                    <p class="text-xs text-white/60 leading-relaxed">
+                        สังเคราะห์ Bitstream ในเครื่องผ่าน WSL (Yosys) และแฟลชลง FPGA จริงได้ใน 1 วินาที ไม่ต้องลงโปรแกรม 80GB
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- SPEAKER CUES DRAWER -->
+    <div id="cues-drawer" class="fixed bottom-20 left-1/2 -translate-x-1/2 max-w-4xl w-[92%] bento-card p-5 border-white/30 shadow-2xl z-40 hidden transition-all">
+        <div class="flex justify-between items-center mb-2 border-b border-white/10 pb-2">
+            <div class="flex items-center space-x-2">
+                <span class="glyph-red-dot"></span>
+                <span class="mono text-xs text-red-400 font-bold uppercase" id="cue-title">SPEAKER 01 CUE SHEET</span>
+            </div>
+            <button onclick="toggleCues()" class="text-xs mono text-white/50 hover:text-white">[ ปิด X ]</button>
+        </div>
+        <p id="cue-content" class="text-xs md:text-sm text-white/90 leading-relaxed whitespace-pre-line font-normal"></p>
+    </div>
+
+    <!-- BOTTOM CONTROL BAR -->
+    <footer class="w-full flex items-center justify-between pt-4 border-t border-white/10 z-20">
+        <div class="mono text-[11px] text-white/40 hidden md:flex items-center space-x-3">
+            <span>[ ← ] PREV</span>
+            <span>[ → ] NEXT</span>
+            <span>[ SPACE ] ADVANCE</span>
+            <span>[ F ] FULLSCREEN</span>
+            <span>[ C ] CUES</span>
+        </div>
+
+        <button onclick="toggleCues()" class="px-4 py-2 rounded-full border border-red-500/40 bg-red-950/30 hover:bg-red-900/40 text-red-300 text-xs mono tracking-wider transition flex items-center space-x-2">
+            <span>🎙️</span>
+            <span>SPEAKER CUES (สคริปต์พูด)</span>
+        </button>
+
+        <div class="flex items-center space-x-3">
+            <button onclick="prevSlide()" class="px-5 py-2 rounded-full border border-white/20 bg-white/5 hover:bg-white/15 text-white mono text-xs tracking-wider transition">
+                ← PREV
+            </button>
+            <button onclick="nextSlide()" class="px-5 py-2 rounded-full bg-white text-black hover:bg-neutral-200 mono text-xs font-bold tracking-wider transition shadow-lg">
+                NEXT →
+            </button>
+        </div>
+    </footer>
+
+    <!-- SPEAKER SCRIPTS & NAVIGATION -->
+    <script>
+        window.prevSectionUrl = '00_cover.html';
+        window.nextSectionUrl = '02_speaker2_pipeline.html';
+        window.speakerScripts = {
+            1: "【บทพูดคนที่ 1: ขยี้โพสต์อาจารย์】\nจุดเริ่มต้นมาจากโพสต์ของอาจารย์ครับ ที่อาจารย์บอกว่า 'หา Compiler แปลงภาษา C เป็น MIPS opcode หรือ micro Python ที่รันบน MIPS CPU... ไม่รู้รุ่นน้องอีก 3 รุ่นจะทำได้ไหม ใครทำได้อาจารย์จะให้ A!'\nพวกเราเห็นโจทย์นี้แล้วรู้สึกว่าท้าทายมาก และพวกเราไม่ได้แค่ไปหา Compiler มาตัวเดียว แต่พวกเราสร้าง IDE ทั้งตัวขึ้นมาตอบโจทย์อาจารย์ครบทุกข้อเลยครับ!",
+            2: "【บทพูดคนที่ 1: ตอบโจทย์อาจารย์】\nใน FPGA Studio เราใส่ Real GCC Toolchain มาให้เสร็จสรรพ มี Virtual Board ที่จำลอง 7-Segment, สวิตช์, หลอดไฟ, และจอภาพ VGA และที่เด็ดที่สุดคือ เป็นระบบเปิดที่ใครมี CPU หรือ Compiler ของตัวเอง ก็สามารถกด Import เข้ามาเทสต์ในโปรแกรมนี้ได้เลยครับ"
+        };
+    </script>
+    <script src="../js/presentation.js"></script>
+</body>
+</html>

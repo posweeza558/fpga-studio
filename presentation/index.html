@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FPGA STUDIO — PRESENTATION SUITE (NOTHING EDITION)</title>
+    <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Prompt:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/nothing.css">
+    <script>
+        // Auto-redirect to full presentation after 3 seconds or on keypress, unless cancelled
+        let timer = setTimeout(() => {
+            window.location.href = 'presentation_all.html';
+        }, 1500);
+    </script>
+</head>
+<body class="h-screen w-screen flex flex-col justify-between p-8 dot-matrix-bg">
+
+    <!-- Top Bar -->
+    <header class="w-full flex items-center justify-between pb-4 border-b border-white/10">
+        <div class="flex items-center space-x-3">
+            <span class="glyph-red-dot"></span>
+            <span class="mono text-xs text-white/70 font-semibold tracking-widest uppercase">NOTHING (OS) // SUITE LAUNCHER</span>
+            <span class="text-white/30 text-xs">|</span>
+            <span class="mono text-xs text-white/50">FPGA STUDIO v4.3</span>
+        </div>
+        <div class="mono text-xs text-white/40">
+            AUTO-LAUNCHING IN 1.5S...
+        </div>
+    </header>
+
+    <!-- Main Selection Cards -->
+    <main class="flex-1 flex flex-col items-center justify-center max-w-4xl mx-auto w-full text-center">
+        <div class="w-20 h-20 rounded-full border border-white/30 flex items-center justify-center mb-6">
+            <span class="glyph-red-dot"></span>
+        </div>
+
+        <h1 class="text-4xl md:text-5xl font-bold ndot uppercase tracking-tight text-white mb-3">
+            FPGA STUDIO KEYNOTE
+        </h1>
+        <p class="mono text-xs md:text-sm text-white/60 uppercase tracking-widest mb-8">
+            เลือกรูปแบบการนำเสนอ หรือกดเพื่อเริ่มสไลด์รวมทันที
+        </p>
+
+        <!-- Master Presentation Big Button -->
+        <a href="presentation_all.html" onclick="clearTimeout(timer)" class="w-full bento-card p-6 mb-6 hover:border-red-500/60 bg-red-950/20 text-left flex items-center justify-between transition group">
+            <div>
+                <div class="flex items-center space-x-2 text-xs mono text-red-400 font-bold mb-1">
+                    <span class="glyph-red-dot"></span>
+                    <span>MASTER KEYNOTE DECK (แนะนำสำหรับวันพรีเซนต์จริง)</span>
+                </div>
+                <h3 class="text-xl font-bold text-white group-hover:text-red-300 transition">
+                    เปิดสไลด์รวม 8 แผ่น (presentation_all.html)
+                </h3>
+                <p class="text-xs text-white/60 mt-1">
+                    รวมทุกหัวข้อของ 4 คนไว้ในไฟล์เดียว เลื่อนต่อเนื่องไม่มีสะดุด โพยบทพูดและ Fullscreen ครบ
+                </p>
+            </div>
+            <div class="mono text-2xl text-white/40 group-hover:text-white transition px-4">
+                →
+            </div>
+        </a>
+
+        <!-- Individual Speaker Modular Links -->
+        <div class="w-full text-left">
+            <div class="mono text-xs text-white/40 mb-3 uppercase tracking-wider">
+                แยกเปิดทำทีละคน (Modular Slides — ไม่ชนกันใน Git):
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+                <a href="slides/00_cover.html" onclick="clearTimeout(timer)" class="bento-card p-3 hover:border-white/40 transition">
+                    <span class="mono text-[10px] text-white/40 block">COVER</span>
+                    <h4 class="text-xs font-bold text-white">00. หน้าปก</h4>
+                </a>
+                <a href="slides/01_speaker1_challenge.html" onclick="clearTimeout(timer)" class="bento-card p-3 hover:border-white/40 transition">
+                    <span class="mono text-[10px] text-red-400 block">SPEAKER 01</span>
+                    <h4 class="text-xs font-bold text-white">01. โพสต์อาจารย์</h4>
+                </a>
+                <a href="slides/02_speaker2_pipeline.html" onclick="clearTimeout(timer)" class="bento-card p-3 hover:border-white/40 transition">
+                    <span class="mono text-[10px] text-white/40 block">SPEAKER 02</span>
+                    <h4 class="text-xs font-bold text-white">02. ท่อ C & MMIO</h4>
+                </a>
+                <a href="slides/03_speaker3_demo.html" onclick="clearTimeout(timer)" class="bento-card p-3 hover:border-white/40 transition">
+                    <span class="mono text-[10px] text-white/40 block">SPEAKER 03</span>
+                    <h4 class="text-xs font-bold text-white">03. Live Demo</h4>
+                </a>
+                <a href="slides/04_speaker4_superpowers.html" onclick="clearTimeout(timer)" class="bento-card p-3 hover:border-white/40 transition">
+                    <span class="mono text-[10px] text-red-400 block">SPEAKER 04</span>
+                    <h4 class="text-xs font-bold text-white">04. Deep Tech & A</h4>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full flex items-center justify-between pt-4 border-t border-white/10 mono text-xs text-white/40">
+        <div>TIP: ดับเบิลคลิก build.bat เพื่อรวมโค้ดใหม่ทุกครั้งหลังเพื่อน pull request</div>
+        <div>NOTHING (R) DESIGN LANGUAGE</div>
+    </footer>
+</body>
+</html>
