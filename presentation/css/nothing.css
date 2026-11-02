@@ -29,6 +29,8 @@ body {
     overflow: hidden;
     user-select: none;
     position: relative;
+    width: 100vw;
+    height: 100vh;
 }
 
 /* Background Canvas Layer */
@@ -63,7 +65,7 @@ body {
     height: 9px;
     border-radius: 9999px;
     background-color: var(--fpga-red);
-    box-shadow: 0 0 12px var(--fpga-red-glow);
+    box-shadow: 0 0 10px var(--fpga-red-glow);
     animation: pulse-red 2s infinite ease-in-out;
     display: inline-block;
 }
@@ -73,7 +75,7 @@ body {
     height: 9px;
     border-radius: 9999px;
     background-color: var(--fpga-green);
-    box-shadow: 0 0 12px var(--fpga-green-glow);
+    box-shadow: 0 0 10px var(--fpga-green-glow);
     animation: pulse-green 2s infinite ease-in-out;
     display: inline-block;
 }
@@ -105,18 +107,74 @@ body {
     transform: translateY(-2px);
 }
 
-/* Slide Transitions */
+/* Slide Transitions Animation */
 .slide {
     display: none;
     opacity: 0;
-    transform: scale(0.985);
-    transition: opacity 0.35s ease, transform 0.35s ease;
+    transform: scale(0.96) translateY(12px);
+    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform, opacity;
 }
 
 .slide.active {
     display: flex;
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1) translateY(0);
+    animation: slideEnter 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideEnter {
+    0% {
+        opacity: 0;
+        transform: scale(0.96) translateY(12px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Floating Edge Navigation Buttons (เหมือนสไลด์มืออาชีพ) */
+.nav-edge-btn {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 30;
+    width: 46px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(22, 22, 22, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    color: rgba(255, 255, 255, 0.45);
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 0.3;
+    user-select: none;
+}
+
+.nav-edge-btn:hover {
+    opacity: 1;
+    background: rgba(35, 35, 35, 0.9);
+    border-color: rgba(30, 215, 96, 0.5);
+    color: #1ED760;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.7);
+}
+
+.nav-edge-prev {
+    left: 8px;
+    border-radius: 12px 24px 24px 12px;
+}
+
+.nav-edge-next {
+    right: 8px;
+    border-radius: 24px 12px 12px 24px;
+}
+
+.nav-edge-btn:active {
+    transform: translateY(-50%) scale(0.92);
 }
 
 /* Custom Scrollbar */
