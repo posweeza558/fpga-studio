@@ -3,168 +3,1013 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FPGA STUDIO — 02. ORIGIN QUEST &amp; INTERPRETATION</title>
+    <title>FPGA STUDIO — 02. ORIGIN QUEST // 3D ORBIT</title>
     <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Doto:wght@400;600;800;900&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;600;700&family=Prompt:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/nothing.css">
 </head>
-<body class="h-screen w-screen flex flex-col justify-between p-6 relative overflow-hidden">
+<body class="h-screen w-screen m-0 p-0 relative overflow-hidden">
 
-    <!-- Interactive Warping Dot Matrix Canvas -->
-    <canvas id="bg-canvas"></canvas>
-
-    <!-- TOP BAR (CLEAN MINIMAL INDUSTRIAL) -->
-    <header class="w-full flex items-center justify-between pb-3 border-b border-[#242424] z-20">
-        <div class="flex items-center space-x-3">
-            <span class="glyph-red-dot"></span>
-            <span class="mono text-xs text-[#EAEAEA] font-bold tracking-widest uppercase">FPGA STUDIO</span>
-            <span class="text-white/20 text-xs">|</span>
-            <span class="mono text-xs text-red-400">ORIGIN QUEST // INTERPRETATION</span>
-        </div>
-
-        <div class="flex items-center space-x-4">
-            <div class="mono text-sm font-bold tracking-widest text-[#EAEAEA]">
-                <span id="current-slide-num">02</span> <span class="text-white/30">/</span> <span id="total-slide-num">05</span>
-            </div>
-            <button onclick="toggleFullscreen()" class="p-2 rounded-full border border-[#282828] hover:border-[#484848] hover:bg-[#2A2A2A] transition text-xs mono text-[#B3B3B3]" title="Full Screen (F)">
-                ⛶
-            </button>
-        </div>
-    </header>
-
-    <!-- MAIN SLIDE CONTAINER (CAROUSEL VIEWPORT) -->
-    <main class="flex-1 w-full flex items-center justify-center py-2 relative z-10 overflow-hidden">
+    <!-- FULLSCREEN SLIDE VIEWPORT -->
+    <main class="w-screen h-screen m-0 p-0 relative z-10 overflow-hidden">
         <div id="carousel-viewport">
             <div id="carousel-track">
 
                 <!-- ======================================================== -->
-                <!-- SLIDE 2: ORIGIN QUEST & INTERPRETATION                   -->
+                <!-- SLIDE 2: ORIGIN QUEST — 3D CENTRAL GLOBE & 2 HEMISPHERES -->
                 <!-- ======================================================== -->
-                <section class="slide active fx-slide w-full h-full" style="--horizon: clamp(56px, 8vh, 92px);" data-slide="2" data-speaker="SPEAKER // ORIGIN CHALLENGE">
+                <section class="slide active fx-slide w-full h-full" id="origin-quest-slide" data-slide="2" data-speaker="SPEAKER // ORIGIN CHALLENGE">
 
-                    <div class="fx-root flex flex-col justify-between px-[clamp(24px,3.5vw,56px)] pt-[clamp(16px,2.6vh,30px)] pb-[clamp(56px,8.5vh,92px)]">
+                    <style>
+                        #oq-globe {
+                            position: absolute;
+                            inset: 0;
+                            width: 100%;
+                            height: 100%;
+                            z-index: 2;
+                            pointer-events: none;
+                        }
+
+                        .oq-stage {
+                            position: relative;
+                            z-index: 10;
+                            width: 100%;
+                            height: 100%;
+                            max-width: 1560px;
+                            margin: 0 auto;
+                            padding: clamp(28px, 4.2vh, 46px) clamp(24px, 3.2vw, 56px) clamp(28px, 4.2vh, 46px);
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: space-between;
+                        }
+
+                        .oq-grid {
+                            display: grid;
+                            grid-template-columns: minmax(0, 1fr) clamp(255px, 21vw, 335px) minmax(0, 1fr);
+                            gap: clamp(14px, 1.6vw, 26px);
+                            align-items: center;
+                            flex: 1;
+                            min-height: 0;
+                        }
+
+                        /* Hemisphere Swap Panels */
+                        .oq-swap-wrap {
+                            position: relative;
+                            width: 100%;
+                        }
+
+                        .oq-hemisphere {
+                            width: 100%;
+                            transition:
+                                opacity 0.92s cubic-bezier(0.28, 0.0, 0.2, 1),
+                                transform 0.92s cubic-bezier(0.28, 0.0, 0.2, 1);
+                            will-change: opacity, transform;
+                        }
+
+                        .oq-hemisphere.oq-inactive-left {
+                            position: absolute;
+                            inset: 0;
+                            opacity: 0;
+                            visibility: hidden;
+                            pointer-events: none;
+                            transform: translate3d(-32px, 0, 0) scale(0.96);
+                        }
+
+                        .oq-hemisphere.oq-inactive-right {
+                            position: absolute;
+                            inset: 0;
+                            opacity: 0;
+                            visibility: hidden;
+                            pointer-events: none;
+                            transform: translate3d(32px, 0, 0) scale(0.96);
+                        }
+
+                        .oq-hemisphere.oq-active {
+                            position: relative;
+                            opacity: 1;
+                            visibility: visible;
+                            pointer-events: auto;
+                            transform: translate3d(0, 0, 0) scale(1);
+                        }
+
+                        /* Delayed fade-in while planet rises from horizon */
+                        .oq-wing {
+                            opacity: 1;
+                            transform: translateY(0);
+                            transition: opacity 0.58s cubic-bezier(0.22, 1, 0.36, 1), transform 0.58s cubic-bezier(0.22, 1, 0.36, 1);
+                        }
+                        .oq-rising .oq-wing {
+                            opacity: 0;
+                            transform: translateY(18px);
+                        }
+
+                        /* Professor Crop Frame */
+                        .oq-post-paper {
+                            background: #FFFFFF;
+                            border-radius: 14px;
+                            padding: clamp(10px, 1.4vh, 15px) clamp(10px, 1vw, 14px);
+                            border: 1px solid rgba(255, 255, 255, 0.45);
+                            box-shadow:
+                                0 18px 45px rgba(0, 0, 0, 0.65),
+                                0 0 0 1px rgba(30, 215, 96, 0.18);
+                        }
+                        .oq-post-paper-red {
+                            box-shadow:
+                                0 18px 45px rgba(0, 0, 0, 0.65),
+                                0 0 0 1px rgba(248, 113, 113, 0.25);
+                        }
+                        .oq-post-paper img {
+                            width: 100%;
+                            height: auto;
+                            max-height: 31vh;
+                            object-fit: contain;
+                            display: block;
+                        }
+
+                        /* Cause -> Effect Action Cards */
+                        .oq-action-card {
+                            position: relative;
+                            border-radius: 20px;
+                            padding: clamp(18px, 2.4vh, 26px) clamp(18px, 1.6vw, 24px);
+                            background: linear-gradient(155deg, rgba(255,255,255,0.075), rgba(255,255,255,0.015) 48%, rgba(30,215,96,0.055));
+                            border: 1px solid rgba(255, 255, 255, 0.12);
+                            backdrop-filter: blur(16px);
+                            -webkit-backdrop-filter: blur(16px);
+                            box-shadow: 0 22px 52px rgba(0,0,0,0.52), inset 0 1px 0 rgba(255,255,255,0.10);
+                            display: flex;
+                            align-items: flex-start;
+                            gap: 16px;
+                            transition: border-color 0.3s ease, transform 0.3s ease;
+                        }
+                        .oq-action-card:hover {
+                            border-color: rgba(30, 215, 96, 0.45);
+                            transform: translateX(4px);
+                        }
+                        .oq-action-card.red {
+                            background: linear-gradient(155deg, rgba(255,255,255,0.075), rgba(255,255,255,0.015) 48%, rgba(248,113,113,0.06));
+                            border-color: rgba(248, 113, 113, 0.22);
+                        }
+                        .oq-action-card.red:hover {
+                            border-color: rgba(248, 113, 113, 0.52);
+                        }
+
+                        .oq-icon-box {
+                            width: 48px;
+                            height: 48px;
+                            border-radius: 14px;
+                            flex-shrink: 0;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background: rgba(30, 215, 96, 0.11);
+                            border: 1px solid rgba(30, 215, 96, 0.38);
+                            color: #1ED760;
+                            box-shadow: 0 0 24px rgba(30, 215, 96, 0.20);
+                            margin-top: 2px;
+                        }
+                        .oq-action-card.red .oq-icon-box {
+                            background: rgba(248, 113, 113, 0.11);
+                            border-color: rgba(248, 113, 113, 0.42);
+                            color: #FF6B7A;
+                            box-shadow: 0 0 24px rgba(248, 113, 113, 0.20);
+                        }
+                        .oq-icon-box svg {
+                            width: 24px;
+                            height: 24px;
+                        }
+
+                        @media (max-width: 1024px) {
+                            .oq-grid {
+                                grid-template-columns: 1fr;
+                                gap: 14px;
+                            }
+                            #oq-globe-anchor {
+                                height: 180px !important;
+                            }
+                        }
+                    </style>
+
+                    <div class="fx-root" id="oq-root">
 
                         <!-- Deep space layers -->
                         <canvas class="fx-stars"></canvas>
                         <div class="fx-nebula"></div>
                         <div class="fx-grid"></div>
-                        <div class="fx-aurora"></div>
-                        <div class="fx-watermark fx-dot">02</div>
 
-                        <!-- Planet horizon -->
-                        <div class="fx-orbit-ring"></div>
-                        <div class="fx-planet"></div>
+                        <!-- 3D Planet Canvas (seamlessly morphs Slide 1 <-> Slide 2 <-> Slide 3) -->
+                        <canvas id="oq-globe"></canvas>
 
-                        <!-- Top Hero Header -->
-                        <div class="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-2 pb-2.5 border-b border-white/10">
-                            <div>
-                                <div class="fx-rise flex items-center gap-3 mb-1.5">
-                                    <span class="glyph-red-dot"></span>
-                                    <span class="fx-mono text-[10.5px] tracking-[0.32em] text-red-400">MISSION 01 // THE PROFESSOR'S CHALLENGE</span>
-                                    <span class="h-px w-14 bg-gradient-to-r from-red-400/60 to-transparent"></span>
-                                    <span class="fx-mono text-[10.5px] tracking-[0.28em] text-white/35">SEPTEMBER 2026</span>
-                                </div>
-                                <div class="flex flex-wrap items-baseline gap-4">
-                                    <h2 class="fx-rise fx-dot uppercase text-white leading-none" style="font-size: clamp(32px, 5.4vh, 62px); text-shadow: 0 0 26px rgba(30,215,96,0.3); animation-delay:0.06s">
-                                        <span data-scramble="ORIGIN ">ORIGIN </span><span class="text-[#1ED760]" data-scramble="QUEST">QUEST</span>
-                                    </h2>
-                                    <h3 class="fx-rise fx-thai text-white font-semibold text-[clamp(17px,2.4vh,25px)] tracking-tight" style="animation-delay:0.1s">
-                                        อาจารย์ท้า... ใครทำได้ให้เกรด A — และการตีความของพวกเรา
-                                    </h3>
-                                </div>
-                            </div>
-                            <div class="fx-rise hidden lg:flex items-center gap-2" style="animation-delay:0.14s">
-                                <span class="fx-chip fx-chip-green">ALL 3 OPTIONS COMBINED</span>
-                                <span class="fx-chip fx-chip-red">GRADE A CHALLENGE PROVEN</span>
-                            </div>
-                        </div>
+                        <!-- Foreground Layout -->
+                        <div class="oq-stage">
 
-                        <!-- Main 2-Column Glass Spec Cards -->
-                        <div class="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-[clamp(16px,2.2vw,32px)] flex-1 min-h-0 my-3">
-
-                            <!-- CARD 1: SEP 13 (โจทย์ 3 ทางเลือก) -->
-                            <div class="fx-rise fx-glass flex flex-col justify-between p-[clamp(14px,2vh,22px)] min-h-0" style="animation-delay:0.12s">
-                                <div class="fx-scan"></div>
-                                <div class="flex flex-col min-h-0 flex-1">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <span class="fx-mono text-[10px] tracking-[0.28em] text-white/45">POST 01 // 13 SEP 2026</span>
-                                        <span class="fx-mono text-[10px] tracking-[0.2em] text-[#1ED760]">● 3-IN-1 COMPLETE</span>
+                            <!-- Compact Top Title Row -->
+                            <div class="flex flex-wrap items-end justify-between gap-3 pb-3 border-b border-white/10">
+                                <div>
+                                    <div class="flex items-center gap-2.5 mb-1">
+                                        <span id="oq-top-dot" class="glyph-green-dot"></span>
+                                        <span id="oq-eyebrow" class="fx-mono text-[10.5px] tracking-[0.3em] text-[#1ED760] uppercase">QUEST 01 // PROFESSOR'S BRIEF → VIRTUAL BOARD SIMULATOR</span>
                                     </div>
-
-                                    <!-- Professor Post Image -->
-                                    <div class="relative rounded-xl overflow-hidden border border-white/10 bg-black/65 mb-2.5 flex items-center justify-center h-[clamp(105px,18vh,155px)] shrink-0">
-                                        <img src="../assets/prof_post_sep13.png" alt="โพสต์อาจารย์ 13 ก.ย." class="w-full h-full object-contain p-1" onerror="this.src='prof_post_sep13.png'">
-                                        <span class="absolute bottom-1.5 right-2 fx-mono text-[9px] tracking-[0.18em] text-white/55 bg-black/80 px-2 py-0.5 rounded border border-white/10">3 OPTIONS BRIEF</span>
+                                    <div class="flex flex-wrap items-baseline gap-4">
+                                        <h2 class="fx-dot uppercase text-white leading-none" style="font-size: clamp(34px, 5.2vh, 60px); text-shadow: 0 0 26px rgba(30,215,96,0.32);">
+                                            <span data-scramble="ORIGIN ">ORIGIN </span><span id="oq-title-accent" class="text-[#1ED760]" data-scramble="QUEST">QUEST</span>
+                                        </h2>
+                                        <h3 class="fx-thai text-white/90 font-semibold text-[clamp(15px,2.1vh,22px)] tracking-tight">
+                                            จากโจทย์ของอาจารย์ สู่เครื่องมือที่เราสร้างขึ้นมาเชื่อมระบบ
+                                        </h3>
                                     </div>
-
-                                    <!-- Interpretation Bullets -->
-                                    <ul class="space-y-1.5 text-[clamp(11.5px,1.45vh,13.5px)] leading-[1.55] text-white/65">
-                                        <li class="fx-bullet">
-                                            <span><strong>โจทย์เลือกทำ 1 ข้อ:</strong> <code>1. วิดีโอสอนคูณหาร</code> · <code>2. Factorial + Simulator</code> · <code>3. ฮาร์ดแวร์คูณหารบน FPGA ออก 7-Segment</code></span>
-                                        </li>
-                                        <li class="fx-bullet">
-                                            <span><strong>การตีความของพวกเรา — รวบทำครบทั้ง 3 ข้อในระบบเดียว:</strong> สร้างวงจรหารฮาร์ดแวร์ 32 ไซเคิล (<code>div.v</code>) บนชิป Artix-7 จริง แสดงผลเลขฐานสิบออก 7-Segment และมี Virtual Board Simulator ในตัว</span>
-                                        </li>
-                                    </ul>
                                 </div>
 
-                                <div class="pt-2.5 mt-2 border-t border-white/10">
-                                    <div class="fx-row">
-                                        <span class="text-[#1ED760] font-semibold">RESOLUTION</span>
-                                        <span class="text-white/70">Hardware Divider + 7-Seg + Simulator</span>
-                                    </div>
-                                    <div class="flex flex-wrap gap-1.5 mt-2">
-                                        <span class="fx-chip">DIV.V 32-CYCLE</span>
-                                        <span class="fx-chip">7-SEG DECIMAL</span>
-                                        <span class="fx-chip fx-chip-green">3-IN-1 UNIFIED</span>
-                                    </div>
+                                <div class="hidden md:flex items-center gap-2">
+                                    <span id="oq-side-indicator" class="fx-chip fx-chip-green">QUEST 01 // SIMULATOR</span>
+                                    <span class="fx-chip">FPGA STUDIO v4.4</span>
                                 </div>
                             </div>
 
-                            <!-- CARD 2: SEP 25 (โจทย์ท้าทายเกรด A) -->
-                            <div class="fx-rise fx-glass fx-glass-red flex flex-col justify-between p-[clamp(14px,2vh,22px)] min-h-0" style="animation-delay:0.18s">
-                                <div class="fx-scan"></div>
-                                <div class="flex flex-col min-h-0 flex-1">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <span class="fx-mono text-[10px] tracking-[0.28em] text-white/45">POST 02 // 25 SEP 2026</span>
-                                        <span class="fx-mono text-[10px] tracking-[0.2em] text-red-400">● GRADE A QUEST</span>
+                            <!-- 3-Column Stage: Professor Post | 3D Globe | What We Built -->
+                            <div class="oq-grid my-auto py-2">
+
+                                <!-- ========================================== -->
+                                <!-- LEFT WING: PROFESSOR'S POST (1 AT A TIME)  -->
+                                <!-- ========================================== -->
+                                <div class="oq-wing oq-swap-wrap">
+
+                                    <!-- SIDE 01 POST (prof_crop_1.png) -->
+                                    <div class="oq-hemisphere oq-active" id="oq-left-0">
+                                        <div class="fx-glass p-[clamp(18px,2.3vh,26px)]">
+                                            <div class="fx-scan"></div>
+                                            <div class="flex items-center justify-between mb-3">
+                                                <div class="flex items-center gap-2">
+                                                    <span class="w-2 h-2 rounded-full bg-[#1ED760] shadow-[0_0_10px_#1ED760]"></span>
+                                                    <span class="fx-thai text-sm font-semibold text-white">อาจารย์บอกแบบนี้</span>
+                                                </div>
+                                                <span class="fx-mono text-[10px] tracking-[0.22em] text-[#1ED760]">POST 01 // SIMULATOR BRIEF</span>
+                                            </div>
+
+                                            <div class="oq-post-paper mb-3.5">
+                                                <img src="../assets/prof_crop_1.png" alt="โพสต์อาจารย์ชุดที่ 1" onerror="this.src='prof_crop_1.png'">
+                                            </div>
+
+                                            <div class="flex items-center justify-between gap-3 pt-2 border-t border-white/10">
+                                                <span class="fx-thai text-[clamp(12.5px,1.55vh,14.5px)] text-white/80">
+                                                    โจทย์ทางเลือก <strong class="text-white">เขียนโปรแกรมคำนวณ + รันบน Simulator</strong>
+                                                </span>
+                                                <span class="fx-chip fx-chip-green shrink-0">VIRTUAL SIM</span>
+                                            </div>
+                                        </div>
                                     </div>
 
-                                    <!-- Professor Post Image -->
-                                    <div class="relative rounded-xl overflow-hidden border border-red-500/25 bg-black/65 mb-2.5 flex items-center justify-center h-[clamp(105px,18vh,155px)] shrink-0">
-                                        <img src="../assets/prof_post_sep25.png" alt="โพสต์อาจารย์ 25 ก.ย." class="w-full h-full object-contain p-1" onerror="this.src='prof_post_sep25.png'">
-                                        <span class="absolute bottom-1.5 right-2 fx-mono text-[9px] tracking-[0.18em] text-red-300 bg-black/80 px-2 py-0.5 rounded border border-red-500/30">ULTIMATE CHALLENGE</span>
+                                    <!-- SIDE 02 POST (prof_crop_2.png) -->
+                                    <div class="oq-hemisphere oq-inactive-left" id="oq-left-1">
+                                        <div class="fx-glass fx-glass-red p-[clamp(18px,2.3vh,26px)]">
+                                            <div class="fx-scan"></div>
+                                            <div class="flex items-center justify-between mb-3">
+                                                <div class="flex items-center gap-2">
+                                                    <span class="w-2 h-2 rounded-full bg-[#FF5A6E] shadow-[0_0_10px_#FF5A6E]"></span>
+                                                    <span class="fx-thai text-sm font-semibold text-white">อาจารย์ท้าไว้แบบนี้</span>
+                                                </div>
+                                                <span class="fx-mono text-[10px] tracking-[0.22em] text-red-400">POST 02 // GRADE A QUEST</span>
+                                            </div>
+
+                                            <div class="oq-post-paper oq-post-paper-red mb-3.5">
+                                                <img src="../assets/prof_crop_2.png" alt="โพสต์อาจารย์ชุดที่ 2" onerror="this.src='prof_crop_2.png'">
+                                            </div>
+
+                                            <div class="flex items-center justify-between gap-3 pt-2 border-t border-white/10">
+                                                <span class="fx-thai text-[clamp(12.5px,1.55vh,14.5px)] text-white/80">
+                                                    <strong class="text-red-300">“อีก 3 รุ่นจะทำได้ไหมไม่รู้ ใครทำได้ให้ A!”</strong>
+                                                </span>
+                                                <span class="fx-chip fx-chip-red shrink-0">GRADE A CHALLENGE</span>
+                                            </div>
+                                        </div>
                                     </div>
 
-                                    <!-- Interpretation Bullets -->
-                                    <ul class="space-y-1.5 text-[clamp(11.5px,1.45vh,13.5px)] leading-[1.55] text-white/65">
-                                        <li class="fx-bullet fx-bullet-red">
-                                            <span><strong>คำท้าของอาจารย์:</strong> <em>“หา Compiler แปลงภาษา C เป็น MIPS opcode... ไม่รู้รุ่นน้องอีก 3 รุ่นจะทำได้ไหม ใครทำได้อาจารย์จะให้ A!”</em></span>
-                                        </li>
-                                        <li class="fx-bullet fx-bullet-red">
-                                            <span><strong>ข้อพิสูจน์ของพวกเรา — ไม่ต้องรอถึง 3 รุ่น:</strong> ฝัง <code>Real MIPS GCC 12.2</code> + <code>RISC-V GCC 15.2</code> พร้อม <code>start.S</code> บูต Stack และ <code>link.ld</code> จัดแรม แปลงภาษา C วิ่งลงบอร์ด Nexys A7 ได้จริงใน 1.2 วินาที</span>
-                                        </li>
-                                    </ul>
                                 </div>
 
-                                <div class="pt-2.5 mt-2 border-t border-white/10">
-                                    <div class="fx-row">
-                                        <span class="text-red-400 font-semibold">VERIFICATION</span>
-                                        <span class="text-white/70">Real C → MIPS32 Opcode → Nexys A7 Silicon</span>
-                                    </div>
-                                    <div class="flex flex-wrap gap-1.5 mt-2">
-                                        <span class="fx-chip">REAL GCC 12.2</span>
-                                        <span class="fx-chip">start.S + link.ld</span>
-                                        <span class="fx-chip fx-chip-red">NO WAITING 3 GENS</span>
-                                    </div>
+                                <!-- ========================================== -->
+                                <!-- CENTER ANCHOR: 3D ROTATING GLOBE           -->
+                                <!-- ========================================== -->
+                                <div class="flex flex-col items-center justify-center relative select-none pointer-events-none">
+                                    <div id="oq-globe-anchor" class="w-full aspect-square max-h-[320px]"></div>
                                 </div>
+
+                                <!-- ========================================== -->
+                                <!-- RIGHT WING: CONCISE CAUSE -> EFFECT CARDS  -->
+                                <!-- ========================================== -->
+                                <div class="oq-wing oq-swap-wrap">
+
+                                    <!-- SIDE 01 RESPONSE: 1 HERO CARD (VIRTUAL BOARD SIM) -->
+                                    <div class="oq-hemisphere oq-active flex flex-col justify-center" id="oq-right-0">
+
+                                        <div class="oq-action-card">
+                                            <div class="oq-icon-box">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                                    <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 10h2m4 0h4"/>
+                                                </svg>
+                                            </div>
+                                            <div class="min-w-0 flex-1">
+                                                <div class="fx-thai text-[clamp(12px,1.5vh,14px)] text-white/55 mb-1">
+                                                    อาจารย์บอก: “ทำโปรแกรมคำนวณ และ Python Simulator ที่รันเอาผลลัพธ์ออกมาได้”
+                                                </div>
+                                                <div class="fx-thai text-[clamp(20px,2.6vh,26px)] font-bold text-[#1ED760] leading-snug mb-2">
+                                                    → ผมเลยทำ Virtual Board Sim
+                                                </div>
+                                                <div class="fx-thai text-[clamp(13.5px,1.7vh,15.5px)] text-white/80 leading-relaxed mb-4">
+                                                    จำลองบอร์ด Nexys A7 ทั้งใบ กดสวิตช์ 16 ขา ดูไฟ 7-Segment สดๆ บนจอ ไม่ต้องง้อบอร์ดจริง
+                                                </div>
+                                                <div class="flex flex-wrap gap-2 pt-3 border-t border-white/10">
+                                                    <span class="fx-chip fx-chip-green">16 SWITCHES &amp; LEDS</span>
+                                                    <span class="fx-chip">7-SEG DEC / HEX</span>
+                                                    <span class="fx-chip">LIVE 32-REG DEBUG</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- SIDE 02 RESPONSE: 2 CARDS (AUTO I/O + VGA & GCC + CUSTOM COMPILER) -->
+                                    <div class="oq-hemisphere oq-inactive-right flex flex-col gap-4" id="oq-right-1">
+
+                                        <div class="oq-action-card red">
+                                            <div class="oq-icon-box">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                                    <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/>
+                                                </svg>
+                                            </div>
+                                            <div class="min-w-0 flex-1">
+                                                <div class="fx-thai text-[clamp(11.5px,1.45vh,13.5px)] text-white/55 mb-1">
+                                                    อาจารย์บอก: “เป็นระบบคอมที่รับอินพุต ประมวลผล ส่งออกเอาท์พุต (จอภาพได้ยิ่งดี)”
+                                                </div>
+                                                <div class="fx-thai text-[clamp(16.5px,2.15vh,21px)] font-bold text-[#FF6B7A] leading-snug mb-1.5">
+                                                    → ผมเลยทำระบบผูกขา CPU เข้ากับ I/O และจอ VGA อัตโนมัติ
+                                                </div>
+                                                <div class="fx-thai text-[clamp(12.5px,1.55vh,14.5px)] text-white/80 leading-relaxed">
+                                                    เปลี่ยน CPU เปล่าๆ ให้เป็นระบบคอมครบวงจร รับค่าสวิตช์/ปุ่มกด ประมวลผล แล้วส่งออก LED, 7-Seg และจอ VGA
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="oq-action-card red">
+                                            <div class="oq-icon-box">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                                    <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="14" y1="4" x2="10" y2="20"/>
+                                                </svg>
+                                            </div>
+                                            <div class="min-w-0 flex-1">
+                                                <div class="fx-thai text-[clamp(11.5px,1.45vh,13.5px)] text-white/55 mb-1">
+                                                    อาจารย์ท้า: “หา Compiler แปลงภาษา C เป็น MIPS opcode มาเขียนโปรแกรมสนุกๆ (ใครทำได้ให้ A)”
+                                                </div>
+                                                <div class="fx-thai text-[clamp(16.5px,2.15vh,21px)] font-bold text-white leading-snug mb-1.5">
+                                                    → ผมเลยเชื่อม <span class="text-[#1ED760]">GCC เข้า IDE</span> + ทำระบบนำเข้า Custom Compiler
+                                                </div>
+                                                <div class="fx-thai text-[clamp(12.5px,1.55vh,14.5px)] text-white/80 leading-relaxed">
+                                                    จับคอมไพเลอร์ C มาผูกกับ <code class="fx-mono text-xs text-[#1ED760]">start.S</code> และ <code class="fx-mono text-xs text-[#1ED760]">link.ld</code> กดปุ่มเดียวแปลงโค้ด C เป็นคำสั่ง MIPS พร้อมรันทันที
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
                             </div>
+
+                            <!-- Subtle Spacer at bottom -->
+                            <div class="h-1"></div>
 
                         </div>
 
                     </div>
+
+                    <script>
+                    (function() {
+                        const slideEl = document.getElementById('origin-quest-slide');
+                        const rootEl  = document.getElementById('oq-root');
+                        const canvas  = document.getElementById('oq-globe');
+                        const anchor  = document.getElementById('oq-globe-anchor');
+                        if (!canvas || !slideEl) return;
+
+                        // Mount canvas into #carousel-viewport so the 3D planet stays centered in viewport
+                        // and morphs seamlessly across Slide 1 <-> Slide 2 <-> Slide 3 <-> Slide 4 with ZERO flicker
+                        const viewport = document.getElementById('carousel-viewport');
+                        if (viewport && canvas.parentElement !== viewport) {
+                            viewport.insertBefore(canvas, viewport.firstChild);
+                        }
+                        document.body.classList.add('has-unified-globe');
+
+                        const ctx = canvas.getContext('2d');
+                        let W = 0, H = 0, dpr = 1;
+
+                        // State: 0 = Post 1 (Virtual Board Sim), 1 = Post 2 (Auto I/O + VGA & GCC + Custom Compiler)
+                        let activeSide = 0;
+                        let sideMix = 0;          // 0.0 -> 1.0 smooth color/ring interpolation
+                        let rotY = 0;             // Current 3D Y rotation (never snapped!)
+                        let baseSpinOffset = 0;   // Target hemisphere offset (0 or Math.PI)
+                        let curSpinOffset  = 0;
+                        let spinVel = 0;
+
+                        // Unified 920ms Tween State (matches #carousel-track 0.92s cubic-bezier(0.28, 0.0, 0.2, 1) identically!)
+                        const TRANSITION_MS = 920;
+                        let currentSlideNum = 2;
+                        let liftProgress = 1;
+                        let targetLift   = 1;
+                        let curHorizonPx = 140;
+                        let activeHorizonMode = 'slide1'; // 'slide1' | 'slide3' | 'sunk'
+
+                        let tweenStartMs  = 0;
+                        let startLift     = 1;
+                        let startHorPx    = 140;
+                        let startSideMix  = 0;
+                        let targetSideMix = 0;
+                        let startSpinOff  = 0;
+
+                        // Build Fibonacci 3D Sphere Lattice
+                        const DOT_COUNT = 860;
+                        const sphereDots = [];
+                        const golden = Math.PI * (3 - Math.sqrt(5));
+                        for (let i = 0; i < DOT_COUNT; i++) {
+                            const y = 1 - (i / (DOT_COUNT - 1)) * 2;
+                            const rad = Math.sqrt(Math.max(0, 1 - y * y));
+                            const theta = golden * i;
+                            const x = Math.cos(theta) * rad;
+                            const z = Math.sin(theta) * rad;
+                            const patchA = Math.max(0, z * 0.85 + y * 0.25) * (0.55 + 0.45 * Math.sin(x * 5.2 + y * 4.1));
+                            const patchB = Math.max(0, -z * 0.85 - y * 0.15) * (0.55 + 0.45 * Math.cos(x * 4.8 - y * 4.6));
+                            sphereDots.push({ x, y, z, patchA, patchB });
+                        }
+
+                        function resize() {
+                            const rect = canvas.getBoundingClientRect();
+                            W = rect.width || window.innerWidth;
+                            H = rect.height || window.innerHeight;
+                            dpr = Math.min(window.devicePixelRatio || 1, 2);
+                            canvas.width = W * dpr;
+                            canvas.height = H * dpr;
+                            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                        }
+                        window.addEventListener('resize', resize);
+                        resize();
+
+                        function applySideDOM(side) {
+                            const left0   = document.getElementById('oq-left-0');
+                            const left1   = document.getElementById('oq-left-1');
+                            const right0  = document.getElementById('oq-right-0');
+                            const right1  = document.getElementById('oq-right-1');
+                            const eyebrow = document.getElementById('oq-eyebrow');
+                            const topDot  = document.getElementById('oq-top-dot');
+                            const accent  = document.getElementById('oq-title-accent');
+                            const badge   = document.getElementById('oq-side-indicator');
+
+                            if (side === 0) {
+                                left0.className  = 'oq-hemisphere oq-active';
+                                left1.className  = 'oq-hemisphere oq-inactive-left';
+                                right0.className = 'oq-hemisphere oq-active flex flex-col justify-center';
+                                right1.className = 'oq-hemisphere oq-inactive-right flex flex-col gap-4';
+                                if (eyebrow) {
+                                    eyebrow.textContent = "QUEST 01 // PROFESSOR'S BRIEF → VIRTUAL BOARD SIMULATOR";
+                                    eyebrow.style.color = '#1ED760';
+                                }
+                                if (topDot) topDot.className = 'glyph-green-dot';
+                                if (accent) accent.style.color = '#1ED760';
+                                if (badge) {
+                                    badge.textContent = 'QUEST 01 // SIMULATOR';
+                                    badge.className = 'fx-chip fx-chip-green';
+                                }
+                            } else {
+                                left0.className  = 'oq-hemisphere oq-inactive-left';
+                                left1.className  = 'oq-hemisphere oq-active';
+                                right0.className = 'oq-hemisphere oq-inactive-right flex flex-col justify-center';
+                                right1.className = 'oq-hemisphere oq-active flex flex-col gap-4';
+                                if (eyebrow) {
+                                    eyebrow.textContent = 'QUEST 02 // GRADE A CHALLENGE → AUTO I/O + VGA & C COMPILER';
+                                    eyebrow.style.color = '#FF6B7A';
+                                }
+                                if (topDot) topDot.className = 'glyph-red-dot';
+                                if (accent) accent.style.color = '#FF6B7A';
+                                if (badge) {
+                                    badge.textContent = 'QUEST 02 // GRADE A';
+                                    badge.className = 'fx-chip fx-chip-red';
+                                }
+                            }
+                        }
+
+                        function getTargetHorizonPx(mode) {
+                            const h3 = Math.min(195, Math.max(128, (H || 900) * 0.19));
+                            if (mode === 'slide3') return h3;
+                            if (mode === 'sunk')   return h3 - (H || 900);
+                            return Math.min(160, Math.max(105, (H || 900) * 0.15));
+                        }
+
+                        function beginTween(newLift, newHorizonMode, newSideMix, newSpinOff) {
+                            startLift     = liftProgress;
+                            startHorPx    = curHorizonPx;
+                            startSideMix  = sideMix;
+                            startSpinOff  = curSpinOffset;
+                            targetLift    = newLift;
+                            activeHorizonMode = newHorizonMode;
+                            targetSideMix = newSideMix;
+                            baseSpinOffset = newSpinOff;
+                            tweenStartMs  = performance.now();
+                        }
+
+                        window.setOriginQuestSide = function(side) {
+                            const next = side ? 1 : 0;
+                            if (next !== activeSide) {
+                                const delta = next > activeSide ? Math.PI : -Math.PI;
+                                activeSide = next;
+                                applySideDOM(activeSide);
+                                beginTween(targetLift, activeHorizonMode, activeSide === 1 ? 1 : 0, baseSpinOffset + delta);
+                            }
+                        };
+
+                        window.getOriginQuestSide = function() {
+                            return activeSide;
+                        };
+
+                        // Hook for presentation.js nextSlide / prevSlide inside Slide 2
+                        window.stepOriginQuest = function(dir) {
+                            if (dir > 0 && activeSide === 0) {
+                                window.setOriginQuestSide(1);
+                                return true;
+                            }
+                            if (dir < 0 && activeSide === 1) {
+                                window.setOriginQuestSide(0);
+                                return true;
+                            }
+                            return false;
+                        };
+
+                        // Unified Zero-Flicker Slide Sync for Slide 1 <-> Slide 2 <-> Slide 3 <-> Slide 4 (forward & backward)
+                        window.syncOriginQuestSlide = function(slideKey, prevSlideKey) {
+                            resize();
+                            currentSlideNum = slideKey;
+                            const forceSide2  = window.location.search.includes('side=2') || window.location.hash === '#side2';
+                            const forceSettle = window.location.search.includes('settle=1');
+                            if (forceSide2 || forceSettle) {
+                                slideEl.querySelectorAll('.oq-hemisphere').forEach(el => { el.style.transition = 'none'; });
+                            }
+
+                            if (slideKey === 2) {
+                                if (forceSide2) {
+                                    activeSide = 1;
+                                    sideMix = 1; startSideMix = 1; targetSideMix = 1;
+                                    baseSpinOffset = Math.PI; curSpinOffset = Math.PI; startSpinOff = Math.PI;
+                                    liftProgress = 1; startLift = 1; targetLift = 1;
+                                    rootEl.classList.remove('oq-rising');
+                                    applySideDOM(1);
+                                } else if (forceSettle) {
+                                    activeSide = 0;
+                                    sideMix = 0; startSideMix = 0; targetSideMix = 0;
+                                    baseSpinOffset = 0; curSpinOffset = 0; startSpinOff = 0;
+                                    liftProgress = 1; startLift = 1; targetLift = 1;
+                                    rootEl.classList.remove('oq-rising');
+                                    applySideDOM(0);
+                                } else if (prevSlideKey >= 3) {
+                                    // Returning backward from Slide 3 -> Slide 2: smoothly lift from current position onto Side 02
+                                    activeSide = 1;
+                                    applySideDOM(1);
+                                    beginTween(1, 'slide3', 1, Math.PI);
+                                } else {
+                                    // Entering forward from Slide 1 -> Slide 2: smoothly lift from current position onto Side 01
+                                    if (!prevSlideKey || prevSlideKey === 0) {
+                                        liftProgress = 0;
+                                        curHorizonPx = getTargetHorizonPx('slide1');
+                                    }
+                                    activeSide = 0;
+                                    applySideDOM(0);
+                                    beginTween(1, 'slide1', 0, 0);
+                                }
+                            } else if (slideKey === 1) {
+                                activeSide = 0;
+                                if (!prevSlideKey || prevSlideKey === 0) {
+                                    liftProgress = 0; startLift = 0; targetLift = 0;
+                                    curHorizonPx = getTargetHorizonPx('slide1');
+                                    startHorPx = curHorizonPx;
+                                    activeHorizonMode = 'slide1';
+                                } else {
+                                    beginTween(0, 'slide1', 0, 0);
+                                }
+                            } else if (slideKey === 3) {
+                                activeSide = 0;
+                                beginTween(0, 'slide3', 0, 0);
+                            } else {
+                                // Slide 4 (Pipeline Video) & Slide 5: planet moves down by exact 100vh in sync with Slide 3!
+                                activeSide = 0;
+                                beginTween(0, 'sunk', 0, 0);
+                            }
+                        };
+
+                        window.enterOriginQuest = function(direction) {
+                            window.syncOriginQuestSlide(2, direction === 'backward' ? 3 : 1);
+                        };
+
+                        // Support mouse wheel to rotate between Hemisphere 01 & 02
+                        let wheelLock = 0;
+                        window.addEventListener('wheel', (e) => {
+                            if (!slideEl.classList.contains('active')) return;
+                            const now = performance.now();
+                            if (now - wheelLock < 620) return;
+                            const d = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+                            if (Math.abs(d) < 12) return;
+                            if (d > 0 && activeSide === 0) {
+                                wheelLock = now;
+                                window.setOriginQuestSide(1);
+                            } else if (d < 0 && activeSide === 1) {
+                                wheelLock = now;
+                                window.setOriginQuestSide(0);
+                            }
+                        }, { passive: true });
+
+                        function rotate3D(x, y, z, ry, rx, rzTilt) {
+                            const cy = Math.cos(ry), sy = Math.sin(ry);
+                            let x1 = x * cy + z * sy;
+                            let z1 = -x * sy + z * cy;
+                            let y1 = y;
+                            const cx = Math.cos(rx), sx = Math.sin(rx);
+                            let y2 = y1 * cx - z1 * sx;
+                            let z2 = y1 * sx + z1 * cx;
+                            let x2 = x1;
+                            if (rzTilt) {
+                                const cz = Math.cos(rzTilt), sz = Math.sin(rzTilt);
+                                const x3 = x2 * cz - y2 * sz;
+                                const y3 = x2 * sz + y2 * cz;
+                                x2 = x3; y2 = y3;
+                            }
+                            return { x: x2, y: y2, z: z2 };
+                        }
+
+                        function easeInOutCubic(t) {
+                            return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+                        }
+
+                        function drawOrbitRing(cx, cy, R, ringMult, rx, rzTilt, rCol, gCol, bCol, alphaScale, dashed, half, time) {
+                            const segs = 96;
+                            const fov = R * 3.8;
+                            ctx.save();
+                            if (dashed) ctx.setLineDash([4, 7]);
+                            ctx.lineWidth = dashed ? 1.1 : 1.5;
+
+                            for (let i = 0; i < segs; i++) {
+                                const a0 = (i / segs) * Math.PI * 2;
+                                const a1 = ((i + 1) / segs) * Math.PI * 2;
+                                const p0 = rotate3D(Math.cos(a0) * ringMult, 0, Math.sin(a0) * ringMult, time * 0.25, rx, rzTilt);
+                                const p1 = rotate3D(Math.cos(a1) * ringMult, 0, Math.sin(a1) * ringMult, time * 0.25, rx, rzTilt);
+
+                                const isFront = ((p0.z + p1.z) * 0.5) >= 0;
+                                if ((half === 'front' && !isFront) || (half === 'back' && isFront)) continue;
+
+                                const k0 = fov / (fov - p0.z * R * 0.45);
+                                const k1 = fov / (fov - p1.z * R * 0.45);
+                                const sx0 = cx + p0.x * R * k0;
+                                const sy0 = cy + p0.y * R * k0;
+                                const sx1 = cx + p1.x * R * k1;
+                                const sy1 = cy + p1.y * R * k1;
+
+                                const depthAlpha = isFront ? (0.34 + 0.42 * p0.z) : 0.11;
+                                ctx.strokeStyle = `rgba(${rCol},${gCol},${bCol},${depthAlpha * alphaScale})`;
+                                ctx.beginPath();
+                                ctx.moveTo(sx0, sy0);
+                                ctx.lineTo(sx1, sy1);
+                                ctx.stroke();
+                            }
+                            ctx.restore();
+
+                            if (!dashed) {
+                                const satAngle = time * 1.15;
+                                const sp = rotate3D(Math.cos(satAngle) * ringMult, 0, Math.sin(satAngle) * ringMult, time * 0.25, rx, rzTilt);
+                                const satFront = sp.z >= 0;
+                                if ((half === 'front' && satFront) || (half === 'back' && !satFront)) {
+                                    const ks = fov / (fov - sp.z * R * 0.45);
+                                    const sx = cx + sp.x * R * ks;
+                                    const sy = cy + sp.y * R * ks;
+                                    const glow = ctx.createRadialGradient(sx, sy, 0, sx, sy, 12);
+                                    glow.addColorStop(0, `rgba(255,255,255,${0.95 * alphaScale})`);
+                                    glow.addColorStop(0.35, `rgba(${rCol},${gCol},${bCol},${0.75 * alphaScale})`);
+                                    glow.addColorStop(1, `rgba(${rCol},${gCol},${bCol},0)`);
+                                    ctx.fillStyle = glow;
+                                    ctx.beginPath();
+                                    ctx.arc(sx, sy, 12, 0, Math.PI * 2);
+                                    ctx.fill();
+                                }
+                            }
+                        }
+
+                        function drawLinkBeams(cx, cy, R, rCol, gCol, bCol, alpha, time) {
+                            if (alpha <= 0.02 || W < 1024) return;
+                            const leftStart  = cx - R - 86;
+                            const leftEnd    = cx - R - 10;
+                            const rightStart = cx + R + 10;
+                            const rightEnd   = cx + R + 86;
+
+                            ctx.save();
+                            ctx.lineWidth = 1.25;
+
+                            // Left Beam: Professor Post -> 3D Globe
+                            const gLeft = ctx.createLinearGradient(leftStart, cy, leftEnd, cy);
+                            gLeft.addColorStop(0, `rgba(${rCol},${gCol},${bCol},0.05)`);
+                            gLeft.addColorStop(1, `rgba(${rCol},${gCol},${bCol},${0.68 * alpha})`);
+                            ctx.strokeStyle = gLeft;
+                            ctx.setLineDash([3, 5]);
+                            ctx.beginPath();
+                            ctx.moveTo(leftStart, cy);
+                            ctx.lineTo(leftEnd, cy);
+                            ctx.stroke();
+
+                            const pIn = (time * 0.9) % 1;
+                            const pxIn = leftStart + (leftEnd - leftStart) * pIn;
+                            ctx.fillStyle = `rgba(255,255,255,${0.9 * alpha})`;
+                            ctx.beginPath();
+                            ctx.arc(pxIn, cy, 2.6, 0, Math.PI * 2);
+                            ctx.fill();
+
+                            // Right Beams: 1 central beam on Side 01 (1 Hero Card), 2 branching beams on Side 02 (2 Cards)
+                            const offsetsY = activeSide === 0 ? [0] : [-68, 68];
+                            offsetsY.forEach((dy, idx) => {
+                                const targetY = cy + dy;
+                                const gRight = ctx.createLinearGradient(rightStart, cy, rightEnd, targetY);
+                                gRight.addColorStop(0, `rgba(30,215,96,${0.72 * alpha})`);
+                                gRight.addColorStop(1, `rgba(${rCol},${gCol},${bCol},0.10)`);
+                                ctx.strokeStyle = gRight;
+                                ctx.beginPath();
+                                ctx.moveTo(rightStart, cy + dy * 0.18);
+                                ctx.bezierCurveTo(
+                                    rightStart + 34, cy + dy * 0.18,
+                                    rightEnd - 34, targetY,
+                                    rightEnd, targetY
+                                );
+                                ctx.stroke();
+
+                                const pOut = (time * 0.85 + idx * 0.42) % 1;
+                                const bx = rightStart + (rightEnd - rightStart) * pOut;
+                                const by = (cy + dy * 0.18) + (targetY - (cy + dy * 0.18)) * (pOut * pOut * (3 - 2 * pOut));
+                                ctx.fillStyle = `rgba(180,255,215,${0.9 * alpha})`;
+                                ctx.beginPath();
+                                ctx.arc(bx, by, 2.5, 0, Math.PI * 2);
+                                ctx.fill();
+                            });
+
+                            ctx.restore();
+                        }
+
+                        // Exact CSS cubic-bezier(0.28, 0.0, 0.2, 1) solver so #oq-globe matches #carousel-track 100%
+                        function solveCubicBezier(p1x, p1y, p2x, p2y, x) {
+                            if (x <= 0) return 0;
+                            if (x >= 1) return 1;
+                            const cx = 3 * p1x;
+                            const bx = 3 * (p2x - p1x) - cx;
+                            const ax = 1 - cx - bx;
+                            const cy = 3 * p1y;
+                            const by = 3 * (p2y - p1y) - cy;
+                            const ay = 1 - cy - by;
+                            let t = x;
+                            for (let i = 0; i < 6; i++) {
+                                const xEst = ((ax * t + bx) * t + cx) * t - x;
+                                if (Math.abs(xEst) < 1e-5) break;
+                                const d = (3 * ax * t + 2 * bx) * t + cx;
+                                if (Math.abs(d) < 1e-5) break;
+                                t -= xEst / d;
+                            }
+                            return ((ay * t + by) * t + cy) * t;
+                        }
+
+                        function render(now) {
+                            requestAnimationFrame(render);
+                            if (!W || !H) { resize(); if (!W) return; }
+
+                            const time = now * 0.001;
+                            const rawU = tweenStartMs > 0 ? Math.min(1, Math.max(0, (now - tweenStartMs) / TRANSITION_MS)) : 1;
+                            const ease = solveCubicBezier(0.28, 0.0, 0.2, 1.0, rawU);
+
+                            liftProgress  = startLift + (targetLift - startLift) * ease;
+                            const goalHorizonPx = getTargetHorizonPx(activeHorizonMode);
+                            curHorizonPx  = startHorPx + (goalHorizonPx - startHorPx) * ease;
+                            sideMix       = Math.max(0, Math.min(1, startSideMix + (targetSideMix - startSideMix) * ease));
+                            const prevSpin = curSpinOffset;
+                            curSpinOffset = startSpinOff + (baseSpinOffset - startSpinOff) * ease;
+                            spinVel       = Math.min(1, Math.abs(curSpinOffset - prevSpin) * 18);
+                            rotY          = curSpinOffset + time * 0.24;
+
+                            // Skip drawing only if completely sunk off-screen below Slide 4/5
+                            if (liftProgress < 0.002 && curHorizonPx <= goalHorizonPx + 2 && activeHorizonMode === 'sunk') {
+                                ctx.clearRect(0, 0, W, H);
+                                return;
+                            }
+
+                            const e = liftProgress;
+
+                            // Bottom Horizon Geometry
+                            const R0    = 1250;
+                            const topY0 = H - curHorizonPx;
+                            const cx0   = W * 0.5;
+
+                            // Center 3D Globe Geometry on Slide 2
+                            const cx1   = W * 0.5;
+                            const cy1   = H * 0.525;
+                            const R1    = Math.min(Math.max(Math.min(W * 0.086, H * 0.172), 110), 152);
+                            const topY1 = cy1 - R1;
+
+                            const R    = R0 + (R1 - R0) * e;
+                            const topY = topY0 + (topY1 - topY0) * e;
+                            const cy   = topY + R;
+                            const cx   = cx0 + (cx1 - cx0) * e;
+
+                            // Blend accent RGB: Side 0 = Emerald (30,215,96), Side 1 = Grade-A Crimson-Coral (255,90,110)
+                            const rCol = Math.round(30  + (255 - 30)  * sideMix);
+                            const gCol = Math.round(215 + (90  - 215) * sideMix);
+                            const bCol = Math.round(96  + (110 - 96)  * sideMix);
+
+                            ctx.clearRect(0, 0, W, H);
+
+                            // 1. Volumetric Atmospheric Outer Halo
+                            const haloR = R * (1.28 + 0.55 * e + 0.16 * spinVel);
+                            const halo = ctx.createRadialGradient(cx, cy, R * 0.82, cx, cy, haloR);
+                            halo.addColorStop(0, `rgba(${rCol},${gCol},${bCol},${0.26 + 0.12 * spinVel})`);
+                            halo.addColorStop(0.45, `rgba(30,215,96,0.08)`);
+                            halo.addColorStop(1, 'rgba(0,0,0,0)');
+                            ctx.fillStyle = halo;
+                            ctx.beginPath();
+                            ctx.arc(cx, cy, haloR, 0, Math.PI * 2);
+                            ctx.fill();
+
+                            const settledAlpha = Math.max(0, (e - 0.58) / 0.42);
+                            const ringTiltZ = -0.34 + 0.68 * sideMix;
+
+                            // 2. Cause -> Effect Energy Link Beams
+                            drawLinkBeams(cx, cy, R, rCol, gCol, bCol, settledAlpha, time);
+
+                            // 3. Back Half of 3D Orbital Rings (occluded behind planet)
+                            if (settledAlpha > 0.02) {
+                                drawOrbitRing(cx, cy, R, 1.38, 0.36, ringTiltZ, rCol, gCol, bCol, settledAlpha, false, 'back', time);
+                                drawOrbitRing(cx, cy, R, 1.22, -0.44, -ringTiltZ * 0.75, 30, 215, 96, settledAlpha * 0.9, true, 'back', -time * 0.8);
+                            }
+
+                            // 4. 3D Dark-Silicon Planetary Core Body
+                            const coreGrad = ctx.createRadialGradient(
+                                cx - R * 0.25 * e, cy - R * (0.95 - 0.61 * e), R * 0.06,
+                                cx, cy, R
+                            );
+                            if (sideMix < 0.5) {
+                                coreGrad.addColorStop(0, '#0f2b1c');
+                                coreGrad.addColorStop(0.48, '#040b07');
+                                coreGrad.addColorStop(1, '#010302');
+                            } else {
+                                coreGrad.addColorStop(0, '#2a1219');
+                                coreGrad.addColorStop(0.50, '#080a09');
+                                coreGrad.addColorStop(1, '#010202');
+                            }
+                            ctx.fillStyle = coreGrad;
+                            ctx.beginPath();
+                            ctx.arc(cx, cy, R, 0, Math.PI * 2);
+                            ctx.fill();
+
+                            const tiltX = -0.24 * e;
+                            const fov = Math.max(R * 3.4, 420);
+
+                            // 5. Back-Hemisphere Holographic Dots (subtle depth inside globe)
+                            if (e > 0.35) {
+                                for (let i = 0; i < DOT_COUNT; i++) {
+                                    const d = sphereDots[i];
+                                    const p = rotate3D(d.x, d.y, d.z, rotY, tiltX, 0);
+                                    if (p.z >= 0) continue;
+                                    const sx = cx + p.x * R;
+                                    const sy = cy + p.y * R;
+                                    ctx.fillStyle = `rgba(${rCol},${gCol},${bCol},${0.075 * e})`;
+                                    ctx.fillRect(sx - 0.6, sy - 0.6, 1.2, 1.2);
+                                }
+                            }
+
+                            // 6. Front-Hemisphere 3D Latitude & Longitude Wireframe Grid
+                            if (e > 0.22) {
+                                ctx.save();
+                                ctx.lineWidth = 0.85;
+                                const lats = [-0.92, -0.48, 0, 0.48, 0.92];
+                                for (const ly of lats) {
+                                    const lr = Math.sqrt(Math.max(0, 1 - ly * ly));
+                                    ctx.beginPath();
+                                    let started = false;
+                                    for (let s = 0; s <= 60; s++) {
+                                        const a = (s / 60) * Math.PI * 2;
+                                        const p = rotate3D(Math.cos(a) * lr, ly, Math.sin(a) * lr, rotY, tiltX, 0);
+                                        if (p.z > -0.05) {
+                                            const sx = cx + p.x * R;
+                                            const sy = cy + p.y * R;
+                                            if (!started) { ctx.moveTo(sx, sy); started = true; }
+                                            else ctx.lineTo(sx, sy);
+                                        } else {
+                                            started = false;
+                                        }
+                                    }
+                                    ctx.strokeStyle = `rgba(${rCol},${gCol},${bCol},${(ly === 0 ? 0.22 : 0.10) * e})`;
+                                    ctx.stroke();
+                                }
+
+                                for (let m = 0; m < 10; m++) {
+                                    const lon = (m / 10) * Math.PI;
+                                    const cl = Math.cos(lon), sl = Math.sin(lon);
+                                    ctx.beginPath();
+                                    let started = false;
+                                    for (let s = 0; s <= 60; s++) {
+                                        const a = (s / 60) * Math.PI * 2;
+                                        const ux = Math.cos(a) * cl;
+                                        const uy = Math.sin(a);
+                                        const uz = Math.cos(a) * sl;
+                                        const p = rotate3D(ux, uy, uz, rotY, tiltX, 0);
+                                        if (p.z > -0.05) {
+                                            const sx = cx + p.x * R;
+                                            const sy = cy + p.y * R;
+                                            if (!started) { ctx.moveTo(sx, sy); started = true; }
+                                            else ctx.lineTo(sx, sy);
+                                        } else {
+                                            started = false;
+                                        }
+                                    }
+                                    ctx.strokeStyle = `rgba(255,255,255,${0.065 * e})`;
+                                    ctx.stroke();
+                                }
+                                ctx.restore();
+                            }
+
+                            // 7. Front-Hemisphere 3D Fibonacci Dot-Matrix Continents
+                            for (let i = 0; i < DOT_COUNT; i++) {
+                                const d = sphereDots[i];
+                                const p = rotate3D(d.x, d.y, d.z, rotY, tiltX, 0);
+                                if (p.z < 0) continue;
+
+                                const k = 0.94 + 0.06 * (fov / (fov - p.z * R * 0.3));
+                                const sx = cx + p.x * R * k;
+                                const sy = cy + p.y * R * k;
+                                if (sy < -10 || sy > H + 10 || sx < -10 || sx > W + 10) continue;
+
+                                const continentBoost = d.patchA * (1 - sideMix) + d.patchB * sideMix;
+                                const alpha = Math.min(1, (0.18 + 0.58 * p.z + 0.42 * continentBoost));
+                                const dotR  = (1.05 + 0.95 * p.z + 0.55 * continentBoost) * (1 + (1 - e) * 0.35);
+
+                                if (continentBoost > 0.32) {
+                                    ctx.fillStyle = `rgba(${rCol},${gCol},${bCol},${alpha})`;
+                                } else {
+                                    ctx.fillStyle = `rgba(195,255,220,${alpha * 0.72})`;
+                                }
+                                ctx.beginPath();
+                                ctx.arc(sx, sy, dotR, 0, Math.PI * 2);
+                                ctx.fill();
+                            }
+
+                            // 8. Surface Quest Beacons (Side 01 at +Z, Side 02 at -Z)
+                            if (settledAlpha > 0.15) {
+                                const beacons = [
+                                    { x: 0, y: 0.06, z: 1,  r: 30,  g: 215, b: 96,  label: 'QUEST 01' },
+                                    { x: 0, y: -0.05, z: -1, r: 255, g: 90,  b: 110, label: 'QUEST 02' }
+                                ];
+                                beacons.forEach((b) => {
+                                    const p = rotate3D(b.x, b.y, b.z, rotY, tiltX, 0);
+                                    if (p.z <= 0.18) return;
+                                    const sx = cx + p.x * R;
+                                    const sy = cy + p.y * R;
+                                    const vis = ((p.z - 0.18) / 0.82) * settledAlpha;
+                                    const pulse = 8 + 6 * (0.5 + 0.5 * Math.sin(time * 3.8));
+
+                                    ctx.save();
+                                    ctx.strokeStyle = `rgba(${b.r},${b.g},${b.b},${0.75 * vis})`;
+                                    ctx.lineWidth = 1.4;
+                                    ctx.beginPath();
+                                    ctx.arc(sx, sy, pulse, 0, Math.PI * 2);
+                                    ctx.stroke();
+
+                                    ctx.fillStyle = `rgba(255,255,255,${0.95 * vis})`;
+                                    ctx.beginPath();
+                                    ctx.arc(sx, sy, 3.2, 0, Math.PI * 2);
+                                    ctx.fill();
+
+                                    ctx.font = "600 9.5px 'JetBrains Mono', monospace";
+                                    ctx.fillStyle = `rgba(255,255,255,${0.82 * vis})`;
+                                    ctx.textAlign = 'center';
+                                    ctx.fillText(b.label, sx, sy - 14);
+                                    ctx.restore();
+                                });
+                            }
+
+                            // 9. Crisp Fresnel Atmospheric Rim Ring
+                            ctx.save();
+                            ctx.strokeStyle = `rgba(${rCol},${gCol},${bCol},0.85)`;
+                            ctx.lineWidth = 1.7;
+                            ctx.shadowColor = `rgba(${rCol},${gCol},${bCol},0.75)`;
+                            ctx.shadowBlur = 20;
+                            ctx.beginPath();
+                            ctx.arc(cx, cy, R, 0, Math.PI * 2);
+                            ctx.stroke();
+                            ctx.restore();
+
+                            // 10. Front Half of 3D Orbital Rings (wrapping in front of planet)
+                            if (settledAlpha > 0.02) {
+                                drawOrbitRing(cx, cy, R, 1.22, -0.44, -ringTiltZ * 0.75, 30, 215, 96, settledAlpha * 0.9, true, 'front', -time * 0.8);
+                                drawOrbitRing(cx, cy, R, 1.38, 0.36, ringTiltZ, rCol, gCol, bCol, settledAlpha, false, 'front', time);
+                            }
+                        }
+
+                        requestAnimationFrame(render);
+                    })();
+                    </script>
 
                 </section>
 
@@ -172,8 +1017,8 @@
         </div>
     </main>
 
-    <!-- SPEAKER CUES DRAWER (กดปุ่ม C เพื่อเปิด/ปิด) -->
-    <div id="cues-drawer" class="fixed bottom-10 left-1/2 -translate-x-1/2 max-w-4xl w-[92%] bento-card p-5 border-[#484848] shadow-2xl z-40 hidden transition-all">
+    <!-- SPEAKER CUES DRAWER -->
+    <div id="cues-drawer" class="fixed bottom-10 left-1/2 -translate-x-1/2 max-w-4xl w-[92%] bento-card p-5 border-[#484848] shadow-2xl z-50 hidden transition-all">
         <div class="flex justify-between items-center mb-2 border-b border-[#282828] pb-2">
             <div class="flex items-center space-x-2">
                 <span class="glyph-red-dot"></span>
@@ -184,12 +1029,11 @@
         <p id="cue-content" class="text-xs md:text-sm text-white/90 leading-relaxed whitespace-pre-line font-normal"></p>
     </div>
 
-    <!-- SPEAKER SCRIPTS & NAVIGATION -->
     <script>
         window.prevSectionUrl = '00_cover.html';
         window.nextSectionUrl = '02_features.html';
         window.speakerScripts = {
-            2: "【บทพูดเพจ 2: โจทย์อาจารย์และการตีความของพวกเรา】\nจุดเริ่มต้นทั้งหมดมาจากโพสต์ของอาจารย์ครับ ในโพสต์วันที่ 13 กันยายน อาจารย์มีโจทย์ 3 ทางเลือกให้พวกเรา แต่แทนที่จะเลือกทำแค่ข้อใดข้อหนึ่ง พวกเราตัดสินใจรวบทำหมดทุกข้อ ทั้งสร้างฮาร์ดแวร์ตัวหารบนบอร์ด Nexys A7, แสดงผลออก 7-Segment เลขฐานสิบ, และมี Simulator จำลองบอร์ดในตัว\n\nและในโพสต์วันที่ 25 กันยายน อาจารย์ได้ท้าทายไว้ว่า 'หา Compiler แปลงภาษา C เป็น MIPS opcode หรือ micro Python ที่รันบน MIPS CPU... ไม่รู้รุ่นน้องอีก 3 รุ่นจะทำได้ไหม ใครทำได้อาจารย์จะให้ A!'\nวันนี้พวกเรามาพิสูจน์ให้อาจารย์เห็นแล้วครับว่า ไม่ต้องรอถึง 3 รุ่น พวกเราสร้าง FPGA Studio ที่มีคอมไพเลอร์ GCC แท้ จัดการแรมด้วย start.S และ link.ld รันภาษา C บนซิลิคอนจริงได้สำเร็จแล้วครับ!"
+            2: "【บทพูดเพจ 2: โลก 3D จุดกำเนิดโปรเจกต์】\n[ฝั่งที่ 1] จุดเริ่มต้นมาจากโพสต์แรกของอาจารย์ที่ให้ทำโปรแกรมคำนวณควบคู่กับ Python Simulator เพื่อรันดูผลลัพธ์ครับ แทนที่จะดูผลเป็นตัวหนังสือในคอมมานด์ไลน์ พวกเราเลยสร้าง Virtual Board Simulator จำลองบอร์ด Nexys A7 ทั้งใบ กดสวิตช์ 16 ขาและดูไฟ 7-Segment สดๆ บนจอได้เลยโดยไม่ต้องง้อบอร์ดจริง\n\n[หมุนโลก 180° ไปฝั่งที่ 2] ต่อมาอาจารย์โพสต์ว่าอยากเห็นระบบคอมที่รับอินพุต ประมวลผล ส่งออกเอาท์พุตและจอภาพ รวมถึงท้าให้หา Compiler แปลงภาษา C เป็น MIPS opcode ใครทำได้ให้เกรด A... พวกเราเลยทำระบบผูกขา CPU เข้ากับ I/O รอบบอร์ดและจอ VGA อัตโนมัติ พร้อมเชื่อม GCC เข้ากับ IDE และทำระบบนำเข้า Custom Compiler ให้กดปุ่มเดียวแปลงโค้ด C เป็นคำสั่ง MIPS พร้อมรันทันทีครับ!"
         };
     </script>
     <script src="../js/presentation.js"></script>

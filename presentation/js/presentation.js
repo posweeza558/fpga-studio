@@ -38,7 +38,7 @@ function initPresentation() {
     totalSlides = slides.length;
     
     const totalElem = document.getElementById('total-slide-num');
-    if (totalElem) {
+    if (totalElem && totalSlides > 1) {
         totalElem.innerText = String(totalSlides).padStart(2, '0');
     }
 
@@ -49,13 +49,27 @@ function initPresentation() {
     initGlobalClickNavigation();
 }
 
+// 2D Spatial Coordinates for Slides:
+// Slide 1 (0,0) -> Slide 2 (1,0) -> Slide 3 (2,0) -> Slide 4 Video is ABOVE Slide 3 in space (2,-1) -> Slide 5 (3,-1)
+function getSlideGridPos(indexZeroBased, total) {
+    if (total <= 1) return { x: 0, y: 0 };
+    const map = [
+        { x: 0, y: 0 },  // Slide 1: Cover
+        { x: 1, y: 0 },  // Slide 2: Origin Quest (3D Globe)
+        { x: 2, y: 0 },  // Slide 3: Features (Planet Horizon)
+        { x: 2, y: -1 }, // Slide 4: Pipeline Video (Camera ascends UP above the world!)
+        { x: 3, y: -1 }  // Slide 5: Live Demo & GitHub (Deep Space Orbit)
+    ];
+    return map[indexZeroBased] || { x: indexZeroBased, y: 0 };
+}
+
 function setupCarouselDOM() {
     const main = document.querySelector('main');
     if (!main) return;
 
+    let viewport = document.getElementById('carousel-viewport');
     let track = document.getElementById('carousel-track');
     if (!track) {
-        let viewport = document.getElementById('carousel-viewport');
         if (!viewport) {
             viewport = document.createElement('div');
             viewport.id = 'carousel-viewport';
@@ -68,6 +82,23 @@ function setupCarouselDOM() {
 
         const slides = Array.from(main.querySelectorAll('.slide'));
         slides.forEach(s => track.appendChild(s));
+    }
+
+    if (viewport && !document.getElementById('global-space-stage')) {
+        const spaceStage = document.createElement('div');
+        spaceStage.id = 'global-space-stage';
+        spaceStage.innerHTML = '<div class="fx-nebula"></div><div class="fx-grid"></div>';
+        viewport.insertBefore(spaceStage, viewport.firstChild);
+    }
+
+    const slides = Array.from(track.querySelectorAll('.slide'));
+    if (slides.length > 1) {
+        track.classList.add('track-2d');
+        slides.forEach((s, idx) => {
+            const pos = getSlideGridPos(idx, slides.length);
+            s.style.left = `${pos.x * 100}vw`;
+            s.style.top  = `${pos.y * 100}vh`;
+        });
     }
     carouselTrack = track;
 }
@@ -99,13 +130,29 @@ function setupEdgeArrows() {
     document.body.appendChild(rightArrow);
 }
 
+let lastSlideIndex = 0;
+
+function isOriginQuestSlide(el) {
+    return Boolean(el && (el.id === 'origin-quest-slide' || el.getAttribute('data-slide') === '2'));
+}
+
 function updateSlide() {
     const slides = document.querySelectorAll('.slide');
     if (!slides.length) return;
 
+    const prevIdx = lastSlideIndex;
+    lastSlideIndex = currentSlide;
+
     if (carouselTrack) {
-        const offsetPercent = (currentSlide - 1) * 100;
-        carouselTrack.style.transform = `translate3d(-${offsetPercent}%, 0, 0)`;
+        if ( slides.length > 1 ) {
+            const pos = getSlideGridPos(currentSlide - 1, slides.length);
+            const tx = -pos.x * 100;
+            const ty = -pos.y * 100;
+            carouselTrack.style.transform = `translate3d(${tx}vw, ${ty}vh, 0)`;
+        } else {
+            const offsetPercent = (currentSlide - 1) * 100;
+            carouselTrack.style.transform = `translate3d(-${offsetPercent}%, 0, 0)`;
+        }
     }
 
     slides.forEach((s, idx) => {
@@ -116,12 +163,24 @@ function updateSlide() {
         }
     });
 
+    const activeSlide = slides[currentSlide - 1] || document.querySelector(`.slide[data-slide="${currentSlide}"]`);
+    const slideKey = totalSlides > 1 ? currentSlide : (Number(activeSlide?.getAttribute('data-slide')) || currentSlide);
+
+    // Show Top HUD Bar ONLY on Slide 1
+    const hud = document.querySelector('.fx-hud');
+    if (hud) {
+        if (slideKey === 1) {
+            hud.classList.remove('hud-hidden');
+        } else {
+            hud.classList.add('hud-hidden');
+        }
+    }
+
     const curElem = document.getElementById('current-slide-num');
-    if (curElem) {
+    if (curElem && totalSlides > 1) {
         curElem.innerText = String(currentSlide).padStart(2, '0');
     }
 
-    const activeSlide = document.querySelector(`.slide[data-slide="${currentSlide}"]`);
     const speakerName = activeSlide ? activeSlide.getAttribute('data-speaker') || "PRESENTATION" : "PRESENTATION";
     
     const cueTitle = document.getElementById('cue-title');
@@ -129,7 +188,15 @@ function updateSlide() {
     if (cueTitle) cueTitle.innerText = `${speakerName} // CUE SHEET`;
     if (cueContent) {
         const scripts = window.speakerScripts || {};
-        cueContent.innerText = scripts[currentSlide] || "ไม่มีสคริปต์ในสไลด์นี้";
+        cueContent.innerText = scripts[slideKey] || scripts[currentSlide] || "ไม่มีสคริปต์ในสไลด์นี้";
+    }
+
+    // Hook: Sync Origin Quest 3D Globe across Slide 1 <-> Slide 2 <-> Slide 3 (forward & backward)
+    if (typeof window.syncOriginQuestSlide === 'function') {
+        window.syncOriginQuestSlide(slideKey, prevIdx);
+    } else if (isOriginQuestSlide(activeSlide) && typeof window.enterOriginQuest === 'function') {
+        const dir = (prevIdx > currentSlide) ? 'backward' : 'forward';
+        window.enterOriginQuest(dir);
     }
 
     // Hook: If arriving on slide 3 (Arc Carousel Slide), initialize/update arc positions immediately
@@ -138,6 +205,19 @@ function updateSlide() {
             window.initArcCarousel();
         } else if (typeof window.updateArcPositions === 'function') {
             window.updateArcPositions();
+        }
+    }
+
+    // Hook: Auto-play / pause Pipeline Video on Slide 4
+    const pipeVid = document.getElementById('pipeline-video');
+    if (pipeVid) {
+        if (slideKey === 4) {
+            pipeVid.play().catch(() => {
+                pipeVid.muted = true;
+                pipeVid.play().catch(() => {});
+            });
+        } else {
+            pipeVid.pause();
         }
     }
 
@@ -151,6 +231,15 @@ function updateSlide() {
 }
 
 function nextSlide() {
+    const slides = document.querySelectorAll('.slide');
+    const activeSlide = slides[currentSlide - 1];
+    if (isOriginQuestSlide(activeSlide) && typeof window.stepOriginQuest === 'function') {
+        if (window.stepOriginQuest(1)) {
+            updateEdgeArrows(mouse.x);
+            return;
+        }
+    }
+
     if (currentSlide < totalSlides) {
         currentSlide++;
         updateSlide();
@@ -160,6 +249,15 @@ function nextSlide() {
 }
 
 function prevSlide() {
+    const slides = document.querySelectorAll('.slide');
+    const activeSlide = slides[currentSlide - 1];
+    if (isOriginQuestSlide(activeSlide) && typeof window.stepOriginQuest === 'function') {
+        if (window.stepOriginQuest(-1)) {
+            updateEdgeArrows(mouse.x);
+            return;
+        }
+    }
+
     if (currentSlide > 1) {
         currentSlide--;
         updateSlide();
@@ -464,6 +562,10 @@ function updatePupil() {
 
 function scrambleTextElement(el, finalText) {
     if (!el || !finalText) return;
+    if (window.location.search.includes('settle=1') || window.location.search.includes('side=2')) {
+        el.textContent = finalText;
+        return;
+    }
     const glyphs = '01#%&*+<>/=?ABCDEFXYZ';
     const len = finalText.length;
     let frame = 0;

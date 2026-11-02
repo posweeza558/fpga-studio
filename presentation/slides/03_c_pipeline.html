@@ -3,46 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FPGA STUDIO — 04. SILICON PIPELINE</title>
+    <title>FPGA STUDIO — 04. SILICON PIPELINE VIDEO</title>
     <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Doto:wght@400;600;800;900&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;600;700&family=Prompt:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/nothing.css">
 </head>
-<body class="h-screen w-screen flex flex-col justify-between p-6 relative overflow-hidden">
+<body class="h-screen w-screen m-0 p-0 relative overflow-hidden">
 
-    <!-- Interactive Warping Dot Matrix Canvas -->
-    <canvas id="bg-canvas"></canvas>
-
-    <!-- TOP BAR (CLEAN MINIMAL) -->
-    <header class="w-full flex items-center justify-between pb-3 border-b border-[#242424] z-20">
-        <div class="flex items-center space-x-3">
-            <span class="glyph-green-dot"></span>
-            <span class="mono text-xs text-[#EAEAEA] font-bold tracking-widest uppercase">FPGA STUDIO</span>
-            <span class="text-white/20 text-xs">|</span>
-            <span class="mono text-xs text-[#1ED760]">SILICON PIPELINE // C TO HARDWARE</span>
-        </div>
-
-        <div class="flex items-center space-x-4">
-            <div class="mono text-sm font-bold tracking-widest text-[#EAEAEA]">
-                <span id="current-slide-num">04</span> <span class="text-white/30">/</span> <span id="total-slide-num">05</span>
-            </div>
-            <button onclick="toggleFullscreen()" class="p-2 rounded-full border border-[#282828] hover:border-[#484848] hover:bg-[#2A2A2A] transition text-xs mono text-[#B3B3B3]" title="Full Screen (F)">
-                ⛶
-            </button>
-        </div>
-    </header>
-
-    <!-- MAIN SLIDE CONTAINER (CAROUSEL VIEWPORT) -->
-    <main class="flex-1 w-full flex items-center justify-center py-2 relative z-10 overflow-hidden">
+    <!-- FULLSCREEN SLIDE VIEWPORT -->
+    <main class="w-screen h-screen m-0 p-0 relative z-10 overflow-hidden">
         <div id="carousel-viewport">
             <div id="carousel-track">
 
                 <!-- ======================================================== -->
-                <!-- SLIDE 4: SILICON PIPELINE (C TRANSFORM TO HARDWARE)     -->
+                <!-- SLIDE 4: SILICON PIPELINE VIDEO (RISES UP FROM PLANET)   -->
                 <!-- ======================================================== -->
-                <section class="slide active fx-slide w-full h-full" style="--horizon: clamp(60px, 8.5vh, 96px);" data-slide="4" data-speaker="SPEAKER // C-TO-SILICON">
+                <section class="slide active fx-slide w-full h-full" id="pipeline-video-slide" data-slide="4" data-speaker="SPEAKER // C-TO-SILICON PIPELINE">
+
+                    <style>
+                        .pv-stage {
+                            position: relative;
+                            z-index: 10;
+                            width: 100%;
+                            height: 100%;
+                            max-width: 1540px;
+                            margin: 0 auto;
+                            padding: clamp(20px, 3vh, 36px) clamp(24px, 3.2vw, 56px);
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            align-items: center;
+                            gap: clamp(12px, 1.8vh, 20px);
+                        }
+
+                        /* High-orbit entry animation as camera ascends above the world */
+                        .pv-header-bar {
+                            transform: translate3d(0, -32px, 0);
+                            opacity: 0;
+                            transition:
+                                transform 0.92s cubic-bezier(0.28, 0.0, 0.2, 1),
+                                opacity 0.92s cubic-bezier(0.28, 0.0, 0.2, 1);
+                            will-change: transform, opacity;
+                        }
+
+                        .slide.active .pv-header-bar {
+                            transform: translate3d(0, 0, 0);
+                            opacity: 1;
+                        }
+
+                        .pv-rise-card {
+                            width: 100%;
+                            max-width: 1360px;
+                            transform: translate3d(0, -54px, 0) scale(0.95);
+                            opacity: 0;
+                            transition:
+                                transform 0.92s cubic-bezier(0.28, 0.0, 0.2, 1),
+                                opacity 0.92s cubic-bezier(0.28, 0.0, 0.2, 1);
+                            will-change: transform, opacity;
+                        }
+
+                        .slide.active .pv-rise-card {
+                            transform: translate3d(0, 0, 0) scale(1);
+                            opacity: 1;
+                        }
+
+                        .pv-frame {
+                            position: relative;
+                            width: 100%;
+                            border-radius: 22px;
+                            overflow: hidden;
+                            background: #000000;
+                            border: 1px solid rgba(30, 215, 96, 0.32);
+                            box-shadow:
+                                0 0 70px rgba(30, 215, 96, 0.14),
+                                0 32px 90px rgba(0, 0, 0, 0.88),
+                                inset 0 1px 0 rgba(255, 255, 255, 0.14);
+                        }
+
+                        .pv-frame::before {
+                            content: '';
+                            position: absolute;
+                            top: 0;
+                            left: 12%;
+                            right: 12%;
+                            height: 1px;
+                            z-index: 5;
+                            background: linear-gradient(90deg, transparent, rgba(30, 215, 96, 0.9), transparent);
+                            pointer-events: none;
+                        }
+
+                        .pv-video {
+                            width: 100%;
+                            max-height: 75vh;
+                            aspect-ratio: 16 / 9;
+                            object-fit: contain;
+                            display: block;
+                            background: #000;
+                        }
+
+                        .pv-controls {
+                            display: flex;
+                            align-items: center;
+                            gap: 12px;
+                            padding: 10px 18px;
+                            background: rgba(6, 11, 8, 0.92);
+                            border-top: 1px solid rgba(255, 255, 255, 0.09);
+                            backdrop-filter: blur(14px);
+                        }
+
+                        .pv-btn {
+                            cursor: pointer;
+                            padding: 5px 12px;
+                            border-radius: 999px;
+                            font-family: 'JetBrains Mono', monospace;
+                            font-size: 10.5px;
+                            letter-spacing: 0.1em;
+                            border: 1px solid rgba(30, 215, 96, 0.4);
+                            background: rgba(30, 215, 96, 0.1);
+                            color: #1ED760;
+                            transition: all 0.2s ease;
+                            flex-shrink: 0;
+                        }
+                        .pv-btn:hover {
+                            background: rgba(30, 215, 96, 0.22);
+                            color: #fff;
+                        }
+
+                        .pv-chap {
+                            cursor: pointer;
+                            padding: 3px 9px;
+                            border-radius: 6px;
+                            font-family: 'JetBrains Mono', monospace;
+                            font-size: 9.5px;
+                            letter-spacing: 0.06em;
+                            color: rgba(255, 255, 255, 0.55);
+                            background: rgba(255, 255, 255, 0.04);
+                            border: 1px solid rgba(255, 255, 255, 0.08);
+                            transition: all 0.2s ease;
+                            white-space: nowrap;
+                        }
+                        .pv-chap:hover {
+                            color: #1ED760;
+                            border-color: rgba(30, 215, 96, 0.45);
+                            background: rgba(30, 215, 96, 0.08);
+                        }
+
+                        .pv-scrubber {
+                            flex: 1;
+                            height: 5px;
+                            border-radius: 999px;
+                            background: rgba(255, 255, 255, 0.14);
+                            cursor: pointer;
+                            position: relative;
+                            overflow: hidden;
+                        }
+                        .pv-scrubber-fill {
+                            height: 100%;
+                            width: 0%;
+                            background: linear-gradient(90deg, #1ED760, #6EE7B7);
+                            box-shadow: 0 0 10px #1ED760;
+                        }
+                    </style>
 
                     <div class="fx-root">
 
@@ -50,156 +173,128 @@
                         <canvas class="fx-stars"></canvas>
                         <div class="fx-nebula"></div>
                         <div class="fx-grid"></div>
-                        <div class="fx-aurora"></div>
-                        <div class="fx-watermark fx-dot">04</div>
 
-                        <!-- Planet horizon -->
-                        <div class="fx-orbit-ring"></div>
-                        <div class="fx-planet"></div>
+                        <div class="pv-stage">
 
-                        <!-- Main Split Stage (Matches Slide 3 Architecture) -->
-                        <div class="relative z-10 h-full grid grid-cols-1 lg:grid-cols-12 gap-[clamp(22px,3vw,48px)] px-[clamp(26px,3.8vw,60px)] pt-[clamp(18px,3vh,34px)] pb-[clamp(66px,9.5vh,105px)] items-stretch">
-
-                            <!-- LEFT 7 COLS: Hero Title + 5-Stage Compilation Chain + Runtime Specs -->
-                            <div class="lg:col-span-7 flex flex-col justify-between min-h-0">
+                            <!-- Compact Header Bar -->
+                            <div class="pv-header-bar w-full max-w-[1360px] flex flex-wrap items-end justify-between gap-3">
                                 <div>
-                                    <div class="fx-rise flex items-center gap-3 mb-3">
+                                    <div class="flex items-center gap-2.5 mb-1">
                                         <span class="glyph-green-dot"></span>
-                                        <span class="fx-mono text-[10.5px] tracking-[0.32em] text-[#1ED760]">SOFTWARE TO SILICON // COMPILATION PIPELINE</span>
-                                        <span class="h-px w-14 bg-gradient-to-r from-[#1ED760]/60 to-transparent"></span>
-                                        <span class="fx-mono text-[10.5px] tracking-[0.28em] text-white/35">ZERO-OS BARE METAL</span>
+                                        <span class="fx-mono text-[10.5px] tracking-[0.28em] text-[#1ED760]">SILICON PIPELINE // C TO 7-SEGMENT EXECUTION</span>
                                     </div>
-
-                                    <h2 class="fx-rise fx-dot fx-title uppercase" style="font-size: clamp(38px, 6.8vh, 80px); animation-delay:0.06s">
-                                        <span data-scramble="SILICON ">SILICON </span><span class="g" data-scramble="PIPELINE">PIPELINE</span>
-                                    </h2>
-
-                                    <h3 class="fx-rise fx-thai text-white font-semibold mt-3 text-[clamp(17px,2.4vh,25px)] tracking-tight" style="animation-delay:0.12s">
-                                        จากโค้ดภาษา C สู่สัญญาณฮาร์ดแวร์จริงบนชิป FPGA
-                                    </h3>
-                                    <p class="fx-rise text-white/55 mt-1.5 text-[clamp(12px,1.6vh,14.5px)] leading-relaxed max-w-[54ch]" style="animation-delay:0.16s">
-                                        คอมไพล์ภาษา C ด้วย Real GCC ฝังตัว จัดวางหน่วยความจำด้วย <code class="fx-mono text-[#b9f6cf]">start.S</code> และ <code class="fx-mono text-[#b9f6cf]">link.ld</code> แล้วส่งเข้า 5-Stage Pipeline CPU สั่งการอุปกรณ์ผ่าน MMIO Address โดยตรง
-                                    </p>
-
-                                    <!-- 5-Step Orbital Pipeline Chain -->
-                                    <div class="fx-rise grid grid-cols-5 gap-2 mt-4" style="animation-delay:0.22s">
-                                        <div class="p-2.5 rounded-xl bg-white/[0.03] border border-white/10">
-                                            <div class="fx-dot text-lg text-red-400">01</div>
-                                            <div class="fx-mono text-[10px] tracking-[0.14em] text-white font-semibold mt-0.5">SOURCE</div>
-                                            <div class="fx-mono text-[9.5px] text-white/45 mt-0.5">main.c / nCk</div>
-                                        </div>
-                                        <div class="p-2.5 rounded-xl bg-white/[0.03] border border-white/10">
-                                            <div class="fx-dot text-lg text-[#1ED760]">02</div>
-                                            <div class="fx-mono text-[10px] tracking-[0.14em] text-white font-semibold mt-0.5">COMPILE</div>
-                                            <div class="fx-mono text-[9.5px] text-white/45 mt-0.5">GCC 12.2 / 15.2</div>
-                                        </div>
-                                        <div class="p-2.5 rounded-xl bg-white/[0.03] border border-white/10">
-                                            <div class="fx-dot text-lg text-sky-400">03</div>
-                                            <div class="fx-mono text-[10px] tracking-[0.14em] text-white font-semibold mt-0.5">LINKER</div>
-                                            <div class="fx-mono text-[9.5px] text-white/45 mt-0.5">start.S + link.ld</div>
-                                        </div>
-                                        <div class="p-2.5 rounded-xl bg-white/[0.03] border border-white/10">
-                                            <div class="fx-dot text-lg text-amber-300">04</div>
-                                            <div class="fx-mono text-[10px] tracking-[0.14em] text-white font-semibold mt-0.5">BRAM SPLIT</div>
-                                            <div class="fx-mono text-[9.5px] text-white/45 mt-0.5">.text &amp; .data</div>
-                                        </div>
-                                        <div class="p-2.5 rounded-xl bg-[#1ED760]/[0.08] border border-[#1ED760]/40 shadow-[0_0_24px_rgba(30,215,96,0.18)]">
-                                            <div class="fx-dot text-lg text-[#1ED760]">05</div>
-                                            <div class="fx-mono text-[10px] tracking-[0.14em] text-[#1ED760] font-semibold mt-0.5">SILICON</div>
-                                            <div class="fx-mono text-[9.5px] text-emerald-200/70 mt-0.5">IF·ID·EX·MEM·WB</div>
-                                        </div>
+                                    <div class="flex flex-wrap items-baseline gap-4">
+                                        <h2 class="fx-dot uppercase text-white leading-none" style="font-size: clamp(28px, 4.2vh, 48px); text-shadow: 0 0 24px rgba(30,215,96,0.3);">
+                                            <span data-scramble="PIPELINE ">PIPELINE </span><span class="text-[#1ED760]" data-scramble="EXECUTION">EXECUTION</span>
+                                        </h2>
+                                        <span class="fx-thai text-white/85 font-semibold text-[clamp(14px,1.9vh,19px)]">
+                                            จากโค้ดภาษา C ผ่านสาย USB เข้าสู่ 5-Stage CPU จนแสดงผลออกจอ 7-Segment
+                                        </span>
                                     </div>
                                 </div>
 
-                                <!-- Bottom Stats + Chips -->
-                                <div>
-                                    <div class="fx-rise flex items-end mt-3" style="animation-delay:0.28s">
-                                        <div class="flex-1">
-                                            <div class="fx-dot fx-stat-num hl">0x0000</div>
-                                            <div class="fx-mono text-[9.5px] tracking-[0.18em] text-white/45 mt-1.5">INST ROM (.TEXT)</div>
-                                        </div>
-                                        <div class="flex-1 pl-5 border-l border-white/10">
-                                            <div class="fx-dot fx-stat-num">0x8000M</div>
-                                            <div class="fx-mono text-[9.5px] tracking-[0.18em] text-white/45 mt-1.5">DATA BRAM (.DATA)</div>
-                                        </div>
-                                        <div class="flex-1 pl-5 border-l border-white/10">
-                                            <div class="fx-dot fx-stat-num hl">0x8001M</div>
-                                            <div class="fx-mono text-[9.5px] tracking-[0.18em] text-white/45 mt-1.5">STACK TOP ($SP)</div>
-                                        </div>
-                                        <div class="flex-1 pl-5 border-l border-white/10">
-                                            <div class="fx-dot fx-stat-num">0xF000M</div>
-                                            <div class="fx-mono text-[9.5px] tracking-[0.18em] text-white/45 mt-1.5">MMIO I/O BUS</div>
-                                        </div>
-                                    </div>
-
-                                    <div class="fx-rise flex flex-wrap gap-2 mt-3.5" style="animation-delay:0.34s">
-                                        <span class="fx-chip">-march=mips32 -EB</span>
-                                        <span class="fx-chip">-march=rv32im</span>
-                                        <span class="fx-chip">OBJCOPY .DATA EXTRACT</span>
-                                        <span class="fx-chip fx-chip-green">100% BARE-METAL C</span>
-                                    </div>
+                                <div class="hidden lg:flex items-center gap-2">
+                                    <span class="fx-chip fx-chip-green">C → GCC → UART → 5-STAGE CPU → 7-SEG</span>
                                 </div>
                             </div>
 
-                            <!-- RIGHT 5 COLS: Glass Spec Card (Bootstrap + Full MMIO Bus Map) -->
-                            <div class="lg:col-span-5 fx-rise fx-glass flex flex-col justify-between p-[clamp(16px,2.3vh,24px)] min-h-0" style="animation-delay:0.14s">
-                                <div class="fx-scan"></div>
+                            <!-- Rising Video Cinema Card -->
+                            <div class="pv-rise-card">
+                                <div class="pv-frame">
+                                    <video
+                                        id="pipeline-video"
+                                        class="pv-video"
+                                        src="../assets/pipeline_demo.mp4"
+                                        playsinline
+                                        preload="auto"
+                                        autoplay
+                                        muted
+                                        loop
+                                        onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='pipeline_demo.mp4';}"
+                                    ></video>
 
-                                <div>
-                                    <div class="flex items-center justify-between mb-2.5">
-                                        <span class="fx-mono text-[10px] tracking-[0.3em] text-white/40">RUNTIME ARCHITECTURE</span>
-                                        <span class="fx-mono text-[10px] tracking-[0.2em] text-[#1ED760]">● MMIO BUS ACTIVE</span>
-                                    </div>
+                                    <!-- Interactive Video Controls & Chapter Quick-Jumps (data-no-nav prevents accidental slide change) -->
+                                    <div class="pv-controls" data-no-nav>
+                                        <button type="button" id="pv-play-btn" class="pv-btn" onclick="window.togglePipelineVideo()">
+                                            ⏸ PAUSE
+                                        </button>
 
-                                    <ul class="space-y-2 text-[clamp(11.5px,1.45vh,13.5px)] leading-[1.55] text-white/65">
-                                        <li class="fx-bullet">
-                                            <span><strong>start.S Vector Boot:</strong> วางที่ <code>0x00000000</code> ตั้งค่า Stack Pointer (<code>$sp = 0x80010000</code>) ก่อนกระโดดเข้า <code>main()</code> รองรับฟังก์ชันซ้อนและ Recursive</span>
-                                        </li>
-                                        <li class="fx-bullet">
-                                            <span><strong>Automated .data BRAM Loader:</strong> ใช้ <code>objcopy</code> แยกตัวแปร Global/Static บรรจุลง Data RAM ที่ <code>0x80000000</code> อัตโนมัติ</span>
-                                        </li>
-                                    </ul>
-                                </div>
+                                        <div class="pv-scrubber" id="pv-scrubber" onclick="window.seekPipelineVideo(event)">
+                                            <div class="pv-scrubber-fill" id="pv-scrubber-fill"></div>
+                                        </div>
 
-                                <!-- Hardware MMIO Bus Binding Table -->
-                                <div class="mt-3 pt-3 border-t border-white/10">
-                                    <div class="flex items-center justify-between mb-1.5">
-                                        <span class="fx-mono text-[10px] tracking-[0.3em] text-white/40">NEXYS A7 MMIO ADDRESS MAP</span>
-                                        <span class="fx-mono text-[10px] text-white/35">C POINTER SYNTAX</span>
-                                    </div>
-                                    <div>
-                                        <div class="fx-row">
-                                            <span class="text-red-400 font-semibold">0xF0000000 · WRITE</span>
-                                            <span class="text-white/75">16 User LEDs (<code class="text-[#b9f6cf]">LED = 0xFF;</code>)</span>
-                                        </div>
-                                        <div class="fx-row">
-                                            <span class="text-[#1ED760] font-semibold">0xF0000004 · READ</span>
-                                            <span class="text-white/75">16 Slide Switches (<code class="text-[#b9f6cf]">sw = SWITCH;</code>)</span>
-                                        </div>
-                                        <div class="fx-row">
-                                            <span class="text-amber-300 font-semibold">0xF0000008 · WRITE</span>
-                                            <span class="text-white/75">8-Digit 7-Segment (<code class="text-[#b9f6cf]">SEG7 = 120;</code>)</span>
-                                        </div>
-                                        <div class="fx-row">
-                                            <span class="text-emerald-300 font-semibold">0xF000000C · READ</span>
-                                            <span class="text-white/75">5 Pushbuttons (<code class="text-[#b9f6cf]">BTNC / BTNU</code>)</span>
-                                        </div>
-                                        <div class="fx-row">
-                                            <span class="text-sky-300 font-semibold">0xF0000010 · TX/RX</span>
-                                            <span class="text-white/75">UART 115200 (<code class="text-[#b9f6cf]">printf("Hi\n");</code>)</span>
-                                        </div>
-                                        <div class="fx-row">
-                                            <span class="text-purple-300 font-semibold">0xFF000000 · VRAM</span>
-                                            <span class="text-white/75">VGA 640×480 12-bit Framebuffer</span>
+                                        <span id="pv-time" class="fx-mono text-[10.5px] text-white/60 whitespace-nowrap shrink-0">00:00 / 02:53</span>
+
+                                        <div class="hidden xl:flex items-center gap-1.5 pl-2 border-l border-white/10">
+                                            <button type="button" class="pv-chap" onclick="window.jumpPipelineVideo(0)">10C3</button>
+                                            <button type="button" class="pv-chap" onclick="window.jumpPipelineVideo(8)">FLOW</button>
+                                            <button type="button" class="pv-chap" onclick="window.jumpPipelineVideo(17)">C CODE</button>
+                                            <button type="button" class="pv-chap" onclick="window.jumpPipelineVideo(28)">OPCODE</button>
+                                            <button type="button" class="pv-chap" onclick="window.jumpPipelineVideo(40)">UART</button>
+                                            <button type="button" class="pv-chap" onclick="window.jumpPipelineVideo(59)">IF·ID·EX·MEM</button>
+                                            <button type="button" class="pv-chap" onclick="window.jumpPipelineVideo(138)">7-SEG 191Hz</button>
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
 
                         </div>
 
                     </div>
+
+                    <script>
+                    (function() {
+                        const vid  = document.getElementById('pipeline-video');
+                        const btn  = document.getElementById('pv-play-btn');
+                        const fill = document.getElementById('pv-scrubber-fill');
+                        const timeEl = document.getElementById('pv-time');
+                        const scrub  = document.getElementById('pv-scrubber');
+                        if (!vid) return;
+
+                        if (window.location.search.includes('settle=1')) {
+                            vid.addEventListener('loadedmetadata', () => { vid.currentTime = 3.0; }, { once: true });
+                        }
+
+                        function fmt(sec) {
+                            if (!isFinite(sec) || sec < 0) return '00:00';
+                            const m = Math.floor(sec / 60);
+                            const s = Math.floor(sec % 60);
+                            return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+                        }
+
+                        vid.addEventListener('timeupdate', () => {
+                            const dur = vid.duration || 173;
+                            const pct = Math.min(100, (vid.currentTime / dur) * 100);
+                            if (fill) fill.style.width = pct.toFixed(2) + '%';
+                            if (timeEl) timeEl.textContent = fmt(vid.currentTime) + ' / ' + fmt(dur);
+                        });
+
+                        vid.addEventListener('play', () => {
+                            if (btn) btn.textContent = '⏸ PAUSE';
+                        });
+
+                        vid.addEventListener('pause', () => {
+                            if (btn) btn.textContent = '▶ PLAY';
+                        });
+
+                        window.togglePipelineVideo = function() {
+                            if (vid.paused) vid.play();
+                            else vid.pause();
+                        };
+
+                        window.jumpPipelineVideo = function(sec) {
+                            vid.currentTime = sec;
+                            vid.play().catch(() => {});
+                        };
+
+                        window.seekPipelineVideo = function(e) {
+                            if (!scrub) return;
+                            const rect = scrub.getBoundingClientRect();
+                            const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+                            vid.currentTime = ratio * (vid.duration || 173);
+                        };
+                    })();
+                    </script>
 
                 </section>
 
@@ -207,8 +302,8 @@
         </div>
     </main>
 
-    <!-- SPEAKER CUES DRAWER (กดปุ่ม C เพื่อเปิด/ปิด) -->
-    <div id="cues-drawer" class="fixed bottom-10 left-1/2 -translate-x-1/2 max-w-4xl w-[92%] bento-card p-5 border-[#484848] shadow-2xl z-40 hidden transition-all">
+    <!-- SPEAKER CUES DRAWER -->
+    <div id="cues-drawer" class="fixed bottom-10 left-1/2 -translate-x-1/2 max-w-4xl w-[92%] bento-card p-5 border-[#484848] shadow-2xl z-50 hidden transition-all">
         <div class="flex justify-between items-center mb-2 border-b border-[#282828] pb-2">
             <div class="flex items-center space-x-2">
                 <span class="glyph-red-dot"></span>
@@ -219,12 +314,11 @@
         <p id="cue-content" class="text-xs md:text-sm text-white/90 leading-relaxed whitespace-pre-line font-normal"></p>
     </div>
 
-    <!-- SPEAKER SCRIPTS & NAVIGATION -->
     <script>
         window.prevSectionUrl = '02_features.html';
         window.nextSectionUrl = '04_live_demo.html';
         window.speakerScripts = {
-            4: "【บทพูดเพจ 4: C-to-Silicon Pipeline】\nเมื่อเราเขียนภาษา C ตัว IDE จะเรียก MIPS GCC 12.2 คอมไพล์และลิงก์ด้วย link.ld โดยมี start.S คอยเซ็ต Stack Pointer ไปที่ 0x80010000 และดึงส่วน .data นำไปโหลดใส่ Data RAM อัตโนมัติ ทำให้รันภาษา C ได้สมบูรณ์แบบครับ\nและ CPU จะสั่งงานฮาร์ดแวร์ผ่านตำแหน่ง Address ของบอร์ด Nexys A7: อยากสั่งไฟ LED เขียนลง 0xF0000000, อ่านสวิตช์จาก 0xF0000004, แสดงผลเลขฐานสิบออก 7-Segment ผ่าน 0xF0000008, และพ่นข้อความ printf ออก UART Serial Monitor ผ่านตำแหน่ง 0xF0000010 ครับ"
+            4: "【บทพูดเพจ 4: วิดีโอจำลองการทำงาน C-to-Silicon Pipeline】\nเมื่อเลื่อนขึ้นมาจากหน้าฟีเจอร์ คลิปนี้จะแสดงเส้นทางตั้งแต่การเขียนโค้ดภาษา C คำนวณ 10 เลือก 3 (10C3 = 120) แปลงผ่าน GCC เป็นรหัสเครื่อง 32-bit ส่งผ่านสาย UART เข้าสู่หน่วยความจำคำสั่ง แล้วรันผ่าน 5-Stage Pipeline (IF, ID, EX, MEM, WB) จนแสดงผลออกจอ 7-Segment ด้วยความถี่สแกน 191 Hz ครับ"
         };
     </script>
     <script src="../js/presentation.js"></script>

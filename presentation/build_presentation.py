@@ -110,34 +110,27 @@ def compile_presentation():
     <link href="https://fonts.googleapis.com/css2?family=Doto:wght@400;600;800;900&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;600;700&family=Prompt:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{css_rel}">
 </head>
-<body class="h-screen w-screen flex flex-col justify-between p-6 relative overflow-hidden">
+<body class="h-screen w-screen m-0 p-0 relative overflow-hidden">
 
-    <!-- Interactive Warping Dot Matrix Canvas -->
-    <canvas id="bg-canvas"></canvas>
-
-    <!-- TOP BAR (CLEAN MINIMAL) -->
-    <header class="w-full flex items-center justify-between pb-3 border-b border-[#242424] z-20">
+    <!-- FLOATING TOP HUD BAR (TRANSPARENT OVER FULLSCREEN SPACE STAGE) -->
+    <header class="fx-hud flex items-center justify-between">
         <div class="flex items-center space-x-3">
             <span class="glyph-green-dot"></span>
             <span class="mono text-xs text-[#EAEAEA] font-bold tracking-widest uppercase">FPGA STUDIO</span>
             <span class="text-white/20 text-xs">|</span>
-            <span class="mono text-xs text-[#1ED760]">v4.3 ORBIT LAUNCH</span>
+            <span class="mono text-xs text-[#1ED760]">v4.4 ORBIT LAUNCH</span>
         </div>
 
         <div class="flex items-center space-x-4">
-            <!-- Slide Counter -->
-            <div class="mono text-sm font-bold tracking-widest text-[#EAEAEA]">
-                <span id="current-slide-num">01</span> <span class="text-white/30">/</span> <span id="total-slide-num">{total_slides:02d}</span>
-            </div>
             <!-- Fullscreen Button -->
-            <button onclick="toggleFullscreen()" class="p-2 rounded-full border border-[#282828] hover:border-[#484848] hover:bg-[#2A2A2A] transition text-xs mono text-[#B3B3B3]" title="Full Screen (F)">
+            <button onclick="toggleFullscreen()" class="p-2 rounded-full bg-black/40 border border-white/15 hover:border-[#1ED760]/60 hover:bg-black/70 transition text-xs mono text-[#EAEAEA]" title="Full Screen (F)">
                 ⛶
             </button>
         </div>
     </header>
 
-    <!-- MAIN SLIDE CONTAINER (CAROUSEL VIEWPORT & TRACK) -->
-    <main class="flex-1 w-full flex items-center justify-center py-2 relative z-10 overflow-hidden">
+    <!-- FULLSCREEN SLIDE VIEWPORT & TRACK -->
+    <main class="w-screen h-screen m-0 p-0 relative z-10 overflow-hidden">
         <div id="carousel-viewport">
             <div id="carousel-track">
 {chr(10).join(all_sections)}
@@ -146,7 +139,7 @@ def compile_presentation():
     </main>
 
     <!-- SPEAKER CUES DRAWER (กดปุ่ม C เพื่อเปิด/ปิด) -->
-    <div id="cues-drawer" class="fixed bottom-10 left-1/2 -translate-x-1/2 max-w-4xl w-[92%] bento-card p-5 border-[#484848] shadow-2xl z-40 hidden transition-all">
+    <div id="cues-drawer" class="fixed bottom-10 left-1/2 -translate-x-1/2 max-w-4xl w-[92%] bento-card p-5 border-[#484848] shadow-2xl z-50 hidden transition-all">
         <div class="flex justify-between items-center mb-2 border-b border-[#282828] pb-2">
             <div class="flex items-center space-x-2">
                 <span class="glyph-red-dot"></span>

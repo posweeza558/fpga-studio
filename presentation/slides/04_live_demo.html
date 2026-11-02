@@ -10,138 +10,140 @@
     <link href="https://fonts.googleapis.com/css2?family=Doto:wght@400;600;800;900&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;600;700&family=Prompt:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/nothing.css">
 </head>
-<body class="h-screen w-screen flex flex-col justify-between p-6 relative overflow-hidden">
+<body class="h-screen w-screen m-0 p-0 relative overflow-hidden">
 
-    <!-- Interactive Warping Dot Matrix Canvas -->
-    <canvas id="bg-canvas"></canvas>
-
-    <!-- TOP BAR (CLEAN MINIMAL) -->
-    <header class="w-full flex items-center justify-between pb-3 border-b border-[#242424] z-20">
-        <div class="flex items-center space-x-3">
-            <span class="glyph-green-dot"></span>
-            <span class="mono text-xs text-[#EAEAEA] font-bold tracking-widest uppercase">FPGA STUDIO</span>
-            <span class="text-white/20 text-xs">|</span>
-            <span class="mono text-xs text-[#1ED760]">LIVE LAUNCH // HANDOVER</span>
-        </div>
-
-        <div class="flex items-center space-x-4">
-            <div class="mono text-sm font-bold tracking-widest text-[#EAEAEA]">
-                <span id="current-slide-num">05</span> <span class="text-white/30">/</span> <span id="total-slide-num">05</span>
-            </div>
-            <button onclick="toggleFullscreen()" class="p-2 rounded-full border border-[#282828] hover:border-[#484848] hover:bg-[#2A2A2A] transition text-xs mono text-[#B3B3B3]" title="Full Screen (F)">
-                ⛶
-            </button>
-        </div>
-    </header>
-
-    <!-- MAIN SLIDE CONTAINER (CAROUSEL VIEWPORT) -->
-    <main class="flex-1 w-full flex items-center justify-center py-2 relative z-10 overflow-hidden">
+    <!-- FULLSCREEN SLIDE VIEWPORT -->
+    <main class="w-screen h-screen m-0 p-0 relative z-10 overflow-hidden">
         <div id="carousel-viewport">
             <div id="carousel-track">
 
                 <!-- ======================================================== -->
-                <!-- SLIDE 5: LIVE LAUNCH & GITHUB HANDOVER                  -->
+                <!-- SLIDE 5: LIVE LAUNCH & GITHUB HANDOVER (DEEP SPACE)      -->
                 <!-- ======================================================== -->
-                <section class="slide active fx-slide w-full h-full" style="--horizon: clamp(60px, 8.5vh, 96px);" data-slide="5" data-speaker="SPEAKER // LIVE DEMO">
+                <section class="slide active fx-slide w-full h-full" data-slide="5" data-speaker="SPEAKER // LIVE DEMO">
 
-                    <div class="fx-root">
+                    <style>
+                        .ld-left-panel {
+                            transform: translate3d(-48px, 16px, 0) scale(0.96);
+                            opacity: 0;
+                            transition:
+                                transform 0.92s cubic-bezier(0.28, 0.0, 0.2, 1) 0.04s,
+                                opacity 0.75s cubic-bezier(0.28, 0.0, 0.2, 1) 0.04s;
+                            will-change: transform, opacity;
+                        }
 
-                        <!-- Deep space layers -->
+                        .ld-right-card {
+                            transform: translate3d(52px, 20px, 0) scale(0.94);
+                            opacity: 0;
+                            transition:
+                                transform 0.96s cubic-bezier(0.28, 0.0, 0.2, 1) 0.12s,
+                                opacity 0.78s cubic-bezier(0.28, 0.0, 0.2, 1) 0.12s,
+                                box-shadow 0.4s ease;
+                            will-change: transform, opacity;
+                        }
+
+                        .ld-step-item {
+                            transform: translate3d(-20px, 8px, 0);
+                            opacity: 0;
+                            transition:
+                                transform 0.82s cubic-bezier(0.28, 0.0, 0.2, 1),
+                                opacity 0.72s cubic-bezier(0.28, 0.0, 0.2, 1);
+                        }
+
+                        .slide.active .ld-left-panel,
+                        .slide.active .ld-right-card,
+                        .slide.active .ld-step-item {
+                            transform: translate3d(0, 0, 0) scale(1);
+                            opacity: 1;
+                        }
+                    </style>
+
+                    <div class="fx-root flex items-center justify-center px-[clamp(32px,5vw,84px)] py-10">
+
+                        <!-- Deep space layers (No planet — pure deep space orbit) -->
                         <canvas class="fx-stars"></canvas>
                         <div class="fx-nebula"></div>
                         <div class="fx-grid"></div>
-                        <div class="fx-aurora"></div>
-                        <div class="fx-watermark fx-dot">05</div>
 
-                        <!-- Planet horizon -->
-                        <div class="fx-orbit-ring"></div>
-                        <div class="fx-planet"></div>
-
-                        <!-- Main Split Stage (Matches Slide 3 Architecture) -->
-                        <div class="relative z-10 h-full grid grid-cols-1 lg:grid-cols-12 gap-[clamp(22px,3vw,48px)] px-[clamp(26px,3.8vw,60px)] pt-[clamp(18px,3vh,34px)] pb-[clamp(66px,9.5vh,105px)] items-stretch">
+                        <!-- Centered Balanced Split Stage -->
+                        <div class="relative z-10 w-full max-w-[1480px] grid grid-cols-1 lg:grid-cols-12 gap-[clamp(28px,3.6vw,64px)] items-center">
 
                             <!-- LEFT 7 COLS: Hero + 3 Live Hardware Verification Cases -->
-                            <div class="lg:col-span-7 flex flex-col justify-between min-h-0">
-                                <div>
-                                    <div class="fx-rise flex items-center gap-3 mb-3">
-                                        <span class="glyph-red-dot"></span>
-                                        <span class="fx-mono text-[10.5px] tracking-[0.32em] text-[#1ED760]">LIVE VERIFICATION // HARDWARE &amp; HANDOVER</span>
-                                        <span class="h-px w-14 bg-gradient-to-r from-[#1ED760]/60 to-transparent"></span>
-                                        <span class="fx-mono text-[10.5px] tracking-[0.28em] text-white/35">NEXYS A7-100T</span>
-                                    </div>
-
-                                    <h2 class="fx-rise fx-dot fx-title uppercase" style="font-size: clamp(38px, 6.8vh, 82px); animation-delay:0.06s">
-                                        <span data-scramble="LIVE ">LIVE </span><span class="g" data-scramble="LAUNCH">LAUNCH</span>
-                                    </h2>
-
-                                    <h3 class="fx-rise fx-thai text-white font-semibold mt-3 text-[clamp(17px,2.4vh,25px)] tracking-tight" style="animation-delay:0.12s">
-                                        การทดสอบบนบอร์ดจริง &amp; สแกนทดลองใช้งานทันที
-                                    </h3>
-
-                                    <!-- 3 Live Verification Cases -->
-                                    <ul class="fx-rise space-y-2.5 mt-3.5 text-[clamp(12px,1.5vh,14px)] leading-[1.55] text-white/65" style="animation-delay:0.18s">
-                                        <li class="fx-bullet">
-                                            <span><strong>[TEST 01] คำนวณ nCk ในภาษา C ออก 7-Segment:</strong> รันฟังก์ชันคอมบิเนชัน <code>10 C 3 = 120</code> ผ่านฮาร์ดแวร์ตัวคูณ/หาร 32 ไซเคิล วิ่งผ่าน 5-Stage Pipeline แสดงเลข <code>00000120</code> บนหน้าปัดบอร์ดจริงทันที</span>
-                                        </li>
-                                        <li class="fx-bullet">
-                                            <span><strong>[TEST 02] Fast Binary BRAM Upload ใน 1.2 วินาที:</strong> แก้โค้ด C แล้วกด <code>Upload to Board</code> ยิงไบนารีผ่านสาย Micro-USB ทับ Block RAM ทันทีโดยไม่ต้องรัน Vivado 15 นาที</span>
-                                        </li>
-                                        <li class="fx-bullet">
-                                            <span><strong>[TEST 03] สลับคอร์ MIPS32 ↔ RISC-V ในคลิกเดียว:</strong> คอมไพล์และดีบักโค้ดชุดเดียวกันบนทั้งสองสถาปัตยกรรม เปรียบเทียบผลลัพธ์ระดับไซเคิลต่อไซเคิล</span>
-                                        </li>
-                                    </ul>
+                            <div class="ld-left-panel lg:col-span-7 flex flex-col justify-center">
+                                <div class="fx-rise flex items-center gap-3 mb-3">
+                                    <span class="glyph-red-dot"></span>
+                                    <span class="fx-mono text-[10.5px] tracking-[0.32em] text-[#1ED760]">LIVE VERIFICATION // HARDWARE &amp; HANDOVER</span>
+                                    <span class="h-px w-14 bg-gradient-to-r from-[#1ED760]/60 to-transparent"></span>
+                                    <span class="fx-mono text-[10.5px] tracking-[0.28em] text-white/35">NEXYS A7-100T</span>
                                 </div>
 
-                                <!-- Live 7-Seg Readout + Stats -->
-                                <div>
-                                    <div class="fx-rise flex items-end mt-3" style="animation-delay:0.24s">
-                                        <div class="flex-1">
-                                            <div class="fx-dot fx-stat-num text-red-400" style="text-shadow:0 0 18px rgba(248,113,113,0.55)">00000120</div>
-                                            <div class="fx-mono text-[9.5px] tracking-[0.18em] text-white/45 mt-1.5">7-SEG OUTPUT (10 C 3)</div>
-                                        </div>
-                                        <div class="flex-1 pl-5 border-l border-white/10">
-                                            <div class="fx-dot fx-stat-num hl">1<span style="font-family:Inter;font-weight:700">.</span>2s</div>
-                                            <div class="fx-mono text-[9.5px] tracking-[0.18em] text-white/45 mt-1.5">USB BRAM UPLOAD</div>
-                                        </div>
-                                        <div class="flex-1 pl-5 border-l border-white/10">
-                                            <div class="fx-dot fx-stat-num">599 MB</div>
-                                            <div class="fx-mono text-[9.5px] tracking-[0.18em] text-white/45 mt-1.5">SETUP.EXE INSTALLER</div>
-                                        </div>
-                                    </div>
+                                <h2 class="fx-rise fx-dot fx-title uppercase" style="font-size: clamp(40px, 7.2vh, 88px); animation-delay:0.06s">
+                                    <span data-scramble="LIVE ">LIVE </span><span class="g" data-scramble="LAUNCH">LAUNCH</span>
+                                </h2>
 
-                                    <div class="fx-rise flex flex-wrap gap-2 mt-3.5" style="animation-delay:0.3s">
-                                        <span class="fx-chip fx-chip-red">7-SEG VERIFIED</span>
-                                        <span class="fx-chip">IN-APP JTAG F7</span>
-                                        <span class="fx-chip">BOARD STEP F11</span>
-                                        <span class="fx-chip fx-chip-green">OPEN-SOURCE RELEASE</span>
+                                <h3 class="fx-rise fx-thai text-white font-semibold mt-3.5 text-[clamp(18px,2.4vh,26px)] tracking-tight" style="animation-delay:0.12s">
+                                    การทดสอบบนบอร์ดจริง &amp; สแกนทดลองใช้งานทันที
+                                </h3>
+
+                                <!-- 3 Live Verification Cases -->
+                                <ul class="space-y-3 mt-4 text-[clamp(12.5px,1.55vh,14.5px)] leading-[1.6] text-white/70">
+                                    <li class="fx-bullet ld-step-item" style="transition-delay:0.14s">
+                                        <span><strong>[TEST 01] เบิร์น CPU ลงบอร์ด FPGA (Burn CPU Bitstream):</strong> อัปโหลดสถาปัตยกรรม 5-Stage Pipeline CPU พร้อมวงจร I/O และตัวหาร 32 ไซเคิล ลงชิป Artix-7 บนบอร์ด Nexys A7-100T ผ่าน In-App JTAG (<code>F7</code>)</span>
+                                    </li>
+                                    <li class="fx-bullet ld-step-item" style="transition-delay:0.22s">
+                                        <span><strong>[TEST 02] แฟลชโค้ดลงบอร์ดใน 1.2 วินาที (Flash Code via USB):</strong> คอมไพล์โค้ดแล้วกด <code>Upload to Board</code> ยิงไบนารีผ่าน Micro-USB ทับหน่วยความจำ Block RAM ของบอร์ดจริงโดยตรง ไม่ต้องรอสังเคราะห์วงจรใหม่</span>
+                                    </li>
+                                    <li class="fx-bullet ld-step-item" style="transition-delay:0.30s">
+                                        <span><strong>[TEST 03] คำนวณ nCk ออกจอ 7-Segment (Run nCk Calculation):</strong> รันฟังก์ชันภาษา C คำนวณ <code>10 C 3 = 120</code> บนฮาร์ดแวร์คูณ/หารของ CPU แสดงผลลัพธ์ <code>00000120</code> บนหน้าปัด 7-Segment ของบอร์ดจริงทันที</span>
+                                    </li>
+                                </ul>
+
+                                <!-- Live 7-Seg Readout + Stats -->
+                                <div class="ld-step-item flex items-end mt-6 pt-5 border-t border-white/10" style="transition-delay:0.36s">
+                                    <div class="flex-1">
+                                        <div class="fx-dot fx-stat-num text-red-400" style="text-shadow:0 0 18px rgba(248,113,113,0.55)">00000120</div>
+                                        <div class="fx-mono text-[9.5px] tracking-[0.18em] text-white/45 mt-1.5">7-SEG OUTPUT (10 C 3)</div>
                                     </div>
+                                    <div class="flex-1 pl-5 border-l border-white/10">
+                                        <div class="fx-dot fx-stat-num hl">1<span style="font-family:Inter;font-weight:700">.</span>2s</div>
+                                        <div class="fx-mono text-[9.5px] tracking-[0.18em] text-white/45 mt-1.5">USB BRAM UPLOAD</div>
+                                    </div>
+                                    <div class="flex-1 pl-5 border-l border-white/10">
+                                        <div class="fx-dot fx-stat-num">599 MB</div>
+                                        <div class="fx-mono text-[9.5px] tracking-[0.18em] text-white/45 mt-1.5">SETUP.EXE INSTALLER</div>
+                                    </div>
+                                </div>
+
+                                <div class="ld-step-item flex flex-wrap gap-2 mt-4" style="transition-delay:0.42s">
+                                    <span class="fx-chip fx-chip-red">7-SEG VERIFIED</span>
+                                    <span class="fx-chip">IN-APP JTAG F7</span>
+                                    <span class="fx-chip">BOARD STEP F11</span>
+                                    <span class="fx-chip fx-chip-green">ALL-IN-ONE INSTALLER</span>
                                 </div>
                             </div>
 
-                            <!-- RIGHT 5 COLS: Glass QR Code & Grade A Handover Card -->
-                            <div class="lg:col-span-5 fx-rise fx-glass flex flex-col justify-between items-center text-center p-[clamp(18px,2.5vh,28px)] min-h-0" style="animation-delay:0.14s">
+                            <!-- RIGHT 5 COLS: Compact Glass QR Code & Grade A Handover Card -->
+                            <div class="ld-right-card lg:col-span-5 fx-glass flex flex-col items-center text-center p-[clamp(22px,3vh,32px)]">
                                 <div class="fx-scan"></div>
 
-                                <div class="w-full flex items-center justify-between">
+                                <div class="w-full flex items-center justify-between mb-5">
                                     <span class="fx-mono text-[10px] tracking-[0.3em] text-white/40">SCAN TO DOWNLOAD</span>
-                                    <span class="fx-mono text-[10px] tracking-[0.2em] text-[#1ED760]">● GITHUB RELEASE</span>
+                                    <span class="fx-mono text-[10px] tracking-[0.2em] text-[#1ED760]">● OFFICIAL RELEASE v4.4</span>
                                 </div>
 
-                                <!-- QR Code Spotlight -->
-                                <div class="my-auto flex flex-col items-center">
-                                    <div class="relative p-3 rounded-2xl bg-white shadow-[0_0_45px_rgba(30,215,96,0.28)] mb-3">
-                                        <img src="../assets/github_qr.png" alt="GitHub Repo QR Code" class="w-36 h-36 md:w-40 md:h-40 object-contain" onerror="this.src='github_qr.png'">
+                                <div class="flex flex-col items-center">
+                                    <div class="relative p-3.5 rounded-2xl bg-white shadow-[0_0_45px_rgba(30,215,96,0.28)] mb-4">
+                                        <img src="../assets/github_qr.png" alt="GitHub Repo QR Code" class="w-40 h-40 md:w-44 md:h-44 object-contain" onerror="this.src='github_qr.png'">
                                     </div>
                                     <div class="fx-mono text-xs md:text-sm text-white font-semibold tracking-wider">
                                         github.com/posweeza558/fpga-studio
                                     </div>
-                                    <p class="fx-thai text-xs text-white/55 mt-1 max-w-[34ch]">
-                                        สแกนเพื่อดาวน์โหลดตัวติดตั้ง <code class="fx-mono text-[#b9f6cf]">Setup.exe (599 MB)</code> หรือศึกษาซอร์สโค้ดและคู่มือได้ทันที
+                                    <p class="fx-thai text-xs text-white/55 mt-1.5 max-w-[34ch]">
+                                        สแกนเพื่อดาวน์โหลดตัวติดตั้ง <code class="fx-mono text-[#b9f6cf]">Setup.exe (599 MB)</code> พร้อมคู่มือและทดลองใช้งานได้ทันที
                                     </p>
                                 </div>
 
-                                <!-- Final Grade A Closing Message -->
-                                <div class="w-full pt-3 border-t border-white/10">
+                                <div class="w-full mt-5 pt-4 border-t border-white/10">
                                     <p class="fx-thai text-xs md:text-[13.5px] text-[#1ED760] font-semibold leading-relaxed">
                                         “พวกเราตอบโจทย์อาจารย์ครบทุกข้อ โดยไม่ต้องรอถึง 3 รุ่น...<br>หวังว่าผลงานนี้จะคู่ควรกับเกรด A ของอาจารย์ครับ! 🙏”
                                     </p>
@@ -159,8 +161,8 @@
         </div>
     </main>
 
-    <!-- SPEAKER CUES DRAWER (กดปุ่ม C เพื่อเปิด/ปิด) -->
-    <div id="cues-drawer" class="fixed bottom-10 left-1/2 -translate-x-1/2 max-w-4xl w-[92%] bento-card p-5 border-[#484848] shadow-2xl z-40 hidden transition-all">
+    <!-- SPEAKER CUES DRAWER -->
+    <div id="cues-drawer" class="fixed bottom-10 left-1/2 -translate-x-1/2 max-w-4xl w-[92%] bento-card p-5 border-[#484848] shadow-2xl z-50 hidden transition-all">
         <div class="flex justify-between items-center mb-2 border-b border-[#282828] pb-2">
             <div class="flex items-center space-x-2">
                 <span class="glyph-red-dot"></span>
@@ -171,12 +173,11 @@
         <p id="cue-content" class="text-xs md:text-sm text-white/90 leading-relaxed whitespace-pre-line font-normal"></p>
     </div>
 
-    <!-- SPEAKER SCRIPTS & NAVIGATION -->
     <script>
         window.prevSectionUrl = '03_c_pipeline.html';
         window.nextSectionUrl = '00_cover.html';
         window.speakerScripts = {
-            5: "【บทพูดเพจ 5: ทดสอบของจริง & ส่งมอบผลงาน】\nและนี่คือการทดสอบบนบอร์ดจริงในห้องเรียนครับ เราคอมไพล์โค้ด 10 C 3 ผลลัพธ์ 120 ออก 7-Segment จริง, สับสวิตช์ไฟ LED ติดตามจริง, และกดอัปโหลดโค้ดใหม่ลงชิปได้ใน 1 วินาทีครับ\nสุดท้ายนี้ เราเปิดโปรเจกต์นี้เป็น Open-Source ทุกคนในห้องสามารถยกมือถือขึ้นมาสแกน QR Code เพื่อดาวน์โหลดตัวติดตั้ง Setup.exe ขนาด 599MB หรือนำโค้ดไปศึกษาต่อได้ทันทีตั้งแต่วันนี้โดยไม่ต้องรอถึง 3 รุ่นครับ... พวกเราตอบโจทย์อาจารย์ครบทุกข้อ หวังว่าโปรเจกต์นี้จะคู่ควรกับเกรด A ของอาจารย์ครับ ขอบคุณครับ!"
+            5: "【บทพูดเพจ 5: ทดสอบของจริง & ส่งมอบผลงาน】\nและนี่คือการทดสอบบนบอร์ดจริงในห้องเรียน 3 ขั้นตอนครับ ขั้นตอนแรกคือเบิร์นสถาปัตยกรรม CPU ลงบอร์ด FPGA, ขั้นตอนที่สองคือแฟลชโค้ดโปรแกรมผ่านสาย USB ลงหน่วยความจำ BRAM ใน 1.2 วินาที, และขั้นตอนที่สามคือรันโปรแกรมคำนวณ 10 C 3 ได้ผลลัพธ์ 120 ออกหน้าปัด 7-Segment บนบอร์ดจริงทันทีครับ\nทุกคนในห้องสามารถยกมือถือสแกน QR Code เพื่อดาวน์โหลดตัวติดตั้ง Setup.exe ขนาด 599MB ไปทดลองใช้งานได้ทันทีโดยไม่ต้องรอถึง 3 รุ่นครับ... พวกเราตอบโจทย์อาจารย์ครบทุกข้อ หวังว่าโปรเจกต์นี้จะคู่ควรกับเกรด A ของอาจารย์ครับ ขอบคุณครับ!"
         };
     </script>
     <script src="../js/presentation.js"></script>

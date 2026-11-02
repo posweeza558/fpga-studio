@@ -10,154 +10,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Doto:wght@400;600;800;900&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;600;700&family=Prompt:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/nothing.css">
 </head>
-<body class="h-screen w-screen flex flex-col justify-between p-6 relative overflow-hidden">
+<body class="h-screen w-screen m-0 p-0 relative overflow-hidden">
 
-    <!-- Interactive Warping Dot Matrix Canvas -->
-    <canvas id="bg-canvas"></canvas>
-
-    <!-- TOP BAR (CLEAN MINIMAL INDUSTRIAL) -->
-    <header class="w-full flex items-center justify-between pb-3 border-b border-[#242424] z-20">
-        <div class="flex items-center space-x-3">
-            <span class="glyph-green-dot"></span>
-            <span class="mono text-xs text-[#EAEAEA] font-bold tracking-widest uppercase">FPGA STUDIO</span>
-            <span class="text-white/20 text-xs">|</span>
-            <span class="mono text-xs text-[#1ED760]">ORBIT // 7 CORE FEATURES</span>
-        </div>
-
-        <div class="flex items-center space-x-4">
-            <div class="mono text-sm font-bold tracking-widest text-[#EAEAEA]">
-                <span id="current-slide-num">03</span> <span class="text-white/30">/</span> <span id="total-slide-num">05</span>
-            </div>
-            <button onclick="toggleFullscreen()" class="p-2 rounded-full border border-[#282828] hover:border-[#484848] hover:bg-[#2A2A2A] transition text-xs mono text-[#B3B3B3]" title="Full Screen (F)">
-                ⛶
-            </button>
-        </div>
-    </header>
-
-    <!-- MAIN SLIDE CONTAINER (CAROUSEL VIEWPORT) -->
-    <main class="flex-1 w-full flex items-center justify-center py-2 relative z-10 overflow-hidden">
+    <!-- FULLSCREEN SLIDE VIEWPORT -->
+    <main class="w-screen h-screen m-0 p-0 relative z-10 overflow-hidden">
         <div id="carousel-viewport">
             <div id="carousel-track">
 
                 <!-- ======================================================== -->
                 <!-- SLIDE 3: ORBIT LAUNCH — FEATURES ON A PLANET HORIZON      -->
                 <!-- ======================================================== -->
-                <section class="slide active fx-slide w-full h-full" data-slide="3" data-speaker="SPEAKER // SYSTEM FEATURES">
+                <section class="slide active fx-slide w-full h-full" style="--horizon: clamp(128px, 19vh, 195px);" data-slide="3" data-speaker="SPEAKER // SYSTEM FEATURES">
 
                     <style>
-                        @property --fx-a {
-                            syntax: '<angle>';
-                            inherits: false;
-                            initial-value: 0deg;
-                        }
-
-                        .fx-slide {
-                            position: relative;
-                            padding: 0 !important;
-                            display: block !important;
-                            --R: 1150px;          /* planet radius */
-                            --horizon: clamp(120px, 19vh, 190px); /* how much planet rises from the bottom */
-                            --lift: 44px;         /* orb float height above the rim */
-                            --step: 9deg;         /* angular distance between features */
-                            --g: #1ED760;
-                        }
-
-                        .fx-root {
-                            position: absolute;
-                            inset: 0;
-                            overflow: hidden;
-                            border-radius: 28px;
-                            background: #020403;
-                            font-family: 'Inter', 'IBM Plex Sans Thai', sans-serif;
-                            -webkit-font-smoothing: antialiased;
-                        }
-
-                        /* ---------- Typography ---------- */
-                        .fx-dot { font-family: 'Doto', 'IBM Plex Sans Thai', monospace; font-weight: 900; letter-spacing: 0.02em; }
-                        .fx-mono { font-family: 'JetBrains Mono', monospace; }
-                        .fx-thai { font-family: 'IBM Plex Sans Thai', 'Inter', sans-serif; }
-
-                        /* ---------- Deep space layers ---------- */
-                        .fx-stars { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
-
-                        .fx-nebula {
-                            position: absolute; inset: -10%; z-index: 0; pointer-events: none;
-                            background:
-                                radial-gradient(40% 35% at 18% 28%, rgba(30, 215, 96, 0.10), transparent 70%),
-                                radial-gradient(35% 30% at 82% 18%, rgba(56, 189, 248, 0.08), transparent 70%),
-                                radial-gradient(30% 30% at 65% 60%, rgba(139, 92, 246, 0.06), transparent 70%);
-                            animation: fxNebula 26s ease-in-out infinite alternate;
-                        }
-                        @keyframes fxNebula {
-                            0%   { transform: translate3d(0, 0, 0) scale(1); }
-                            100% { transform: translate3d(-2%, 1.5%, 0) scale(1.06); }
-                        }
-
-                        .fx-grid {
-                            position: absolute; inset: 0; z-index: 0; pointer-events: none;
-                            background-image:
-                                linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-                                linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
-                            background-size: 64px 64px;
-                            mask-image: radial-gradient(70% 60% at 50% 40%, black, transparent 80%);
-                            -webkit-mask-image: radial-gradient(70% 60% at 50% 40%, black, transparent 80%);
-                        }
-
-                        /* Aurora glow rising above the horizon */
-                        .fx-aurora {
-                            position: absolute; left: 50%; bottom: calc(var(--horizon) - 60px);
-                            width: 120%; height: 380px; transform: translateX(-50%);
-                            background: radial-gradient(50% 50% at 50% 100%, rgba(30, 215, 96, 0.22), rgba(56, 189, 248, 0.06) 45%, transparent 75%);
-                            filter: blur(10px);
-                            z-index: 1; pointer-events: none;
-                            animation: fxAurora 6s ease-in-out infinite;
-                        }
-                        @keyframes fxAurora {
-                            0%, 100% { opacity: 0.75; }
-                            50% { opacity: 1; }
-                        }
-
-                        /* ---------- Planet ---------- */
-                        .fx-planet {
-                            position: absolute; left: 50%; top: calc(100% - var(--horizon));
-                            width: calc(var(--R) * 2); height: calc(var(--R) * 2);
-                            transform: translateX(-50%);
-                            border-radius: 50%;
-                            z-index: 2; pointer-events: none;
-                            background: radial-gradient(circle at 50% 0%, #0b1a12 0%, #040806 18%, #010201 40%);
-                            box-shadow:
-                                0 -1px 0 rgba(30, 215, 96, 0.85),
-                                0 -8px 30px rgba(30, 215, 96, 0.35),
-                                0 -40px 120px rgba(30, 215, 96, 0.18),
-                                inset 0 18px 40px rgba(30, 215, 96, 0.16);
-                        }
-                        /* dot-matrix surface (Nothing-style) */
-                        .fx-planet::before {
-                            content: ''; position: absolute; inset: 0; border-radius: 50%;
-                            background-image: radial-gradient(rgba(30, 215, 96, 0.35) 1.1px, transparent 1.6px);
-                            background-size: 16px 16px;
-                            mask-image: radial-gradient(circle at 50% 0%, black 0%, rgba(0,0,0,0.5) 6%, transparent 14%);
-                            -webkit-mask-image: radial-gradient(circle at 50% 0%, black 0%, rgba(0,0,0,0.5) 6%, transparent 14%);
-                        }
-                        /* rim shine */
-                        .fx-planet::after {
-                            content: ''; position: absolute; inset: 0; border-radius: 50%;
-                            background: conic-gradient(from 300deg, transparent 0deg, rgba(255,255,255,0.0) 20deg, rgba(190, 255, 215, 0.55) 60deg, rgba(255,255,255,0.0) 100deg, transparent 360deg);
-                            mask-image: radial-gradient(circle, transparent calc(var(--R) - 2px), black calc(var(--R) - 1px));
-                            -webkit-mask-image: radial-gradient(circle, transparent calc(var(--R) - 2px), black calc(var(--R) - 1px));
-                            opacity: 0.8;
-                        }
-
-                        .fx-orbit-ring {
-                            position: absolute; left: 50%;
-                            top: calc(100% - var(--horizon) - var(--lift));
-                            width: calc((var(--R) + var(--lift)) * 2); height: calc((var(--R) + var(--lift)) * 2);
-                            transform: translateX(-50%);
-                            border-radius: 50%;
-                            border: 1px dashed rgba(255, 255, 255, 0.10);
-                            z-index: 2; pointer-events: none;
-                        }
-
                         /* ---------- Orbiting feature orbs ---------- */
                         .fx-pivot {
                             position: absolute; left: 50%;
@@ -260,7 +125,7 @@
 
                         /* ---------- Segment progress ---------- */
                         .fx-progress {
-                            position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%);
+                            position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%);
                             display: flex; gap: 6px; z-index: 40;
                         }
                         .fx-seg {
@@ -277,88 +142,17 @@
                         .fx-paused .fx-seg.active > i { animation-play-state: paused; }
                         @keyframes fxFill { to { transform: scaleX(1); } }
 
-                        /* ---------- Content stage ---------- */
+                        /* ---------- Content stage (centered vertically, never over-stretched) ---------- */
                         .fx-content {
-                            position: absolute; left: 0; right: 0; top: 0;
-                            bottom: calc(var(--horizon) + var(--lift) + 100px);
+                            position: absolute; left: 0; right: 0;
+                            top: 56px;
+                            bottom: calc(var(--horizon) + var(--lift) + 92px);
                             z-index: 10;
-                            padding: clamp(18px, 3.2vh, 36px) clamp(28px, 4vw, 64px) 0;
+                            padding: 0 clamp(32px, 5vw, 84px);
                             display: grid;
-                            grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-                            gap: clamp(24px, 3vw, 56px);
-                            align-items: stretch;
-                        }
-
-                        .fx-rise { opacity: 0; animation: fxRise 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
-                        @keyframes fxRise {
-                            0%   { opacity: 0; transform: translateY(18px); filter: blur(6px); }
-                            100% { opacity: 1; transform: translateY(0); filter: blur(0); }
-                        }
-
-                        .fx-title {
-                            font-size: clamp(44px, 9vh, 116px);
-                            line-height: 0.92;
-                            color: #fff;
-                            text-shadow: 0 0 28px rgba(30, 215, 96, 0.35);
-                        }
-                        .fx-title .g { color: var(--g); }
-
-                        .fx-stat-num { font-size: clamp(22px, 3.6vh, 38px); line-height: 1; color: #fff; }
-                        .fx-stat-num.hl { color: var(--g); text-shadow: 0 0 18px rgba(30,215,96,0.5); }
-
-                        .fx-glass {
-                            position: relative;
-                            border-radius: 22px;
-                            background: linear-gradient(160deg, rgba(255,255,255,0.07), rgba(255,255,255,0.015) 40%, rgba(30,215,96,0.04));
-                            border: 1px solid rgba(255, 255, 255, 0.10);
-                            backdrop-filter: blur(18px);
-                            -webkit-backdrop-filter: blur(18px);
-                            box-shadow: 0 30px 80px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.10);
-                            overflow: hidden;
-                        }
-                        .fx-glass::before {
-                            content: ''; position: absolute; top: 0; left: 10%; right: 10%; height: 1px;
-                            background: linear-gradient(90deg, transparent, rgba(30,215,96,0.8), transparent);
-                        }
-                        .fx-scan {
-                            position: absolute; left: 0; right: 0; height: 60px; top: -60px;
-                            background: linear-gradient(180deg, transparent, rgba(30,215,96,0.06), transparent);
-                            animation: fxScan 5s linear infinite;
-                            pointer-events: none;
-                        }
-                        @keyframes fxScan { to { top: 110%; } }
-
-                        .fx-bullet { display: grid; grid-template-columns: 14px 1fr; gap: 10px; align-items: start; }
-                        .fx-bullet::before {
-                            content: ''; width: 6px; height: 6px; margin-top: 7px; margin-left: 2px;
-                            background: var(--g); box-shadow: 0 0 8px var(--g);
-                        }
-                        .fx-bullet code {
-                            font-family: 'JetBrains Mono', monospace; font-size: 0.86em;
-                            color: #b9f6cf; background: rgba(30,215,96,0.08);
-                            padding: 0 4px; border-radius: 4px;
-                        }
-                        .fx-bullet strong { color: #fff; font-weight: 600; }
-
-                        .fx-row {
-                            display: flex; justify-content: space-between; align-items: center;
-                            padding: 6px 0; border-bottom: 1px dashed rgba(255,255,255,0.08);
-                            font-family: 'JetBrains Mono', monospace; font-size: 11px;
-                        }
-                        .fx-row:last-child { border-bottom: 0; }
-
-                        .fx-chip {
-                            font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.08em;
-                            padding: 3px 10px; border-radius: 999px;
-                            border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.65);
-                            background: rgba(255,255,255,0.03);
-                        }
-
-                        .fx-watermark {
-                            position: absolute; right: clamp(20px, 3vw, 48px); top: 6px;
-                            font-size: clamp(120px, 26vh, 260px); line-height: 1;
-                            color: rgba(255,255,255,0.025);
-                            z-index: 1; pointer-events: none;
+                            grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
+                            gap: clamp(28px, 3.8vw, 68px);
+                            align-items: center;
                         }
                     </style>
 
@@ -375,7 +169,7 @@
                         <div class="fx-orbit-ring"></div>
                         <div class="fx-planet"></div>
 
-                        <!-- Feature content (rendered directly on space, no big box) -->
+                        <!-- Feature content (rendered directly on space) -->
                         <div class="fx-content" id="fx-content"></div>
 
                         <!-- Active feature label above apex -->
@@ -400,7 +194,7 @@
                                 cpu:    '<rect x="5" y="5" width="14" height="14" rx="2"/><rect x="9" y="9" width="6" height="6" rx="1"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/>',
                                 plug:   '<path d="M9 7V2M15 7V2M6 7h12v4a6 6 0 0 1-12 0V7zM12 17v5"/>',
                                 board:  '<rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4M6 8h2M6 11h2M11 8h7M11 11h5"/>',
-                                timer:  '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6M19 5l1.5 1.5"/>',
+                                debug:  '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6M19 5l1.5 1.5"/>',
                                 code:   '<path d="M8 6l-6 6 6 6M16 6l6 6-6 6M14 4l-4 16"/>',
                                 zap:    '<path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/>',
                                 export: '<path d="M12 15V3M7 8l5-5 5 5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/>'
@@ -409,97 +203,95 @@
 
                             const FEATURES = [
                                 {
-                                    icon: 'cpu', code: 'CPU CORE', accent: 'CORE',
+                                    icon: 'cpu', code: 'CPU CORE',
                                     th: 'ฮาร์ดแวร์ & สถาปัตยกรรม CPU 32-bit',
-                                    tagline: 'คอร์ OpenMIPS 5-Stage Pipeline + RISC-V RV32IM พร้อมวงจรหาร div.v 32 ไซเคิล ดันคล็อกทะลุ 28.88 MHz',
+                                    tagline: 'คอร์ OpenMIPS 5-Stage Pipeline + RISC-V RV32IM พร้อมตัวหาร div.v 32 ไซเคิล ดันคล็อกทะลุ 28.88 MHz',
                                     stats: [['28.88', 'MHz CLOCK', true], ['+722%', 'TIMING BOOST', true], ['+5.34', 'NS SLACK', false], ['5', 'STAGES', false]],
                                     bullets: [
-                                        '<strong>5-Stage Pipeline</strong> — <code>IF</code> → <code>ID</code> → <code>EX</code> → <code>MEM</code> → <code>WB</code> พร้อม Hazard Detection, Forwarding และ Branch Delay Slot',
-                                        '<strong>Dual-Architecture</strong> — สลับ OpenMIPS 32-bit ↔ RISC-V (RV32IM) ได้ในคลิกเดียวจากเมนู Compiler',
-                                        '<strong>div.v Multi-Cycle Divider</strong> — ตัวหาร 32 สเต็ป แก้คอขวด Timing บน Artix-7 จาก 3.51 → 28.88 MHz ผ่านเกณฑ์ 25 MHz ของ Nexys A7'
+                                        '<strong>5-Stage Pipeline</strong> — <code>IF → ID → EX → MEM → WB</code> พร้อมวงจร Hazard Forwarding &amp; Stall Unit',
+                                        '<strong>Dual-Architecture</strong> — สลับคอร์ OpenMIPS 32-bit ↔ RISC-V (RV32IM) ได้ทันทีในคลิกเดียว',
+                                        '<strong>div.v 32-Cycle Divider</strong> — ตัวหารฮาร์ดแวร์แก้คอขวด Timing บน Artix-7 จาก 3.51 → 28.88 MHz'
                                     ],
                                     side: { title: 'PIPELINE TRACE', rows: [['IF', 'ADDIU $t0,$zero,1', '#1ED760'], ['ID', 'Decode R / I-Type', '#7dd3fc'], ['EX', 'ALU · Div 32-step', '#fcd34d'], ['MEM', 'BRAM R/W', '#c4b5fd'], ['WB', '$t0 ← result', '#fca5a5']] },
                                     tags: ['MIPS32', 'RV32IM', 'HAZARD UNIT', 'ARTIX-7']
                                 },
                                 {
-                                    icon: 'plug', code: 'CUSTOM CPU', accent: 'CPU',
-                                    th: 'ระบบนำเข้า CPU & ผูกขาอัตโนมัติ',
-                                    tagline: 'Setup Wizard + HDL AST Parser อ่าน Verilog/VHDL แล้วผูกบัสเข้ากับ Address จริงของบอร์ดให้อัตโนมัติ',
+                                    icon: 'plug', code: 'CUSTOM CPU',
+                                    th: 'นำเข้า CPU นอก & ผูกขา MMIO อัตโนมัติ',
+                                    tagline: 'CPU Setup Wizard + HDL AST Parser สแกนขา Verilog/VHDL และเชื่อมบัสเข้ากับอุปกรณ์จริงให้อัตโนมัติ',
                                     stats: [['AST', 'HDL PARSER', true], ['AUTO', 'MMIO BIND', true], ['16×16', 'LED / SW', false], ['6', 'DEVICES', false]],
                                     bullets: [
-                                        '<strong>Setup Wizard & HDL AST Parser</strong> — สแกนพอร์ต <code>clk</code> <code>rst</code> <code>data_bus</code> <code>addr_bus</code> ออกมาเอง ไม่ต้องกรอกด้วยมือ',
-                                        '<strong>Auto MMIO Bus Binding</strong> — เชื่อมบัสหน่วยความจำของ CPU เข้ากับอุปกรณ์จริงบน Nexys A7 ครบทุกตัว'
+                                        '<strong>CPU Setup Wizard &amp; AST Parser</strong> — สแกนพอร์ต <code>clk</code> <code>rst</code> <code>addr</code> <code>data</code> ออกมาเอง ไม่ต้องกรอกมือ',
+                                        '<strong>Auto MMIO Bus Binding</strong> — เชื่อมบัสหน่วยความจำของ CPU เข้ากับ Address อุปกรณ์ Nexys A7 ทันที',
+                                        '<strong>Auto-Bundle &amp; Manifest</strong> — รวบไฟล์โมดูลย่อยและสร้าง <code>cpu_manifest.json</code> พร้อมจำลองทันที'
                                     ],
                                     side: { title: 'MEMORY MAP', rows: [['0xF0000000', 'LED × 16', '#fca5a5'], ['0xF0000004', 'SWITCH × 16', '#1ED760'], ['0xF0000008', '7-SEG × 8', '#fcd34d'], ['0xF000000C', 'BUTTON × 5', '#6ee7b7'], ['0xF0000010', 'UART TX/RX', '#7dd3fc'], ['0xFF000000', 'VGA FRAME', '#c4b5fd']] },
-                                    tags: ['SETUP WIZARD', 'VERILOG / VHDL', 'MMIO', 'NEXYS A7']
+                                    tags: ['CPU WIZARD', 'VERILOG / VHDL', 'AUTO MMIO', 'NEXYS A7']
                                 },
                                 {
-                                    icon: 'board', code: 'VIRTUAL BOARD', accent: 'BOARD',
-                                    th: 'หน้าจอจำลองบอร์ดเสมือนจริง',
+                                    icon: 'board', code: 'VIRTUAL BOARD',
+                                    th: 'จำลองบอร์ด Nexys A7 เสมือนจริง (Ctrl+J)',
                                     tagline: 'จำลอง Nexys A7 ทั้งบอร์ดบนหน้าจอ — สวิตช์ ไฟ LED 7-Segment UART และจอ VGA ตอบสนองตามบิตจริง',
                                     stats: [['16', 'SWITCHES', false], ['16', 'LEDS', false], ['8', 'DIGIT 7-SEG', true], ['115200', 'BAUD 8N1', true]],
                                     bullets: [
-                                        '<strong>Nexys A7 Board (Ctrl+J)</strong> — สับสวิตช์ 16 ตัว, LED 16 ดวง, RGB 2 ดวง, ปุ่ม 5 ทิศ (<code>Shift-Click</code> กดค้าง)',
-                                        '<strong>7-Segment 8 หลัก</strong> — Dynamic Multiplexing แสดงได้ทั้ง Decimal และ Hex',
-                                        '<strong>UART Terminal & VGA</strong> — รองรับ <code>printf()</code> รับ-ส่งข้อความ และ Framebuffer 640×480 12-bit'
+                                        '<strong>Interactive Nexys A7</strong> — สับสวิตช์ 16 ตัว, LED 16 ดวง, RGB 2 ดวง, ปุ่มกด 5 ทิศ (<code>Shift-Click</code> ค้าง)',
+                                        '<strong>8-Digit 7-Segment</strong> — Dynamic Multiplexing แสดงผลได้ทั้งเลขฐาน 10 (Dec) และฐาน 16 (Hex)',
+                                        '<strong>UART Console &amp; VGA</strong> — พอร์ต 115200 รองรับ <code>printf()</code> โต้ตอบสด และจอภาพ 640×480 12-bit'
                                     ],
                                     side: { title: 'VIRTUAL I/O', rows: [['SW / LED', '16-bit bitmask', '#ffffff'], ['7-SEG', 'dynamic scan', '#fcd34d'], ['UART', 'printf("Hello\\n")', '#1ED760'], ['VGA', '640×480 · 12-bit', '#c4b5fd']] },
                                     tags: ['CTRL+J', 'DEC / HEX', 'UART 115200', 'VGA 640×480']
                                 },
                                 {
-                                    icon: 'timer', code: 'CLOCK CONTROL', accent: 'CLOCK',
-                                    th: 'ปรับสปีด Clock 5 ระดับ & Step ทีละคำสั่ง',
-                                    tagline: 'ช้าพอให้เห็นด้วยตาเปล่าที่ 1 Hz จนถึง Max Speed — หยุด ก้าว และรีเซ็ตได้ทุกจังหวะ',
-                                    stats: [['1 Hz', 'SLOWEST', true], ['MAX', 'FULL SPEED', true], ['F10', 'STEP', false], ['PC=0', 'RESET', false]],
+                                    icon: 'debug', code: 'DEBUG & SIM',
+                                    th: 'ดีบักสดทุกไซเคิล, ปรับ Clock & RTL Co-Sim',
+                                    tagline: 'ส่อง 32 รีจิสเตอร์สด ไฮไลต์บรรทัด C คู่ ASM ปรับความเร็ว 1 Hz ถึง 50M+ cyc/s พร้อมรันเทียบ Verilog จริง',
+                                    stats: [['1 Hz', 'SLOWEST', true], ['50M+', 'CYC/S RUST', true], ['32', 'LIVE REGS', false], ['F10', 'STEP INST', false]],
                                     bullets: [
-                                        '<strong>Clock 5 ระดับ (เมนู Run)</strong> — <code>1 Hz</code> <code>5 Hz</code> <code>20 Hz</code> <code>100 Hz</code> และ <code>Max Speed</code>',
-                                        '<strong>Step Single Instruction (F10)</strong> — ก้าวทีละคำสั่ง ดูรีจิสเตอร์และสถานะ Pipeline ได้ทุกไซเคิล',
-                                        '<strong>Reset Simulation (Ctrl+Shift+R)</strong> — ล้าง CPU, Clock และ Register กลับ <code>PC = 0x00000000</code>'
+                                        '<strong>5 Clock Speeds &amp; Step (F10)</strong> — ปรับสปีด <code>1 Hz</code> ถึง <code>Max Speed</code> (เอนจิน Rust 50M+ cyc/s) ก้าวทีละคำสั่ง',
+                                        '<strong>Live 32-Reg &amp; PC Tracker</strong> — ดูค่า <code>$zero–$ra</code>, <code>HI/LO</code> สด และไฮไลต์บรรทัด C คู่ Opcode ปัจจุบัน',
+                                        '<strong>RTL Co-Sim &amp; GTKWave</strong> — จำลองเทียบฮาร์ดแวร์จริงด้วย <code>iverilog</code> และเปิดกราฟคลื่น <code>.vcd</code> ทันที'
                                     ],
-                                    side: { title: 'SPEED PRESETS', rows: [['1 Hz', '1 s / instruction', '#1ED760'], ['5 Hz', '200 ms', '#ffffff'], ['20 Hz', '50 ms', '#ffffff'], ['100 Hz', '10 ms', '#ffffff'], ['MAX', 'instant', '#fcd34d']] },
-                                    tags: ['STEP F10', 'RESET', 'PIPELINE VIEW', 'REGISTERS']
+                                    side: { title: 'DEBUG & SPEED', rows: [['1 Hz / 5 Hz', 'visual step', '#1ED760'], ['MAX SPEED', '50M+ cyc/s Rust', '#fcd34d'], ['CTRL+H', '32 GPRs + HI/LO', '#7dd3fc'], ['CO-SIM', 'iverilog + GTKWave', '#c4b5fd']] },
+                                    tags: ['32 REGS LIVE', 'PC TRACKER', 'IVERILOG', 'GTKWAVE']
                                 },
                                 {
-                                    icon: 'code', code: 'C RUNTIME', accent: 'RUNTIME',
-                                    th: 'คอมไพล์ & รันไทม์ภาษา C เต็มรูปแบบ',
-                                    tagline: 'Real GCC ฝังในตัว แปลงโค้ดขณะพิมพ์ พร้อม start.S และ link.ld ทำให้ภาษา C รันบน CPU ได้จริง 100%',
-                                    stats: [['12.2', 'MIPS GCC', true], ['15.2', 'RISC-V GCC', true], ['0x8001', 'STACK TOP', false], ['LIVE', 'AUTO BUILD', false]],
+                                    icon: 'code', code: 'COMPILER SUITE',
+                                    th: 'Dual Real GCC & นำเข้า Custom Compiler อิสระ',
+                                    tagline: 'ฝัง GCC แท้ในตัว พร้อม Setup Wizard นำเข้าคอมไพเลอร์นอก และรันไทม์ภาษา C บน Bare-Metal ครบวงจร',
+                                    stats: [['12.2', 'MIPS GCC', true], ['15.2', 'RISC-V GCC', true], ['ANY', 'CUSTOM TOOLCHAIN', true], ['0x8001M', 'STACK TOP', false]],
                                     bullets: [
-                                        '<strong>Real GCC Toolchain</strong> — <code>mips-linux-gnu-gcc 12.2</code> และ <code>riscv64-unknown-elf-gcc 15.2</code> รองรับ C, C++, Assembly',
-                                        '<strong>Real-Time Auto Compile</strong> — แปลงเป็น Machine Code 32-bit + Disassembly ทันทีขณะพิมพ์',
-                                        '<strong>start.S & link.ld</strong> — ตั้ง SP ที่ <code>0x80010000</code> ก่อนเข้า <code>main()</code> แยก <code>.text</code> / <code>.data</code> ลง BRAM อัตโนมัติ'
+                                        '<strong>Dual Embedded GCC</strong> — ฝัง <code>MIPS GCC 12.2</code> และ <code>RISC-V GCC 15.2</code> แปลง C/C++/ASM ทันทีขณะพิมพ์',
+                                        '<strong>Custom Compiler Wizard</strong> — นำเข้า Toolchain นอก (<code>.exe</code> <code>.py</code> <code>.bat</code>) พร้อม Smoke Test และตั้ง Flag อิสระ',
+                                        '<strong>start.S &amp; link.ld Runtime</strong> — ตั้ง SP ที่ <code>0x80010000</code> ก่อนเข้า <code>main()</code> แยก <code>.text/.data</code> ลง BRAM อัตโนมัติ'
                                     ],
-                                    side: { title: 'start.S // BOOT VECTOR', code: '_start:\n    lui   $sp, 0x8001    # SP = 0x80010000\n    jal   main           # enter main()\n    nop                  # delay slot' },
-                                    tags: ['GCC', 'C / C++ / ASM', 'start.S', 'link.ld']
+                                    side: { title: 'COMPILER & BOOT VECTOR', code: '# Built-in GCC + Custom (.exe/.py/.bat)\n_start:                 # start.S\n    lui  $sp, 0x8001    # SP = 0x80010000\n    jal  main           # enter main()' },
+                                    tags: ['REAL GCC', 'CUSTOM COMPILER', 'start.S', 'link.ld']
                                 },
                                 {
-                                    icon: 'zap', code: 'DEPLOY', accent: 'DEPLOY',
-                                    th: 'ต่อบอร์ดจริง & สังเคราะห์ในตัว',
-                                    tagline: 'อัปโหลดโปรแกรมลงบอร์ดใน 1 วินาที แฟลชชิปจากในแอป และสั่ง Step บนซิลิคอนจริงได้',
-                                    stats: [['1.2s', 'UPLOAD', true], ['0', 'VIVADO NEEDED', true], ['F7', 'JTAG FLASH', false], ['F11', 'BOARD STEP', false]],
+                                    icon: 'zap', code: 'SILICON DEPLOY',
+                                    th: 'ต่อบอร์ดจริง 1.2 วินาที & สังเคราะห์ Zero-Vivado',
+                                    tagline: 'อัปโหลดไบนารีลงบอร์ดในพริบตา แฟลชชิปจากในแอป สั่ง Step บนซิลิคอนจริง และสังเคราะห์ออฟไลน์ได้',
+                                    stats: [['1.2s', 'UART UPLOAD', true], ['0 GB', 'VIVADO NEEDED', true], ['F7', 'JTAG FLASH', false], ['F11', 'BOARD STEP', false]],
                                     bullets: [
-                                        '<strong>1-Second Upload</strong> — ส่งไบนารีผ่าน Micro-USB ทับ Block RAM ทันที ไม่ต้องรอ Vivado 15 นาที',
-                                        '<strong>In-App JTAG (F7)</strong> — แฟลช Bitstream คอร์ CPU ลง Artix-7 ตรงจากโปรแกรม',
-                                        '<strong>Hardware Step (F11)</strong> — ก้าวทีละคำสั่งบนบอร์ดจริง หรือรันเต็ม 25 MHz พร้อม Pause / Reset',
-                                        '<strong>Zero-Vivado WSL</strong> — Yosys + nextpnr สังเคราะห์ .bit ออฟไลน์ ไม่ต้องลง Vivado 80 GB'
+                                        '<strong>1.2s Fast UART Upload</strong> — ส่งไบนารีผ่าน Micro-USB ทับ Block RAM ทันที ไม่ต้องรอ Vivado 15 นาที',
+                                        '<strong>In-App JTAG (F7) &amp; Board Step (F11)</strong> — แฟลช <code>.bit</code> ตรงจากแอป และสั่งก้าวคำสั่งบนชิปจริง 25 MHz',
+                                        '<strong>Zero-Vivado WSL &amp; Cloud</strong> — ฝัง <code>Yosys + nextpnr</code> สังเคราะห์ <code>.bit</code> ออฟไลน์ ไม่ต้องลง Vivado 80 GB'
                                     ],
-                                    side: { title: 'HARDWARE LINK', rows: [['JTAG FLASH', 'F7', '#fcd34d'], ['USB UPLOAD', '1.2 s', '#1ED760'], ['BOARD STEP', 'F11', '#7dd3fc'], ['FULL SPEED', '25 MHz', '#c4b5fd']] },
-                                    tags: ['MICRO-USB', 'JTAG', 'YOSYS', 'NEXTPNR']
+                                    side: { title: 'HARDWARE LINK', rows: [['JTAG FLASH', 'F7 (openFPGALoader)', '#fcd34d'], ['USB UPLOAD', '1.2 s UART RAM', '#1ED760'], ['BOARD STEP', 'F11 Real Chip', '#7dd3fc'], ['SYNTHESIS', 'WSL Yosys / Cloud', '#c4b5fd']] },
+                                    tags: ['MICRO-USB', 'IN-APP JTAG', 'YOSYS', 'NEXTPNR']
                                 },
                                 {
-                                    icon: 'export', code: 'EXPORT', accent: 'EXPORT',
-                                    th: 'ส่งออกไฟล์ครบทุกมาตรฐาน',
-                                    tagline: 'จากโค้ดเดียว ส่งออกได้ตั้งแต่โปรเจกต์ Vivado ครบชุด ไปจนถึง Waveform สำหรับ GTKWave',
+                                    icon: 'export', code: 'EXPORT SUITE',
+                                    th: 'ส่งออกไฟล์ครบทุกมาตรฐานอุตสาหกรรม',
+                                    tagline: 'จากโค้ดชุดเดียว ส่งออกได้ตั้งแต่โปรเจกต์ Vivado SoC สำเร็จรูป ไปจนถึงคลื่นสัญญาณดิจิทัล .vcd',
                                     stats: [['.TCL', 'VIVADO SOC', true], ['.COE', 'BRAM INIT', true], ['.VHD', 'ROM MODULE', false], ['.VCD', 'WAVEFORM', false]],
                                     bullets: [
-                                        '<strong>Vivado SoC Project</strong> — <code>.v</code> + <code>.xdc</code> + <code>.tcl</code> เปิดใน Vivado ได้ทันที',
-                                        '<strong>instruction_memory</strong> — โมดูล ROM ทั้ง <code>.vhd</code> และ <code>.v</code>',
-                                        '<strong>program.coe</strong> — Memory Init สำหรับ Block RAM (byte-wide และ 32-bit word)',
-                                        '<strong>machine_code_32bit.txt / .bin</strong> — รหัสเครื่องและไบนารีดิบสำหรับบอร์ดจริง',
-                                        '<strong>GTKWave .vcd</strong> — ส่งออกสัญญาณลอจิกระดับไซเคิล เปิดดูกราฟคลื่นได้ทันที'
+                                        '<strong>Vivado SoC Project</strong> — ส่งออก <code>.v</code> + <code>.xdc</code> + <code>.tcl</code> ครบชุด เปิดรันใน Vivado ได้ทันที',
+                                        '<strong>HDL ROM &amp; BRAM Init</strong> — สร้าง <code>instruction_memory</code> (<code>.vhd</code>/<code>.v</code>) และ <code>program.coe</code> (8/32-bit)',
+                                        '<strong>Binary &amp; Waveform</strong> — ส่งออก <code>machine_code_32bit.txt</code>, <code>.bin</code>, <code>.hex</code> และคลื่น <code>.vcd</code>'
                                     ],
-                                    side: { title: 'OUTPUT FORMATS', rows: [['VIVADO SOC', '.v .xdc .tcl', '#c4b5fd'], ['ROM', '.vhd / .v', '#1ED760'], ['BRAM', '.coe', '#fcd34d'], ['MACHINE', '.txt / .bin', '#7dd3fc'], ['WAVE', '.vcd', '#fca5a5']] },
-                                    tags: ['VIVADO', 'VHDL', 'VERILOG', 'GTKWAVE']
+                                    side: { title: 'OUTPUT FORMATS', rows: [['VIVADO SOC', '.v .xdc .tcl', '#c4b5fd'], ['ROM', '.vhd / .v', '#1ED760'], ['BRAM', '.coe / .coe32', '#fcd34d'], ['MACHINE', '.txt / .bin / .hex', '#7dd3fc'], ['WAVE', '.vcd (GTKWave)', '#fca5a5']] },
+                                    tags: ['VIVADO SOC', 'VHDL / VERILOG', 'COE', 'GTKWAVE']
                                 }
                             ];
 
@@ -516,30 +308,28 @@
                             const isOnScreen = () => { const s = slideEl(); return s && s.classList.contains('active'); };
                             const pad = (n) => String(n).padStart(2, '0');
 
-                            /* ---------------- Text scramble (dot-matrix decode) ---------------- */
                             function scramble(el, finalText) {
                                 const glyphs = '01#%&*+<>/=?ABCDEFXYZ';
                                 const len = finalText.length;
                                 let frame = 0;
-                                const totalFrames = 22;
+                                const totalFrames = 20;
                                 cancelAnimationFrame(el._raf);
                                 const tick = () => {
                                     let out = '';
                                     for (let i = 0; i < len; i++) {
                                         const ch = finalText[i];
                                         const revealAt = (i / len) * totalFrames * 0.8;
-                                        if (ch === ' ' || frame >= revealAt + 6) out += ch;
+                                        if (ch === ' ' || frame >= revealAt + 5) out += ch;
                                         else out += glyphs[Math.floor(Math.random() * glyphs.length)];
                                     }
                                     el.textContent = out;
                                     frame++;
-                                    if (frame <= totalFrames + 6) el._raf = requestAnimationFrame(tick);
+                                    if (frame <= totalFrames + 5) el._raf = requestAnimationFrame(tick);
                                     else el.textContent = finalText;
                                 };
                                 tick();
                             }
 
-                            /* ---------------- Build orbs & progress ---------------- */
                             function build() {
                                 const pivot = $('fx-pivot');
                                 const prog = $('fx-progress');
@@ -570,7 +360,7 @@
                                 const wheelHandler = (e) => {
                                     e.preventDefault();
                                     const now = Date.now();
-                                    if (zone._last && now - zone._last < 380) return; // throttle trackpads
+                                    if (zone._last && now - zone._last < 380) return;
                                     zone._last = now;
                                     rotate((e.deltaY || e.deltaX) > 0 ? 1 : -1);
                                 };
@@ -582,19 +372,16 @@
                                 return true;
                             }
 
-                            /* ---------------- Orbit positions ---------------- */
                             function layout() {
                                 FEATURES.forEach((f, i) => {
                                     const pos = $('fx-pos-' + i);
                                     const orb = $('fx-orb-' + i);
                                     if (!pos || !orb) return;
                                     let diff = i - active;
-                                    // wrap around so the globe looks endless (features on both sides)
                                     if (diff > TOTAL / 2) diff -= TOTAL;
                                     if (diff < -TOTAL / 2) diff += TOTAL;
                                     const prev = pos._diff;
                                     if (prev !== undefined && Math.abs(diff - prev) > 1.5) {
-                                        // jumping across the far side: teleport without sweeping across the screen
                                         pos.style.transition = 'none';
                                         pos.style.setProperty('--fx-a', `calc(var(--step) * ${diff + (diff > 0 ? 1 : -1)})`);
                                         pos.style.opacity = 0;
@@ -613,7 +400,7 @@
                                     s.classList.remove('active', 'done');
                                     if (i < active) s.classList.add('done');
                                     if (i === active) {
-                                        void s.offsetWidth; // restart fill animation
+                                        void s.offsetWidth;
                                         s.classList.add('active');
                                     }
                                 });
@@ -621,7 +408,6 @@
                                 if (r) r.style.setProperty('--fx-dur', DURATION + 'ms');
                             }
 
-                            /* ---------------- Content render ---------------- */
                             function render() {
                                 const f = FEATURES[active];
                                 const box = $('fx-content');
@@ -638,7 +424,7 @@
                                 }
 
                                 let d = 0;
-                                const delay = () => `animation-delay:${(d++ * 0.06).toFixed(2)}s`;
+                                const delay = () => `animation-delay:${(d++ * 0.05).toFixed(2)}s`;
 
                                 const stats = f.stats.map(([v, l, hl], i) => `
                                     <div class="fx-rise flex-1 ${i ? 'pl-5 border-l border-white/10' : ''}" style="${delay()}">
@@ -649,7 +435,7 @@
                                 const tags = f.tags.map(t => `<span class="fx-chip">${t}</span>`).join('');
 
                                 const bullets = f.bullets.map(b => `
-                                    <li class="fx-rise fx-bullet text-[clamp(12px,1.55vh,14px)] leading-[1.6] text-white/65" style="${delay()}">
+                                    <li class="fx-rise fx-bullet text-[clamp(12.5px,1.55vh,14.5px)] leading-[1.6] text-white/70" style="${delay()}">
                                         <span>${b}</span>
                                     </li>`).join('');
 
@@ -661,7 +447,7 @@
                                     sideHtml = '<div class="grid grid-cols-2 gap-x-6">' + f.side.rows.map(([k, v, c]) => `
                                         <div class="fx-row">
                                             <span style="color:${c}" class="font-semibold">${k}</span>
-                                            <span class="text-white/60">${v}</span>
+                                            <span class="text-white/65">${v}</span>
                                         </div>`).join('') + '</div>';
                                 }
 
@@ -670,48 +456,43 @@
 
                                 box.innerHTML = `
                                     <!-- LEFT: Hero -->
-                                    <div class="flex flex-col justify-between min-h-0">
-                                        <div>
-                                            <div class="fx-rise flex items-center gap-3 mb-4" style="${delay()}">
-                                                <span class="glyph-green-dot"></span>
-                                                <span class="fx-mono text-[10.5px] tracking-[0.32em] text-[#1ED760]">FEATURE ${pad(active + 1)}</span>
-                                                <span class="h-px w-16 bg-gradient-to-r from-[#1ED760]/60 to-transparent"></span>
-                                                <span class="fx-mono text-[10.5px] tracking-[0.32em] text-white/35">FPGA STUDIO v4.3</span>
-                                            </div>
-                                            <h2 class="fx-rise fx-dot fx-title uppercase" style="${delay()}">
-                                                <span id="fx-title-plain">${plain}</span><span class="g" id="fx-title-accent">${titleWords[titleWords.length - 1]}</span>
-                                            </h2>
-                                            <h3 class="fx-rise fx-thai text-white font-semibold mt-4 text-[clamp(17px,2.6vh,26px)] tracking-tight" style="${delay()}">${f.th}</h3>
-                                            <p class="fx-rise text-white/50 mt-2 text-[clamp(12.5px,1.7vh,15px)] leading-relaxed max-w-[46ch]" style="${delay()}">${f.tagline}</p>
+                                    <div class="flex flex-col justify-center">
+                                        <div class="fx-rise flex items-center gap-3 mb-4" style="${delay()}">
+                                            <span class="glyph-green-dot"></span>
+                                            <span class="fx-mono text-[10.5px] tracking-[0.32em] text-[#1ED760]">FEATURE ${pad(active + 1)}</span>
+                                            <span class="h-px w-16 bg-gradient-to-r from-[#1ED760]/60 to-transparent"></span>
+                                            <span class="fx-mono text-[10.5px] tracking-[0.32em] text-white/35">FPGA STUDIO v4.4</span>
                                         </div>
-                                        <div>
-                                            <div class="flex items-end mt-5">${stats}</div>
-                                            <div class="fx-rise flex flex-wrap gap-2 mt-5" style="${delay()}">${tags}</div>
-                                        </div>
+                                        <h2 class="fx-rise fx-dot fx-title uppercase" style="${delay()}">
+                                            <span id="fx-title-plain">${plain}</span><span class="g" id="fx-title-accent">${titleWords[titleWords.length - 1]}</span>
+                                        </h2>
+                                        <h3 class="fx-rise fx-thai text-white font-semibold mt-4 text-[clamp(18px,2.5vh,26px)] tracking-tight" style="${delay()}">${f.th}</h3>
+                                        <p class="fx-rise text-white/55 mt-2 text-[clamp(13px,1.65vh,15px)] leading-relaxed max-w-[48ch]" style="${delay()}">${f.tagline}</p>
+
+                                        <div class="flex items-end mt-7 pt-5 border-t border-white/10">${stats}</div>
+                                        <div class="fx-rise flex flex-wrap gap-2 mt-5" style="${delay()}">${tags}</div>
                                     </div>
 
-                                    <!-- RIGHT: Glass spec card -->
-                                    <div class="fx-rise fx-glass flex flex-col min-h-0 p-[clamp(16px,2.4vh,26px)]" style="animation-delay:.12s">
+                                    <!-- RIGHT: Compact Balanced Glass Spec Card -->
+                                    <div class="fx-rise fx-glass flex flex-col p-[clamp(20px,2.8vh,30px)]" style="animation-delay:.10s">
                                         <div class="fx-scan"></div>
-                                        <div class="flex items-center justify-between mb-3">
+                                        <div class="flex items-center justify-between mb-4">
                                             <span class="fx-mono text-[10px] tracking-[0.3em] text-white/40">WHAT'S INSIDE</span>
                                             <span class="fx-mono text-[10px] tracking-[0.2em] text-[#1ED760]">● LIVE SPEC</span>
                                         </div>
-                                        <ul class="space-y-[clamp(6px,1.1vh,12px)] flex-1 min-h-0 overflow-hidden">${bullets}</ul>
-                                        <div class="mt-3 pt-3 border-t border-white/10">
-                                            <div class="fx-mono text-[10px] tracking-[0.3em] text-white/40 mb-1">${f.side.title}</div>
+                                        <ul class="space-y-3">${bullets}</ul>
+                                        <div class="mt-5 pt-4 border-t border-white/10">
+                                            <div class="fx-mono text-[10px] tracking-[0.3em] text-white/40 mb-1.5">${f.side.title}</div>
                                             ${sideHtml}
                                         </div>
                                     </div>`;
 
-                                // Dot-matrix decode effect on the headline
                                 const pEl = $('fx-title-plain');
                                 const aEl = $('fx-title-accent');
                                 if (pEl && plain) scramble(pEl, plain);
                                 if (aEl) scramble(aEl, titleWords[titleWords.length - 1]);
                             }
 
-                            /* ---------------- Controls ---------------- */
                             function setActive(i) {
                                 active = (i + TOTAL) % TOTAL;
                                 layout();
@@ -727,7 +508,6 @@
                                 }, DURATION);
                             }
 
-                            /* ---------------- Starfield ---------------- */
                             let starsStarted = false;
                             function startStars() {
                                 if (starsStarted) return;
@@ -742,8 +522,10 @@
 
                                 function resize() {
                                     const r = canvas.getBoundingClientRect();
-                                    if (!r.width) return;
-                                    W = r.width; H = r.height;
+                                    const w = r.width || window.innerWidth;
+                                    const h = r.height || window.innerHeight;
+                                    if (!w || !h) return;
+                                    W = w; H = h;
                                     canvas.width = W * dpr; canvas.height = H * dpr;
                                     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
                                     const count = Math.round((W * H) / 5200);
@@ -753,7 +535,7 @@
                                         z: Math.random() * 0.9 + 0.1,
                                         p: Math.random() * Math.PI * 2,
                                         tw: 0.6 + Math.random() * 1.8,
-                                        g: Math.random() < 0.12
+                                        g: Math.random() < 0.14
                                     }));
                                 }
                                 window.addEventListener('resize', resize);
@@ -778,7 +560,6 @@
                                         ctx.fillStyle = s.g ? `rgba(120,255,170,${a})` : `rgba(255,255,255,${a})`;
                                         ctx.fillRect(x, y, size, size);
                                     }
-                                    // occasional shooting star
                                     if (!shooting && Math.random() < 0.004) {
                                         shooting = { x: Math.random() * W * 0.7 + W * 0.2, y: Math.random() * H * 0.35, l: 0 };
                                     }
@@ -797,7 +578,6 @@
                                 requestAnimationFrame(frame);
                             }
 
-                            /* ---------------- Public API ---------------- */
                             window.initArcCarousel = function () {
                                 if (!built) built = build();
                                 if (!built) return;
@@ -829,7 +609,7 @@
     </main>
 
     <!-- SPEAKER CUES DRAWER (กดปุ่ม C เพื่อเปิด/ปิด) -->
-    <div id="cues-drawer" class="fixed bottom-10 left-1/2 -translate-x-1/2 max-w-4xl w-[92%] bento-card p-5 border-[#484848] shadow-2xl z-40 hidden transition-all">
+    <div id="cues-drawer" class="fixed bottom-10 left-1/2 -translate-x-1/2 max-w-4xl w-[92%] bento-card p-5 border-[#484848] shadow-2xl z-50 hidden transition-all">
         <div class="flex justify-between items-center mb-2 border-b border-[#282828] pb-2">
             <div class="flex items-center space-x-2">
                 <span class="glyph-red-dot"></span>
@@ -845,7 +625,7 @@
         window.prevSectionUrl = '01_challenge.html';
         window.nextSectionUrl = '03_c_pipeline.html';
         window.speakerScripts = {
-            3: "【บทพูดเพจ 3: 7 ฟีเจอร์หลัก (Orbit Launch)】\nฟีเจอร์ทั้ง 7 ลอยโคจรอยู่บนขอบดาวด้านล่าง คลิกฝั่งซ้าย/ขวาของโซนล่าง หรือ Scroll เมาส์เพื่อหมุน:\n1. CPU CORE — 5-Stage Pipeline, MIPS + RISC-V, div.v 32 ไซเคิล ดันคล็อกถึง 28.88 MHz\n2. CUSTOM CPU — Setup Wizard + AST Parser สแกนขาอัตโนมัติ และผูก MMIO เข้ากับ Address จริงของ Nexys A7\n3. VIRTUAL BOARD — จำลองสวิตช์ LED 7-Segment UART printf และจอ VGA\n4. CLOCK CONTROL — 5 สปีดตั้งแต่ 1 Hz ถึง Max Speed พร้อม Step F10\n5. C RUNTIME — Real GCC แปลงโค้ดขณะพิมพ์ start.S ตั้ง SP และ link.ld จัดหน่วยความจำ\n6. DEPLOY — อัปโหลด 1 วินาที, JTAG F7 ในแอป, Step บอร์ดจริง F11, Zero-Vivado WSL\n7. EXPORT — Vivado SoC, .vhd/.v, .coe, .txt/.bin และ .vcd สำหรับ GTKWave"
+            3: "【บทพูดเพจ 3: 7 ฟีเจอร์หลัก (Orbit Launch)】\nฟีเจอร์ทั้ง 7 ลอยโคจรอยู่บนขอบดาวด้านล่าง คลิกฝั่งซ้าย/ขวาของโซนล่าง หรือ Scroll เมาส์เพื่อหมุน:\n1. CPU CORE — 5-Stage Pipeline, MIPS + RISC-V, div.v 32 ไซเคิล ดันคล็อกถึง 28.88 MHz\n2. CUSTOM CPU — CPU Setup Wizard + AST Parser สแกนขาอัตโนมัติ และผูก MMIO เข้ากับ Address จริงของ Nexys A7\n3. VIRTUAL BOARD — จำลองสวิตช์ LED 7-Segment UART printf และจอ VGA\n4. DEBUG & SIM — ปรับ Clock 1 Hz ถึง 50M+ cyc/s Rust, ส่อง 32 รีจิสเตอร์สดคู่บรรทัด C/ASM, และรัน Co-Sim ด้วย iverilog + GTKWave\n5. COMPILER SUITE — ฝัง Real GCC ทั้ง MIPS/RISC-V พร้อม Custom Compiler Wizard นำเข้าคอมไพเลอร์นอกได้ และมี start.S + link.ld\n6. SILICON DEPLOY — อัปโหลด 1.2 วินาที, JTAG F7 ในแอป, Step บอร์ดจริง F11, Zero-Vivado WSL\n7. EXPORT SUITE — Vivado SoC, .vhd/.v, .coe, .txt/.bin และ .vcd สำหรับ GTKWave"
         };
     </script>
     <script src="../js/presentation.js"></script>
