@@ -1,21 +1,27 @@
+@property --fx-a {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+
 :root {
-    /* FPGA Studio / Spotify Desktop Dark Theme Palette */
-    --fpga-black: #080808;
-    --fpga-dark: #121212;
-    --fpga-panel: #161616;
-    --fpga-card: rgba(31, 31, 31, 0.88);
-    --fpga-card-hover: rgba(42, 42, 42, 0.95);
-    
-    --fpga-border: #282828;
-    --fpga-border-hover: #484848;
-    
+    /* FPGA Studio — Orbit Launch Deep-Space Palette */
+    --fpga-black: #020403;
+    --fpga-dark: #050807;
+    --fpga-panel: #0b110e;
+    --fpga-card: rgba(16, 22, 19, 0.78);
+    --fpga-card-hover: rgba(24, 34, 29, 0.90);
+
+    --fpga-border: rgba(255, 255, 255, 0.10);
+    --fpga-border-hover: rgba(30, 215, 96, 0.45);
+
     --fpga-green: #1ED760;
-    --fpga-green-glow: rgba(30, 215, 96, 0.4);
+    --fpga-green-glow: rgba(30, 215, 96, 0.45);
     --fpga-red: #D71921;
-    --fpga-red-glow: rgba(215, 25, 33, 0.4);
+    --fpga-red-glow: rgba(215, 25, 33, 0.45);
     --fpga-cyan: #38BDF8;
-    --fpga-cyan-glow: rgba(56, 189, 248, 0.3);
-    
+    --fpga-cyan-glow: rgba(56, 189, 248, 0.35);
+
     --txt-bright: #FFFFFF;
     --txt-primary: #EAEAEA;
     --txt-muted: #B3B3B3;
@@ -25,7 +31,8 @@
 body {
     background-color: var(--fpga-dark);
     color: var(--txt-primary);
-    font-family: 'Prompt', 'Space Grotesk', -apple-system, sans-serif;
+    font-family: 'Inter', 'IBM Plex Sans Thai', -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
     overflow: hidden;
     user-select: none;
     position: relative;
@@ -44,13 +51,21 @@ body {
     pointer-events: none;
 }
 
-/* Nothing Phone Dotted Typography style */
-.ndot {
-    font-family: 'Space Grotesk', 'JetBrains Mono', monospace;
-    letter-spacing: -0.04em;
+/* ========================================================================== */
+/* TYPOGRAPHY: NOTHING DOT-MATRIX HEADLINES + MODERN CRISP BODY               */
+/* ========================================================================== */
+
+.ndot, .fx-dot {
+    font-family: 'Doto', 'IBM Plex Sans Thai', monospace;
+    font-weight: 900;
+    letter-spacing: 0.02em;
 }
 
-.mono {
+.fx-thai {
+    font-family: 'IBM Plex Sans Thai', 'Inter', sans-serif;
+}
+
+.mono, .fx-mono {
     font-family: 'JetBrains Mono', monospace;
 }
 
@@ -90,7 +105,7 @@ body {
     50% { opacity: 0.45; transform: scale(0.85); }
 }
 
-/* Dynamic Ambient Edge Arrows (ลูกศรขอบจอกว้างๆ เข้มขึ้นตามระยะเมาส์) */
+/* Dynamic Ambient Edge Arrows */
 .edge-arrow {
     position: fixed;
     top: 50%;
@@ -108,13 +123,8 @@ body {
     height: 140px;
 }
 
-.edge-arrow-left {
-    left: 24px;
-}
-
-.edge-arrow-right {
-    right: 24px;
-}
+.edge-arrow-left { left: 24px; }
+.edge-arrow-right { right: 24px; }
 
 /* FPGA Studio Bento Elevated Card */
 .bento-card {
@@ -131,6 +141,310 @@ body {
     background: var(--fpga-card-hover);
     box-shadow: 0 10px 35px rgba(0, 0, 0, 0.65);
     transform: translateY(-2px);
+}
+
+/* ========================================================================== */
+/* ORBIT LAUNCH UNIFIED DEEP-SPACE STAGE & COMPONENTS                         */
+/* ========================================================================== */
+
+.fx-slide {
+    position: relative;
+    padding: 0 !important;
+    display: block !important;
+    --R: 1150px;
+    --horizon: clamp(68px, 10vh, 110px);
+    --lift: 44px;
+    --step: 9deg;
+    --g: #1ED760;
+}
+
+.fx-root {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: 28px;
+    background: #020403;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    font-family: 'Inter', 'IBM Plex Sans Thai', sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+.fx-stars {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.fx-nebula {
+    position: absolute;
+    inset: -10%;
+    z-index: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(40% 35% at 18% 28%, rgba(30, 215, 96, 0.10), transparent 70%),
+        radial-gradient(35% 30% at 82% 18%, rgba(56, 189, 248, 0.08), transparent 70%),
+        radial-gradient(30% 30% at 65% 60%, rgba(139, 92, 246, 0.06), transparent 70%);
+    animation: fxNebula 26s ease-in-out infinite alternate;
+}
+
+@keyframes fxNebula {
+    0%   { transform: translate3d(0, 0, 0) scale(1); }
+    100% { transform: translate3d(-2%, 1.5%, 0) scale(1.06); }
+}
+
+.fx-grid {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(75% 65% at 50% 40%, black, transparent 82%);
+    -webkit-mask-image: radial-gradient(75% 65% at 50% 40%, black, transparent 82%);
+}
+
+.fx-aurora {
+    position: absolute;
+    left: 50%;
+    bottom: calc(var(--horizon) - 60px);
+    width: 120%;
+    height: 360px;
+    transform: translateX(-50%);
+    background: radial-gradient(50% 50% at 50% 100%, rgba(30, 215, 96, 0.20), rgba(56, 189, 248, 0.06) 45%, transparent 75%);
+    filter: blur(10px);
+    z-index: 1;
+    pointer-events: none;
+    animation: fxAurora 6s ease-in-out infinite;
+}
+
+@keyframes fxAurora {
+    0%, 100% { opacity: 0.72; }
+    50% { opacity: 1; }
+}
+
+.fx-planet {
+    position: absolute;
+    left: 50%;
+    top: calc(100% - var(--horizon));
+    width: calc(var(--R) * 2);
+    height: calc(var(--R) * 2);
+    transform: translateX(-50%);
+    border-radius: 50%;
+    z-index: 2;
+    pointer-events: none;
+    background: radial-gradient(circle at 50% 0%, #0b1a12 0%, #040806 18%, #010201 40%);
+    box-shadow:
+        0 -1px 0 rgba(30, 215, 96, 0.85),
+        0 -8px 30px rgba(30, 215, 96, 0.35),
+        0 -40px 120px rgba(30, 215, 96, 0.18),
+        inset 0 18px 40px rgba(30, 215, 96, 0.16);
+}
+
+.fx-planet::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background-image: radial-gradient(rgba(30, 215, 96, 0.35) 1.1px, transparent 1.6px);
+    background-size: 16px 16px;
+    mask-image: radial-gradient(circle at 50% 0%, black 0%, rgba(0,0,0,0.5) 6%, transparent 14%);
+    -webkit-mask-image: radial-gradient(circle at 50% 0%, black 0%, rgba(0,0,0,0.5) 6%, transparent 14%);
+}
+
+.fx-planet::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(from 300deg, transparent 0deg, rgba(255,255,255,0.0) 20deg, rgba(190, 255, 215, 0.55) 60deg, rgba(255,255,255,0.0) 100deg, transparent 360deg);
+    mask-image: radial-gradient(circle, transparent calc(var(--R) - 2px), black calc(var(--R) - 1px));
+    -webkit-mask-image: radial-gradient(circle, transparent calc(var(--R) - 2px), black calc(var(--R) - 1px));
+    opacity: 0.8;
+}
+
+.fx-orbit-ring {
+    position: absolute;
+    left: 50%;
+    top: calc(100% - var(--horizon) - var(--lift));
+    width: calc((var(--R) + var(--lift)) * 2);
+    height: calc((var(--R) + var(--lift)) * 2);
+    transform: translateX(-50%);
+    border-radius: 50%;
+    border: 1px dashed rgba(255, 255, 255, 0.10);
+    z-index: 2;
+    pointer-events: none;
+}
+
+.fx-watermark {
+    position: absolute;
+    right: clamp(20px, 3vw, 48px);
+    top: 6px;
+    font-size: clamp(110px, 24vh, 240px);
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.025);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.fx-title {
+    font-size: clamp(40px, 7.6vh, 96px);
+    line-height: 0.94;
+    color: #fff;
+    text-shadow: 0 0 28px rgba(30, 215, 96, 0.35);
+}
+
+.fx-title .g { color: var(--g); }
+.fx-title .r { color: #f87171; text-shadow: 0 0 28px rgba(248, 113, 113, 0.45); }
+.fx-title .c { color: #38BDF8; text-shadow: 0 0 28px rgba(56, 189, 248, 0.45); }
+
+.fx-stat-num {
+    font-size: clamp(22px, 3.6vh, 38px);
+    line-height: 1;
+    color: #fff;
+}
+
+.fx-stat-num.hl {
+    color: var(--g);
+    text-shadow: 0 0 18px rgba(30, 215, 96, 0.5);
+}
+
+.fx-glass {
+    position: relative;
+    border-radius: 22px;
+    background: linear-gradient(160deg, rgba(255,255,255,0.07), rgba(255,255,255,0.015) 40%, rgba(30,215,96,0.04));
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.10);
+    overflow: hidden;
+    transition: border-color 0.35s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.fx-glass::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(30,215,96,0.8), transparent);
+}
+
+.fx-glass-red {
+    background: linear-gradient(160deg, rgba(255,255,255,0.07), rgba(255,255,255,0.015) 40%, rgba(239,68,68,0.05));
+    border-color: rgba(248, 113, 113, 0.22);
+}
+
+.fx-glass-red::before {
+    background: linear-gradient(90deg, transparent, rgba(248, 113, 113, 0.85), transparent);
+}
+
+.fx-glass-cyan {
+    background: linear-gradient(160deg, rgba(255,255,255,0.07), rgba(255,255,255,0.015) 40%, rgba(56,189,248,0.05));
+    border-color: rgba(56, 189, 248, 0.22);
+}
+
+.fx-glass-cyan::before {
+    background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.85), transparent);
+}
+
+.fx-scan {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 60px;
+    top: -60px;
+    background: linear-gradient(180deg, transparent, rgba(30,215,96,0.06), transparent);
+    animation: fxScan 5.5s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes fxScan { to { top: 110%; } }
+
+.fx-bullet {
+    display: grid;
+    grid-template-columns: 14px 1fr;
+    gap: 10px;
+    align-items: start;
+}
+
+.fx-bullet::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    margin-top: 7px;
+    margin-left: 2px;
+    background: var(--g);
+    box-shadow: 0 0 8px var(--g);
+}
+
+.fx-bullet-red::before {
+    background: #f87171;
+    box-shadow: 0 0 8px #f87171;
+}
+
+.fx-bullet code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.86em;
+    color: #b9f6cf;
+    background: rgba(30,215,96,0.08);
+    padding: 0 5px;
+    border-radius: 4px;
+}
+
+.fx-bullet strong {
+    color: #fff;
+    font-weight: 600;
+}
+
+.fx-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px dashed rgba(255,255,255,0.08);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+}
+
+.fx-row:last-child { border-bottom: 0; }
+
+.fx-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.68);
+    background: rgba(255,255,255,0.03);
+}
+
+.fx-chip-green {
+    border-color: rgba(30, 215, 96, 0.35);
+    color: #1ED760;
+    background: rgba(30, 215, 96, 0.08);
+}
+
+.fx-chip-red {
+    border-color: rgba(248, 113, 113, 0.38);
+    color: #f87171;
+    background: rgba(248, 113, 113, 0.08);
+}
+
+.fx-rise {
+    opacity: 0;
+    animation: fxRise 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes fxRise {
+    0%   { opacity: 0; transform: translateY(18px); filter: blur(6px); }
+    100% { opacity: 1; transform: translateY(0); filter: blur(0); }
 }
 
 /* ========================================================================== */
@@ -153,7 +467,6 @@ body {
     will-change: transform;
 }
 
-/* Each slide acts as a full viewport frame in the horizontal track */
 .slide {
     min-width: 100%;
     width: 100%;
@@ -173,7 +486,6 @@ body {
     will-change: transform, opacity, filter;
 }
 
-/* Active slide expands smoothly with Nothing Phone cinematic depth */
 .slide.active {
     opacity: 1;
     transform: scale(1);
@@ -181,17 +493,7 @@ body {
 }
 
 /* Custom Scrollbar */
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
-::-webkit-scrollbar-track {
-    background: rgba(0,0,0,0.3);
-}
-::-webkit-scrollbar-thumb {
-    background: #333333;
-    border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-    background: #484848;
-}
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
+::-webkit-scrollbar-thumb { background: #333333; border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: #484848; }

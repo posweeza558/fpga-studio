@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FPGA STUDIO — 02. THE ORIGIN CHALLENGE & INTERPRETATION</title>
+    <title>FPGA STUDIO — 02. ORIGIN QUEST &amp; INTERPRETATION</title>
     <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Prompt:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Doto:wght@400;600;800;900&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;600;700&family=Prompt:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/nothing.css">
 </head>
 <body class="h-screen w-screen flex flex-col justify-between p-6 relative overflow-hidden">
@@ -21,7 +21,7 @@
             <span class="glyph-red-dot"></span>
             <span class="mono text-xs text-[#EAEAEA] font-bold tracking-widest uppercase">FPGA STUDIO</span>
             <span class="text-white/20 text-xs">|</span>
-            <span class="mono text-xs text-red-400">ORIGIN CHALLENGE // INTERPRETATION</span>
+            <span class="mono text-xs text-red-400">ORIGIN QUEST // INTERPRETATION</span>
         </div>
 
         <div class="flex items-center space-x-4">
@@ -40,116 +40,130 @@
             <div id="carousel-track">
 
                 <!-- ======================================================== -->
-                <!-- SLIDE 2: THE ORIGIN CHALLENGE & INTERPRETATION           -->
+                <!-- SLIDE 2: ORIGIN QUEST & INTERPRETATION                   -->
                 <!-- ======================================================== -->
-                <section class="slide active flex-col justify-center max-w-7xl w-full h-full px-2" data-slide="2" data-speaker="SPEAKER // ORIGIN CHALLENGE">
-                    
-                    <!-- Section Header -->
-                    <div class="flex items-end justify-between mb-3 pb-2 border-b border-white/10">
-                        <div>
-                            <div class="flex items-center space-x-2 text-xs mono text-red-400 font-bold mb-0.5">
-                                <span class="glyph-red-dot"></span>
-                                <span class="tracking-widest uppercase">[ 01. THE ORIGIN CHALLENGE // จุดประกายและการตีความโจทย์ ]</span>
-                            </div>
-                            <h2 class="text-2xl md:text-4xl font-extrabold ndot uppercase tracking-tight text-white">
-                                อาจารย์ท้า... ใครทำได้ให้เกรด A
-                            </h2>
-                        </div>
-                        <div class="hidden md:flex items-center space-x-2 mono text-xs">
-                            <span class="px-2.5 py-0.5 rounded bg-red-950/40 border border-red-500/50 text-red-400 font-bold">GRADE A QUEST</span>
-                            <span class="px-2.5 py-0.5 rounded bg-white/5 border border-white/15 text-white/70">SEPTEMBER 2026</span>
-                        </div>
-                    </div>
+                <section class="slide active fx-slide w-full h-full" style="--horizon: clamp(56px, 8vh, 92px);" data-slide="2" data-speaker="SPEAKER // ORIGIN CHALLENGE">
 
-                    <!-- 2 Professor Posts & In-Depth Interpretations -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-                        
-                        <!-- POST 1: SEP 13 (โจทย์ 3 ทางเลือก) -->
-                        <div class="bento-card p-4 border-[#282828] bg-[#121212]/90 flex flex-col justify-between">
+                    <div class="fx-root flex flex-col justify-between px-[clamp(24px,3.5vw,56px)] pt-[clamp(16px,2.6vh,30px)] pb-[clamp(56px,8.5vh,92px)]">
+
+                        <!-- Deep space layers -->
+                        <canvas class="fx-stars"></canvas>
+                        <div class="fx-nebula"></div>
+                        <div class="fx-grid"></div>
+                        <div class="fx-aurora"></div>
+                        <div class="fx-watermark fx-dot">02</div>
+
+                        <!-- Planet horizon -->
+                        <div class="fx-orbit-ring"></div>
+                        <div class="fx-planet"></div>
+
+                        <!-- Top Hero Header -->
+                        <div class="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-2 pb-2.5 border-b border-white/10">
                             <div>
-                                <div class="flex justify-between items-center mb-2 pb-1.5 border-b border-white/10">
-                                    <div class="flex items-center space-x-2">
-                                        <span class="mono text-xs font-bold text-white/90">โพสต์ 13 ก.ย. // โจทย์ 3 ทางเลือก</span>
-                                    </div>
-                                    <span class="mono text-[10px] px-2 py-0.5 rounded bg-white/5 border border-white/10 text-white/60">โจทย์เบื้องต้น</span>
+                                <div class="fx-rise flex items-center gap-3 mb-1.5">
+                                    <span class="glyph-red-dot"></span>
+                                    <span class="fx-mono text-[10.5px] tracking-[0.32em] text-red-400">MISSION 01 // THE PROFESSOR'S CHALLENGE</span>
+                                    <span class="h-px w-14 bg-gradient-to-r from-red-400/60 to-transparent"></span>
+                                    <span class="fx-mono text-[10.5px] tracking-[0.28em] text-white/35">SEPTEMBER 2026</span>
                                 </div>
-
-                                <!-- Post Screenshot -->
-                                <div class="relative rounded-xl overflow-hidden border border-[#282828] bg-black/60 mb-3 group">
-                                    <img src="../assets/prof_post_sep13.png" alt="โพสต์อาจารย์ 13 ก.ย." class="w-full h-40 object-contain p-1" onerror="this.src='prof_post_sep13.png'">
-                                    <div class="absolute bottom-1 right-2 mono text-[9px] text-white/50 bg-black/70 px-1.5 py-0.5 rounded">13 SEP 2026</div>
-                                </div>
-
-                                <!-- Interpretation -->
-                                <div class="space-y-1.5 text-xs text-[#B3B3B3]">
-                                    <div class="mono text-[11px] font-bold text-[#1ED760] uppercase tracking-wider flex items-center space-x-1">
-                                        <span>⚡ การตีความโจทย์ของพวกเรา:</span>
-                                    </div>
-                                    <p class="leading-relaxed">
-                                        อาจารย์ให้เลือกทำข้อใดข้อหนึ่ง: <span class="text-white">1. วิดีโอสอนคูณหาร</span>, <span class="text-white">2. Factorial + Simulator</span>, หรือ <span class="text-white">3. ฮาร์ดแวร์คูณหารบน FPGA ออก 7-Segment</span>
-                                    </p>
-                                    <div class="bg-black/50 p-2.5 rounded-lg border border-[#1ED760]/30 text-[11px] text-white/90 leading-snug">
-                                        <span class="text-[#1ED760] font-bold">» เราไม่เลือกทำแค่ข้อเดียว แต่ "รวบทำหมดทั้ง 3 ข้อ":</span><br>
-                                        สร้างวงจรหารฮาร์ดแวร์ 32 ไซเคิลจริงบนบอร์ด Nexys A7, แสดงผลออก 7-Segment เลขฐานสิบ, และสร้าง Simulator หน้าจอเสมือนจริงในตัว
-                                    </div>
+                                <div class="flex flex-wrap items-baseline gap-4">
+                                    <h2 class="fx-rise fx-dot uppercase text-white leading-none" style="font-size: clamp(32px, 5.4vh, 62px); text-shadow: 0 0 26px rgba(30,215,96,0.3); animation-delay:0.06s">
+                                        <span data-scramble="ORIGIN ">ORIGIN </span><span class="text-[#1ED760]" data-scramble="QUEST">QUEST</span>
+                                    </h2>
+                                    <h3 class="fx-rise fx-thai text-white font-semibold text-[clamp(17px,2.4vh,25px)] tracking-tight" style="animation-delay:0.1s">
+                                        อาจารย์ท้า... ใครทำได้ให้เกรด A — และการตีความของพวกเรา
+                                    </h3>
                                 </div>
                             </div>
-
-                            <div class="mt-3 pt-2 border-t border-white/5 flex gap-1.5 mono text-[10px] text-white/60">
-                                <span class="px-2 py-0.5 rounded bg-white/5">HARDWARE DIVIDER</span>
-                                <span class="px-2 py-0.5 rounded bg-white/5">7-SEG DECIMAL</span>
-                                <span class="px-2 py-0.5 rounded bg-emerald-950/40 text-[#1ED760]">3-IN-1 SOLVED</span>
+                            <div class="fx-rise hidden lg:flex items-center gap-2" style="animation-delay:0.14s">
+                                <span class="fx-chip fx-chip-green">ALL 3 OPTIONS COMBINED</span>
+                                <span class="fx-chip fx-chip-red">GRADE A CHALLENGE PROVEN</span>
                             </div>
                         </div>
 
-                        <!-- POST 2: SEP 25 (โจทย์ท้าทายเกรด A) -->
-                        <div class="bento-card p-4 border-red-500/30 bg-[#121212]/90 flex flex-col justify-between">
-                            <div>
-                                <div class="flex justify-between items-center mb-2 pb-1.5 border-b border-white/10">
-                                    <div class="flex items-center space-x-2">
-                                        <span class="mono text-xs font-bold text-red-400">โพสต์ 25 ก.ย. // โจทย์ท้าทายเกรด A</span>
+                        <!-- Main 2-Column Glass Spec Cards -->
+                        <div class="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-[clamp(16px,2.2vw,32px)] flex-1 min-h-0 my-3">
+
+                            <!-- CARD 1: SEP 13 (โจทย์ 3 ทางเลือก) -->
+                            <div class="fx-rise fx-glass flex flex-col justify-between p-[clamp(14px,2vh,22px)] min-h-0" style="animation-delay:0.12s">
+                                <div class="fx-scan"></div>
+                                <div class="flex flex-col min-h-0 flex-1">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="fx-mono text-[10px] tracking-[0.28em] text-white/45">POST 01 // 13 SEP 2026</span>
+                                        <span class="fx-mono text-[10px] tracking-[0.2em] text-[#1ED760]">● 3-IN-1 COMPLETE</span>
                                     </div>
-                                    <span class="mono text-[10px] px-2 py-0.5 rounded bg-red-950/50 border border-red-500/40 text-red-300 font-bold">เกณฑ์ตัดสิน A</span>
+
+                                    <!-- Professor Post Image -->
+                                    <div class="relative rounded-xl overflow-hidden border border-white/10 bg-black/65 mb-2.5 flex items-center justify-center h-[clamp(105px,18vh,155px)] shrink-0">
+                                        <img src="../assets/prof_post_sep13.png" alt="โพสต์อาจารย์ 13 ก.ย." class="w-full h-full object-contain p-1" onerror="this.src='prof_post_sep13.png'">
+                                        <span class="absolute bottom-1.5 right-2 fx-mono text-[9px] tracking-[0.18em] text-white/55 bg-black/80 px-2 py-0.5 rounded border border-white/10">3 OPTIONS BRIEF</span>
+                                    </div>
+
+                                    <!-- Interpretation Bullets -->
+                                    <ul class="space-y-1.5 text-[clamp(11.5px,1.45vh,13.5px)] leading-[1.55] text-white/65">
+                                        <li class="fx-bullet">
+                                            <span><strong>โจทย์เลือกทำ 1 ข้อ:</strong> <code>1. วิดีโอสอนคูณหาร</code> · <code>2. Factorial + Simulator</code> · <code>3. ฮาร์ดแวร์คูณหารบน FPGA ออก 7-Segment</code></span>
+                                        </li>
+                                        <li class="fx-bullet">
+                                            <span><strong>การตีความของพวกเรา — รวบทำครบทั้ง 3 ข้อในระบบเดียว:</strong> สร้างวงจรหารฮาร์ดแวร์ 32 ไซเคิล (<code>div.v</code>) บนชิป Artix-7 จริง แสดงผลเลขฐานสิบออก 7-Segment และมี Virtual Board Simulator ในตัว</span>
+                                        </li>
+                                    </ul>
                                 </div>
 
-                                <!-- Post Screenshot -->
-                                <div class="relative rounded-xl overflow-hidden border border-red-500/30 bg-black/60 mb-3 group">
-                                    <img src="../assets/prof_post_sep25.png" alt="โพสต์อาจารย์ 25 ก.ย." class="w-full h-40 object-contain p-1" onerror="this.src='prof_post_sep25.png'">
-                                    <div class="absolute bottom-1 right-2 mono text-[9px] text-red-400 bg-black/70 px-1.5 py-0.5 rounded">25 SEP 2026</div>
-                                </div>
-
-                                <!-- Interpretation -->
-                                <div class="space-y-1.5 text-xs text-[#B3B3B3]">
-                                    <div class="mono text-[11px] font-bold text-red-400 uppercase tracking-wider flex items-center space-x-1">
-                                        <span>🎯 การตีความโจทย์ & ข้อพิสูจน์:</span>
+                                <div class="pt-2.5 mt-2 border-t border-white/10">
+                                    <div class="fx-row">
+                                        <span class="text-[#1ED760] font-semibold">RESOLUTION</span>
+                                        <span class="text-white/70">Hardware Divider + 7-Seg + Simulator</span>
                                     </div>
-                                    <p class="leading-relaxed">
-                                        อาจารย์ท้า: <em class="text-white">“หา Compiler แปลงภาษา C เป็น MIPS opcode หรือ micro Python ที่รันบน MIPS CPU... ไม่รู้รุ่นน้องอีก 3 รุ่นจะทำได้ไหม ใครทำได้อาจารย์จะให้ A!”</em>
-                                    </p>
-                                    <div class="bg-red-950/20 p-2.5 rounded-lg border border-red-500/40 text-[11px] text-white/90 leading-snug">
-                                        <span class="text-red-400 font-bold">» เราพิสูจน์แล้วว่า "ไม่ต้องรอถึง 3 รุ่น":</span><br>
-                                        พวกเราฝัง Real MIPS GCC 12.2 + RISC-V GCC 15.2 ในตัว มี start.S บูต Stack และ link.ld จัดแรม แปลงภาษา C วิ่งลงฮาร์ดแวร์ชิป Nexys A7 ได้จริงในวินาทีเดียว!
+                                    <div class="flex flex-wrap gap-1.5 mt-2">
+                                        <span class="fx-chip">DIV.V 32-CYCLE</span>
+                                        <span class="fx-chip">7-SEG DECIMAL</span>
+                                        <span class="fx-chip fx-chip-green">3-IN-1 UNIFIED</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="mt-3 pt-2 border-t border-white/5 flex gap-1.5 mono text-[10px] text-white/60">
-                                <span class="px-2 py-0.5 rounded bg-white/5">REAL GCC COMPILER</span>
-                                <span class="px-2 py-0.5 rounded bg-white/5">ZERO-VIVADO</span>
-                                <span class="px-2 py-0.5 rounded bg-red-950/40 text-red-400 font-bold">NO WAITING 3 GENS</span>
+                            <!-- CARD 2: SEP 25 (โจทย์ท้าทายเกรด A) -->
+                            <div class="fx-rise fx-glass fx-glass-red flex flex-col justify-between p-[clamp(14px,2vh,22px)] min-h-0" style="animation-delay:0.18s">
+                                <div class="fx-scan"></div>
+                                <div class="flex flex-col min-h-0 flex-1">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="fx-mono text-[10px] tracking-[0.28em] text-white/45">POST 02 // 25 SEP 2026</span>
+                                        <span class="fx-mono text-[10px] tracking-[0.2em] text-red-400">● GRADE A QUEST</span>
+                                    </div>
+
+                                    <!-- Professor Post Image -->
+                                    <div class="relative rounded-xl overflow-hidden border border-red-500/25 bg-black/65 mb-2.5 flex items-center justify-center h-[clamp(105px,18vh,155px)] shrink-0">
+                                        <img src="../assets/prof_post_sep25.png" alt="โพสต์อาจารย์ 25 ก.ย." class="w-full h-full object-contain p-1" onerror="this.src='prof_post_sep25.png'">
+                                        <span class="absolute bottom-1.5 right-2 fx-mono text-[9px] tracking-[0.18em] text-red-300 bg-black/80 px-2 py-0.5 rounded border border-red-500/30">ULTIMATE CHALLENGE</span>
+                                    </div>
+
+                                    <!-- Interpretation Bullets -->
+                                    <ul class="space-y-1.5 text-[clamp(11.5px,1.45vh,13.5px)] leading-[1.55] text-white/65">
+                                        <li class="fx-bullet fx-bullet-red">
+                                            <span><strong>คำท้าของอาจารย์:</strong> <em>“หา Compiler แปลงภาษา C เป็น MIPS opcode... ไม่รู้รุ่นน้องอีก 3 รุ่นจะทำได้ไหม ใครทำได้อาจารย์จะให้ A!”</em></span>
+                                        </li>
+                                        <li class="fx-bullet fx-bullet-red">
+                                            <span><strong>ข้อพิสูจน์ของพวกเรา — ไม่ต้องรอถึง 3 รุ่น:</strong> ฝัง <code>Real MIPS GCC 12.2</code> + <code>RISC-V GCC 15.2</code> พร้อม <code>start.S</code> บูต Stack และ <code>link.ld</code> จัดแรม แปลงภาษา C วิ่งลงบอร์ด Nexys A7 ได้จริงใน 1.2 วินาที</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="pt-2.5 mt-2 border-t border-white/10">
+                                    <div class="fx-row">
+                                        <span class="text-red-400 font-semibold">VERIFICATION</span>
+                                        <span class="text-white/70">Real C → MIPS32 Opcode → Nexys A7 Silicon</span>
+                                    </div>
+                                    <div class="flex flex-wrap gap-1.5 mt-2">
+                                        <span class="fx-chip">REAL GCC 12.2</span>
+                                        <span class="fx-chip">start.S + link.ld</span>
+                                        <span class="fx-chip fx-chip-red">NO WAITING 3 GENS</span>
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
 
-                    </div>
-
-                    <!-- Bottom Summary Banner -->
-                    <div class="mt-3 bento-card p-2.5 px-4 bg-[#181818]/90 border-[#1ED760]/30 flex items-center justify-between text-xs mono">
-                        <div class="flex items-center space-x-2 text-white/90">
-                            <span class="glyph-green-dot"></span>
-                            <span class="font-bold text-[#1ED760]">บทสรุปการตีความ:</span>
-                            <span>ไม่ใช่แค่หาสคริปต์มาส่งอาจารย์ แต่เราสร้างสตูดิโอ EDA ตัวเต็มที่ผสานซอฟต์แวร์สู่ซิลิคอน 100%</span>
-                        </div>
-                        <span class="hidden md:inline text-white/40">NEXT: 7 CORE SYSTEM FEATURES →</span>
                     </div>
 
                 </section>

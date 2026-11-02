@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FPGA STUDIO — 04. C-TO-SILICON PIPELINE</title>
+    <title>FPGA STUDIO — 04. SILICON PIPELINE</title>
     <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Prompt:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Doto:wght@400;600;800;900&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;600;700&family=Prompt:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/nothing.css">
 </head>
 <body class="h-screen w-screen flex flex-col justify-between p-6 relative overflow-hidden">
@@ -16,12 +16,12 @@
     <canvas id="bg-canvas"></canvas>
 
     <!-- TOP BAR (CLEAN MINIMAL) -->
-    <header class="w-full flex items-center justify-between pb-4 border-b border-[#282828] z-20">
+    <header class="w-full flex items-center justify-between pb-3 border-b border-[#242424] z-20">
         <div class="flex items-center space-x-3">
             <span class="glyph-green-dot"></span>
             <span class="mono text-xs text-[#EAEAEA] font-bold tracking-widest uppercase">FPGA STUDIO</span>
             <span class="text-white/20 text-xs">|</span>
-            <span class="mono text-xs text-[#1ED760]">C-TO-SILICON PIPELINE</span>
+            <span class="mono text-xs text-[#1ED760]">SILICON PIPELINE // C TO HARDWARE</span>
         </div>
 
         <div class="flex items-center space-x-4">
@@ -35,121 +35,172 @@
     </header>
 
     <!-- MAIN SLIDE CONTAINER (CAROUSEL VIEWPORT) -->
-    <main class="flex-1 w-full flex items-center justify-center py-6 relative z-10 overflow-hidden">
+    <main class="flex-1 w-full flex items-center justify-center py-2 relative z-10 overflow-hidden">
         <div id="carousel-viewport">
             <div id="carousel-track">
 
                 <!-- ======================================================== -->
-                <!-- SLIDE 4: C-TO-SILICON PIPELINE (C TRANSFORM TO OUTPUT)  -->
+                <!-- SLIDE 4: SILICON PIPELINE (C TRANSFORM TO HARDWARE)     -->
                 <!-- ======================================================== -->
-                <section class="slide active flex-col justify-center max-w-6xl w-full h-full" data-slide="4" data-speaker="SPEAKER // C-TO-SILICON">
-                    <div class="flex items-center space-x-2 text-xs mono text-[#38BDF8] mb-2">
-                        <span class="glyph-green-dot"></span>
-                        <span>SOFTWARE TO SILICON // กระบวนการแปลงภาษา C สู่สัญญาณฮาร์ดแวร์</span>
+                <section class="slide active fx-slide w-full h-full" style="--horizon: clamp(60px, 8.5vh, 96px);" data-slide="4" data-speaker="SPEAKER // C-TO-SILICON">
+
+                    <div class="fx-root">
+
+                        <!-- Deep space layers -->
+                        <canvas class="fx-stars"></canvas>
+                        <div class="fx-nebula"></div>
+                        <div class="fx-grid"></div>
+                        <div class="fx-aurora"></div>
+                        <div class="fx-watermark fx-dot">04</div>
+
+                        <!-- Planet horizon -->
+                        <div class="fx-orbit-ring"></div>
+                        <div class="fx-planet"></div>
+
+                        <!-- Main Split Stage (Matches Slide 3 Architecture) -->
+                        <div class="relative z-10 h-full grid grid-cols-1 lg:grid-cols-12 gap-[clamp(22px,3vw,48px)] px-[clamp(26px,3.8vw,60px)] pt-[clamp(18px,3vh,34px)] pb-[clamp(66px,9.5vh,105px)] items-stretch">
+
+                            <!-- LEFT 7 COLS: Hero Title + 5-Stage Compilation Chain + Runtime Specs -->
+                            <div class="lg:col-span-7 flex flex-col justify-between min-h-0">
+                                <div>
+                                    <div class="fx-rise flex items-center gap-3 mb-3">
+                                        <span class="glyph-green-dot"></span>
+                                        <span class="fx-mono text-[10.5px] tracking-[0.32em] text-[#1ED760]">SOFTWARE TO SILICON // COMPILATION PIPELINE</span>
+                                        <span class="h-px w-14 bg-gradient-to-r from-[#1ED760]/60 to-transparent"></span>
+                                        <span class="fx-mono text-[10.5px] tracking-[0.28em] text-white/35">ZERO-OS BARE METAL</span>
+                                    </div>
+
+                                    <h2 class="fx-rise fx-dot fx-title uppercase" style="font-size: clamp(38px, 6.8vh, 80px); animation-delay:0.06s">
+                                        <span data-scramble="SILICON ">SILICON </span><span class="g" data-scramble="PIPELINE">PIPELINE</span>
+                                    </h2>
+
+                                    <h3 class="fx-rise fx-thai text-white font-semibold mt-3 text-[clamp(17px,2.4vh,25px)] tracking-tight" style="animation-delay:0.12s">
+                                        จากโค้ดภาษา C สู่สัญญาณฮาร์ดแวร์จริงบนชิป FPGA
+                                    </h3>
+                                    <p class="fx-rise text-white/55 mt-1.5 text-[clamp(12px,1.6vh,14.5px)] leading-relaxed max-w-[54ch]" style="animation-delay:0.16s">
+                                        คอมไพล์ภาษา C ด้วย Real GCC ฝังตัว จัดวางหน่วยความจำด้วย <code class="fx-mono text-[#b9f6cf]">start.S</code> และ <code class="fx-mono text-[#b9f6cf]">link.ld</code> แล้วส่งเข้า 5-Stage Pipeline CPU สั่งการอุปกรณ์ผ่าน MMIO Address โดยตรง
+                                    </p>
+
+                                    <!-- 5-Step Orbital Pipeline Chain -->
+                                    <div class="fx-rise grid grid-cols-5 gap-2 mt-4" style="animation-delay:0.22s">
+                                        <div class="p-2.5 rounded-xl bg-white/[0.03] border border-white/10">
+                                            <div class="fx-dot text-lg text-red-400">01</div>
+                                            <div class="fx-mono text-[10px] tracking-[0.14em] text-white font-semibold mt-0.5">SOURCE</div>
+                                            <div class="fx-mono text-[9.5px] text-white/45 mt-0.5">main.c / nCk</div>
+                                        </div>
+                                        <div class="p-2.5 rounded-xl bg-white/[0.03] border border-white/10">
+                                            <div class="fx-dot text-lg text-[#1ED760]">02</div>
+                                            <div class="fx-mono text-[10px] tracking-[0.14em] text-white font-semibold mt-0.5">COMPILE</div>
+                                            <div class="fx-mono text-[9.5px] text-white/45 mt-0.5">GCC 12.2 / 15.2</div>
+                                        </div>
+                                        <div class="p-2.5 rounded-xl bg-white/[0.03] border border-white/10">
+                                            <div class="fx-dot text-lg text-sky-400">03</div>
+                                            <div class="fx-mono text-[10px] tracking-[0.14em] text-white font-semibold mt-0.5">LINKER</div>
+                                            <div class="fx-mono text-[9.5px] text-white/45 mt-0.5">start.S + link.ld</div>
+                                        </div>
+                                        <div class="p-2.5 rounded-xl bg-white/[0.03] border border-white/10">
+                                            <div class="fx-dot text-lg text-amber-300">04</div>
+                                            <div class="fx-mono text-[10px] tracking-[0.14em] text-white font-semibold mt-0.5">BRAM SPLIT</div>
+                                            <div class="fx-mono text-[9.5px] text-white/45 mt-0.5">.text &amp; .data</div>
+                                        </div>
+                                        <div class="p-2.5 rounded-xl bg-[#1ED760]/[0.08] border border-[#1ED760]/40 shadow-[0_0_24px_rgba(30,215,96,0.18)]">
+                                            <div class="fx-dot text-lg text-[#1ED760]">05</div>
+                                            <div class="fx-mono text-[10px] tracking-[0.14em] text-[#1ED760] font-semibold mt-0.5">SILICON</div>
+                                            <div class="fx-mono text-[9.5px] text-emerald-200/70 mt-0.5">IF·ID·EX·MEM·WB</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Bottom Stats + Chips -->
+                                <div>
+                                    <div class="fx-rise flex items-end mt-3" style="animation-delay:0.28s">
+                                        <div class="flex-1">
+                                            <div class="fx-dot fx-stat-num hl">0x0000</div>
+                                            <div class="fx-mono text-[9.5px] tracking-[0.18em] text-white/45 mt-1.5">INST ROM (.TEXT)</div>
+                                        </div>
+                                        <div class="flex-1 pl-5 border-l border-white/10">
+                                            <div class="fx-dot fx-stat-num">0x8000M</div>
+                                            <div class="fx-mono text-[9.5px] tracking-[0.18em] text-white/45 mt-1.5">DATA BRAM (.DATA)</div>
+                                        </div>
+                                        <div class="flex-1 pl-5 border-l border-white/10">
+                                            <div class="fx-dot fx-stat-num hl">0x8001M</div>
+                                            <div class="fx-mono text-[9.5px] tracking-[0.18em] text-white/45 mt-1.5">STACK TOP ($SP)</div>
+                                        </div>
+                                        <div class="flex-1 pl-5 border-l border-white/10">
+                                            <div class="fx-dot fx-stat-num">0xF000M</div>
+                                            <div class="fx-mono text-[9.5px] tracking-[0.18em] text-white/45 mt-1.5">MMIO I/O BUS</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="fx-rise flex flex-wrap gap-2 mt-3.5" style="animation-delay:0.34s">
+                                        <span class="fx-chip">-march=mips32 -EB</span>
+                                        <span class="fx-chip">-march=rv32im</span>
+                                        <span class="fx-chip">OBJCOPY .DATA EXTRACT</span>
+                                        <span class="fx-chip fx-chip-green">100% BARE-METAL C</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- RIGHT 5 COLS: Glass Spec Card (Bootstrap + Full MMIO Bus Map) -->
+                            <div class="lg:col-span-5 fx-rise fx-glass flex flex-col justify-between p-[clamp(16px,2.3vh,24px)] min-h-0" style="animation-delay:0.14s">
+                                <div class="fx-scan"></div>
+
+                                <div>
+                                    <div class="flex items-center justify-between mb-2.5">
+                                        <span class="fx-mono text-[10px] tracking-[0.3em] text-white/40">RUNTIME ARCHITECTURE</span>
+                                        <span class="fx-mono text-[10px] tracking-[0.2em] text-[#1ED760]">● MMIO BUS ACTIVE</span>
+                                    </div>
+
+                                    <ul class="space-y-2 text-[clamp(11.5px,1.45vh,13.5px)] leading-[1.55] text-white/65">
+                                        <li class="fx-bullet">
+                                            <span><strong>start.S Vector Boot:</strong> วางที่ <code>0x00000000</code> ตั้งค่า Stack Pointer (<code>$sp = 0x80010000</code>) ก่อนกระโดดเข้า <code>main()</code> รองรับฟังก์ชันซ้อนและ Recursive</span>
+                                        </li>
+                                        <li class="fx-bullet">
+                                            <span><strong>Automated .data BRAM Loader:</strong> ใช้ <code>objcopy</code> แยกตัวแปร Global/Static บรรจุลง Data RAM ที่ <code>0x80000000</code> อัตโนมัติ</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <!-- Hardware MMIO Bus Binding Table -->
+                                <div class="mt-3 pt-3 border-t border-white/10">
+                                    <div class="flex items-center justify-between mb-1.5">
+                                        <span class="fx-mono text-[10px] tracking-[0.3em] text-white/40">NEXYS A7 MMIO ADDRESS MAP</span>
+                                        <span class="fx-mono text-[10px] text-white/35">C POINTER SYNTAX</span>
+                                    </div>
+                                    <div>
+                                        <div class="fx-row">
+                                            <span class="text-red-400 font-semibold">0xF0000000 · WRITE</span>
+                                            <span class="text-white/75">16 User LEDs (<code class="text-[#b9f6cf]">LED = 0xFF;</code>)</span>
+                                        </div>
+                                        <div class="fx-row">
+                                            <span class="text-[#1ED760] font-semibold">0xF0000004 · READ</span>
+                                            <span class="text-white/75">16 Slide Switches (<code class="text-[#b9f6cf]">sw = SWITCH;</code>)</span>
+                                        </div>
+                                        <div class="fx-row">
+                                            <span class="text-amber-300 font-semibold">0xF0000008 · WRITE</span>
+                                            <span class="text-white/75">8-Digit 7-Segment (<code class="text-[#b9f6cf]">SEG7 = 120;</code>)</span>
+                                        </div>
+                                        <div class="fx-row">
+                                            <span class="text-emerald-300 font-semibold">0xF000000C · READ</span>
+                                            <span class="text-white/75">5 Pushbuttons (<code class="text-[#b9f6cf]">BTNC / BTNU</code>)</span>
+                                        </div>
+                                        <div class="fx-row">
+                                            <span class="text-sky-300 font-semibold">0xF0000010 · TX/RX</span>
+                                            <span class="text-white/75">UART 115200 (<code class="text-[#b9f6cf]">printf("Hi\n");</code>)</span>
+                                        </div>
+                                        <div class="fx-row">
+                                            <span class="text-purple-300 font-semibold">0xFF000000 · VRAM</span>
+                                            <span class="text-white/75">VGA 640×480 12-bit Framebuffer</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
                     </div>
-                    <h2 class="text-3xl md:text-4xl font-bold ndot uppercase tracking-tight text-white mb-5">
-                        C-TO-SILICON PIPELINE // จากโค้ด C สู่สัญญาณฮาร์ดแวร์จริง
-                    </h2>
 
-                    <!-- 5-Step Pipeline Flow -->
-                    <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mb-4">
-                        <div class="bento-card p-3.5 text-center">
-                            <span class="mono text-xs text-red-400 block mb-1">01 • SOURCE</span>
-                            <h4 class="font-bold text-sm text-white mb-0.5">ภาษา C / C++</h4>
-                            <p class="text-[11px] text-[#B3B3B3] mono">main.c (nCk / Fibo)</p>
-                        </div>
-                        <div class="bento-card p-3.5 text-center">
-                            <span class="mono text-xs text-[#1ED760] block mb-1">02 • COMPILE</span>
-                            <h4 class="font-bold text-sm text-white mb-0.5">Real MIPS GCC</h4>
-                            <p class="text-[11px] text-[#B3B3B3] mono">-march=mips32 -EB</p>
-                        </div>
-                        <div class="bento-card p-3.5 text-center">
-                            <span class="mono text-xs text-[#38BDF8] block mb-1">03 • LINKING</span>
-                            <h4 class="font-bold text-sm text-white mb-0.5">Linker link.ld</h4>
-                            <p class="text-[11px] text-[#B3B3B3] mono">SP = 0x80010000</p>
-                        </div>
-                        <div class="bento-card p-3.5 text-center">
-                            <span class="mono text-xs text-amber-400 block mb-1">04 • MEMORY</span>
-                            <h4 class="font-bold text-sm text-white mb-0.5">BRAM Split</h4>
-                            <p class="text-[11px] text-[#B3B3B3] mono">.text(0x0) .data(0x80M)</p>
-                        </div>
-                        <div class="bento-card p-3.5 text-center border-[#1ED760]/40 bg-emerald-950/20">
-                            <span class="mono text-xs text-[#1ED760] block mb-1">05 • HARDWARE</span>
-                            <h4 class="font-bold text-sm text-white mb-0.5">5-Stage Pipeline</h4>
-                            <p class="text-[11px] text-emerald-300 mono">IF-ID-EX-MEM-WB</p>
-                        </div>
-                    </div>
-
-                    <!-- Bottom Details: Bootstrapping & MMIO Map -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        
-                        <!-- Bootstrapping / Memory card -->
-                        <div class="bento-card p-4 flex flex-col justify-between">
-                            <div>
-                                <span class="mono text-xs text-[#38BDF8] font-bold block mb-1.5">BOOTSTRAP & DATA RAM</span>
-                                <p class="text-xs text-[#B3B3B3] leading-relaxed mb-2">
-                                    มีโค้ด <span class="mono text-white font-bold">start.S</span> วางอยู่ที่ Vector <span class="mono text-red-400">0x00000000</span> คอยเซ็ต Stack Pointer ไปที่จุดสูงสุดของ RAM (<span class="mono text-white">0x80010000</span>)
-                                </p>
-                                <p class="text-xs text-[#B3B3B3] leading-relaxed">
-                                    และใช้ <span class="mono text-white font-bold">objcopy</span> สกัด Section <span class="mono text-amber-400">.data</span> (ตัวแปร Global/Static) บรรจุใส่ BRAM ที่ <span class="mono text-white">0x80000000</span> ทำให้รันภาษา C ได้ 100%
-                                </p>
-                            </div>
-                            <div class="mono text-[11px] text-white/50 bg-black/40 p-2 rounded-lg text-center mt-2 border border-[#282828]">
-                                stack_top = 0x80010000 // data = 0x80000000
-                            </div>
-                        </div>
-
-                        <!-- MMIO Map 1: LEDs, Switches, 7-Seg -->
-                        <div class="space-y-3">
-                            <div class="bento-card p-3 flex items-center justify-between">
-                                <div>
-                                    <span class="mono text-[11px] text-red-400 font-bold block">0xF0000000 • WRITE</span>
-                                    <h5 class="text-xs font-bold text-white">16 User LEDs</h5>
-                                </div>
-                                <span class="mono text-[11px] text-[#B3B3B3]">LED = 0xFF;</span>
-                            </div>
-                            <div class="bento-card p-3 flex items-center justify-between">
-                                <div>
-                                    <span class="mono text-[11px] text-[#1ED760] font-bold block">0xF0000004 • READ</span>
-                                    <h5 class="text-xs font-bold text-white">16 Slide Switches</h5>
-                                </div>
-                                <span class="mono text-[11px] text-[#B3B3B3]">val = SWITCH;</span>
-                            </div>
-                            <div class="bento-card p-3 flex items-center justify-between border-red-500/30">
-                                <div>
-                                    <span class="mono text-[11px] text-red-400 font-bold block">0xF0000008 • WRITE</span>
-                                    <h5 class="text-xs font-bold text-white">8-Digit 7-Segment</h5>
-                                </div>
-                                <span class="mono text-[11px] text-[#1ED760]">10 C 3 = 120</span>
-                            </div>
-                        </div>
-
-                        <!-- MMIO Map 2: Pushbuttons, UART, VGA -->
-                        <div class="space-y-3">
-                            <div class="bento-card p-3 flex items-center justify-between">
-                                <div>
-                                    <span class="mono text-[11px] text-[#1ED760] font-bold block">0xF000000C • READ</span>
-                                    <h5 class="text-xs font-bold text-white">5 Pushbuttons</h5>
-                                </div>
-                                <span class="mono text-[11px] text-[#B3B3B3]">BTNC / BTNU</span>
-                            </div>
-                            <div class="bento-card p-3 flex items-center justify-between border-[#1ED760]/30">
-                                <div>
-                                    <span class="mono text-[11px] text-amber-400 font-bold block">0xF0000010 • TX/RX</span>
-                                    <h5 class="text-xs font-bold text-white">UART Console (115200)</h5>
-                                </div>
-                                <span class="mono text-[11px] text-[#EAEAEA]">printf("Hello\n");</span>
-                            </div>
-                            <div class="bento-card p-3 flex items-center justify-between">
-                                <div>
-                                    <span class="mono text-[11px] text-[#38BDF8] font-bold block">0xFF000000 • VRAM</span>
-                                    <h5 class="text-xs font-bold text-white">VGA Framebuffer</h5>
-                                </div>
-                                <span class="mono text-[11px] text-[#B3B3B3]">640x480 Pixels</span>
-                            </div>
-                        </div>
-
-                    </div>
                 </section>
 
             </div>

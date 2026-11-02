@@ -67,12 +67,18 @@ def compile_presentation():
         for i, sec in enumerate(sections, start=1):
             sec_updated = re.sub(r'data-slide="\d+"', f'data-slide="{current_global_slide}"', sec)
             
-            if current_global_slide == 1:
-                if 'active' not in sec_updated.split('class="')[1].split('"')[0]:
-                    sec_updated = sec_updated.replace('class="slide ', 'class="slide active ')
-            else:
-                sec_updated = sec_updated.replace('active ', '').replace(' active', '')
+            # Safely ensure only slide 1 has the 'active' class on the <section> opening tag
+            def fix_section_tag(match):
+                tag = match.group(0)
+                if current_global_slide == 1:
+                    if 'active' not in tag:
+                        tag = tag.replace('class="slide ', 'class="slide active ')
+                else:
+                    tag = re.sub(r'\bactive\b', '', tag)
+                    tag = re.sub(r'\s+', ' ', tag)
+                return tag
 
+            sec_updated = re.sub(r'<section\s+class="[^"]*"[^>]*>', fix_section_tag, sec_updated, count=1)
             sec_updated = sec_updated.replace('../assets/', 'assets/')
             
             all_sections.append(sec_updated)
@@ -101,7 +107,7 @@ def compile_presentation():
     <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Prompt:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Doto:wght@400;600;800;900&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;600;700&family=Prompt:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{css_rel}">
 </head>
 <body class="h-screen w-screen flex flex-col justify-between p-6 relative overflow-hidden">
@@ -110,12 +116,12 @@ def compile_presentation():
     <canvas id="bg-canvas"></canvas>
 
     <!-- TOP BAR (CLEAN MINIMAL) -->
-    <header class="w-full flex items-center justify-between pb-4 border-b border-[#282828] z-20">
+    <header class="w-full flex items-center justify-between pb-3 border-b border-[#242424] z-20">
         <div class="flex items-center space-x-3">
             <span class="glyph-green-dot"></span>
             <span class="mono text-xs text-[#EAEAEA] font-bold tracking-widest uppercase">FPGA STUDIO</span>
             <span class="text-white/20 text-xs">|</span>
-            <span class="mono text-xs text-[#1ED760]">v4.3 RELEASE</span>
+            <span class="mono text-xs text-[#1ED760]">v4.3 ORBIT LAUNCH</span>
         </div>
 
         <div class="flex items-center space-x-4">
@@ -131,7 +137,7 @@ def compile_presentation():
     </header>
 
     <!-- MAIN SLIDE CONTAINER (CAROUSEL VIEWPORT & TRACK) -->
-    <main class="flex-1 w-full flex items-center justify-center py-6 relative z-10 overflow-hidden">
+    <main class="flex-1 w-full flex items-center justify-center py-2 relative z-10 overflow-hidden">
         <div id="carousel-viewport">
             <div id="carousel-track">
 {chr(10).join(all_sections)}

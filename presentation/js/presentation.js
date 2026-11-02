@@ -44,6 +44,7 @@ function initPresentation() {
 
     updateSlide();
     initDotMatrixCanvas();
+    initOrbitStarfields();
     initPupilTracker();
     initGlobalClickNavigation();
 }
@@ -129,6 +130,20 @@ function updateSlide() {
     if (cueContent) {
         const scripts = window.speakerScripts || {};
         cueContent.innerText = scripts[currentSlide] || "ไม่มีสคริปต์ในสไลด์นี้";
+    }
+
+    // Hook: If arriving on slide 3 (Arc Carousel Slide), initialize/update arc positions immediately
+    if (currentSlide === 3) {
+        if (typeof window.initArcCarousel === 'function') {
+            window.initArcCarousel();
+        } else if (typeof window.updateArcPositions === 'function') {
+            window.updateArcPositions();
+        }
+    }
+
+    // Trigger Nothing dot-matrix scramble on active slide's [data-scramble] elements
+    if (activeSlide) {
+        triggerSlideScramble(activeSlide);
     }
 
     // Refresh arrows immediately on slide change
@@ -441,6 +456,130 @@ function updatePupil() {
     pupilY += (targetY - pupilY) * 0.12;
 
     tracker.style.transform = `translate3d(${pupilX.toFixed(2)}px, ${pupilY.toFixed(2)}px, 0)`;
+}
+
+// ==============================================================================
+// 5. ORBIT LAUNCH STARFIELD & DOT-MATRIX HEADLINE SCRAMBLE
+// ==============================================================================
+
+function scrambleTextElement(el, finalText) {
+    if (!el || !finalText) return;
+    const glyphs = '01#%&*+<>/=?ABCDEFXYZ';
+    const len = finalText.length;
+    let frame = 0;
+    const totalFrames = 20;
+    if (el._raf) cancelAnimationFrame(el._raf);
+    const tick = () => {
+        let out = '';
+        for (let i = 0; i < len; i++) {
+            const ch = finalText[i];
+            const revealAt = (i / len) * totalFrames * 0.8;
+            if (ch === ' ' || frame >= revealAt + 5) out += ch;
+            else out += glyphs[Math.floor(Math.random() * glyphs.length)];
+        }
+        el.textContent = out;
+        frame++;
+        if (frame <= totalFrames + 5) {
+            el._raf = requestAnimationFrame(tick);
+        } else {
+            el.textContent = finalText;
+        }
+    };
+    tick();
+}
+
+function triggerSlideScramble(slideEl) {
+    const items = slideEl.querySelectorAll('[data-scramble]');
+    items.forEach((el) => {
+        const target = el.getAttribute('data-scramble') || el.textContent;
+        scrambleTextElement(el, target);
+    });
+}
+
+function initOrbitStarfields() {
+    const canvases = Array.from(document.querySelectorAll('canvas.fx-stars:not(#fx-stars)'));
+    if (!canvases.length) return;
+
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    let mx = 0, my = 0;
+    window.addEventListener('mousemove', (e) => {
+        mx = (e.clientX / window.innerWidth - 0.5);
+        my = (e.clientY / window.innerHeight - 0.5);
+    });
+
+    const states = canvases.map((canvas) => ({
+        canvas,
+        ctx: canvas.getContext('2d'),
+        W: 0,
+        H: 0,
+        stars: [],
+        shooting: null,
+        slide: canvas.closest('.slide')
+    }));
+
+    function resizeState(st) {
+        const r = st.canvas.getBoundingClientRect();
+        const w = r.width || window.innerWidth - 48;
+        const h = r.height || window.innerHeight - 100;
+        if (!w || !h) return;
+        st.W = w;
+        st.H = h;
+        st.canvas.width = w * dpr;
+        st.canvas.height = h * dpr;
+        st.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const count = Math.round((w * h) / 5200);
+        st.stars = Array.from({ length: count }, () => ({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            z: Math.random() * 0.9 + 0.1,
+            p: Math.random() * Math.PI * 2,
+            tw: 0.6 + Math.random() * 1.8,
+            g: Math.random() < 0.14
+        }));
+    }
+
+    states.forEach(resizeState);
+    window.addEventListener('resize', () => states.forEach(resizeState));
+
+    function frame(t) {
+        requestAnimationFrame(frame);
+        const time = t / 1000;
+        for (const st of states) {
+            if (st.slide && !st.slide.classList.contains('active')) continue;
+            if (!st.W) { resizeState(st); if (!st.W) continue; }
+            const { ctx, W, H, stars } = st;
+            ctx.clearRect(0, 0, W, H);
+            for (const s of stars) {
+                s.x -= s.z * 0.06;
+                if (s.x < -4) s.x = W + 4;
+                const a = (0.35 + 0.65 * (0.5 + 0.5 * Math.sin(time * s.tw + s.p))) * s.z;
+                const x = s.x - mx * 22 * s.z;
+                const y = s.y - my * 14 * s.z;
+                const size = s.z * 1.4;
+                ctx.fillStyle = s.g ? `rgba(120,255,170,${a})` : `rgba(255,255,255,${a})`;
+                ctx.fillRect(x, y, size, size);
+            }
+            if (!st.shooting && Math.random() < 0.004) {
+                st.shooting = { x: Math.random() * W * 0.7 + W * 0.2, y: Math.random() * H * 0.35, l: 0 };
+            }
+            if (st.shooting) {
+                st.shooting.l += 14;
+                const sx = st.shooting.x - st.shooting.l;
+                const sy = st.shooting.y + st.shooting.l * 0.35;
+                const grad = ctx.createLinearGradient(sx, sy, sx + 120, sy - 42);
+                grad.addColorStop(0, 'rgba(190,255,215,0.9)');
+                grad.addColorStop(1, 'rgba(190,255,215,0)');
+                ctx.strokeStyle = grad;
+                ctx.lineWidth = 1.2;
+                ctx.beginPath();
+                ctx.moveTo(sx, sy);
+                ctx.lineTo(sx + 120, sy - 42);
+                ctx.stroke();
+                if (st.shooting.l > W * 0.5) st.shooting = null;
+            }
+        }
+    }
+    requestAnimationFrame(frame);
 }
 
 // Auto-run on DOM ready
