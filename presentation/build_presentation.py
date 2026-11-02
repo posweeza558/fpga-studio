@@ -163,7 +163,7 @@ def compile_presentation():
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write(html_template)
 
-    index_file = os.path.join(BASE_DIR, "index.html")
+    index_file = os.path.join(os.path.dirname(OUTPUT_FILE), "index.html")
     with open(index_file, "w", encoding="utf-8") as f:
         f.write(html_template)
 

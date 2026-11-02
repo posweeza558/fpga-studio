@@ -3,99 +3,2133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FPGA STUDIO — PRESENTATION SUITE (NOTHING EDITION)</title>
+    <title>FPGA STUDIO — KEYNOTE SLIDES</title>
+    <!-- Tailwind CSS (Public CDN + Antigravity local fallback) -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Prompt:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Doto:wght@400;600;800;900&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;600;700&family=Prompt:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/nothing.css">
-    <script>
-        let timer = setTimeout(() => {
-            window.location.href = 'presentation_all.html';
-        }, 1500);
-    </script>
 </head>
-<body class="h-screen w-screen flex flex-col justify-between p-8 dot-matrix-bg">
+<body class="h-screen w-screen m-0 p-0 relative overflow-hidden">
 
-    <!-- Top Bar -->
-    <header class="w-full flex items-center justify-between pb-4 border-b border-[#282828]">
+    <!-- FLOATING TOP HUD BAR (TRANSPARENT OVER FULLSCREEN SPACE STAGE) -->
+    <header class="fx-hud flex items-center justify-between">
         <div class="flex items-center space-x-3">
             <span class="glyph-green-dot"></span>
-            <span class="mono text-xs text-[#EAEAEA] font-bold tracking-widest uppercase">FPGA STUDIO // LAUNCHER</span>
+            <span class="mono text-xs text-[#EAEAEA] font-bold tracking-widest uppercase">FPGA STUDIO</span>
             <span class="text-white/20 text-xs">|</span>
-            <span class="mono text-xs text-[#1ED760]">v4.3 RELEASE</span>
+            <span class="mono text-xs text-[#1ED760]">v4.4 ORBIT LAUNCH</span>
         </div>
-        <div class="mono text-xs text-white/40">
-            AUTO-LAUNCHING IN 1.5S...
+
+        <div class="flex items-center space-x-4">
+            <!-- Fullscreen Button -->
+            <button onclick="toggleFullscreen()" class="p-2 rounded-full bg-black/40 border border-white/15 hover:border-[#1ED760]/60 hover:bg-black/70 transition text-xs mono text-[#EAEAEA]" title="Full Screen (F)">
+                ⛶
+            </button>
         </div>
     </header>
 
-    <!-- Main Selection Cards -->
-    <main class="flex-1 flex flex-col items-center justify-center max-w-5xl mx-auto w-full text-center">
-        <div class="w-20 h-20 rounded-full border border-white/30 flex items-center justify-center mb-6 shadow-[0_0_25px_rgba(30,215,96,0.15)]">
-            <span class="glyph-green-dot"></span>
-        </div>
+    <!-- FULLSCREEN SLIDE VIEWPORT & TRACK -->
+    <main class="w-screen h-screen m-0 p-0 relative z-10 overflow-hidden">
+        <div id="carousel-viewport">
+            <div id="carousel-track">
+<section class="slide active fx-slide w-full h-full" style="--horizon: clamp(105px, 15vh, 160px);" data-slide="1" data-speaker="FPGA STUDIO // OVERVIEW">
 
-        <h1 class="text-4xl md:text-5xl font-bold ndot uppercase tracking-tight text-white mb-3">
-            FPGA STUDIO KEYNOTE
-        </h1>
-        <p class="mono text-xs md:text-sm text-[#B3B3B3] uppercase tracking-widest mb-8">
-            NOTHING TRAILER CAROUSEL DECK • 5 STREAMLINED SLIDES
-        </p>
+                    <div class="fx-root flex flex-col items-center justify-center text-center px-8">
 
-        <!-- Master Presentation Big Button -->
-        <a href="presentation_all.html" onclick="clearTimeout(timer)" class="w-full bento-card p-6 mb-6 hover:border-[#1ED760]/60 bg-[#161616]/90 text-left flex items-center justify-between transition group">
-            <div>
-                <div class="flex items-center space-x-2 text-xs mono text-[#1ED760] font-bold mb-1">
-                    <span class="glyph-green-dot"></span>
-                    <span>MASTER KEYNOTE DECK (แนะนำสำหรับวันพรีเซนต์จริง)</span>
-                </div>
-                <h3 class="text-xl font-bold text-white group-hover:text-[#1ED760] transition">
-                    เปิดสไลด์รวม 5 แผ่น (presentation_all.html)
-                </h3>
-                <p class="text-xs text-[#B3B3B3] mt-1">
-                    ระบบ Horizontal Carousel เลื่อนแนวนอนแบบเทรลเลอร์ Nothing Phone คลิกซีกจอซ้าย/ขวาเพื่อเปลี่ยนหน้า
-                </p>
-            </div>
-            <div class="mono text-2xl text-white/40 group-hover:text-white transition px-4">
-                →
-            </div>
-        </a>
+                        <!-- Deep space layers -->
+                        <canvas class="fx-stars"></canvas>
+                        <div class="fx-nebula"></div>
+                        <div class="fx-grid"></div>
+                        <div class="fx-aurora"></div>
 
-        <!-- Modular Slide Links -->
-        <div class="w-full text-left">
-            <div class="mono text-xs text-white/40 mb-3 uppercase tracking-wider">
-                เปิดแยกทำทีละสไลด์ (Modular Slides):
-            </div>
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
-                <a href="slides/00_cover.html" onclick="clearTimeout(timer)" class="bento-card p-3 hover:border-white/40 transition">
-                    <span class="mono text-[10px] text-white/40 block">SLIDE 01</span>
-                    <h4 class="text-xs font-bold text-white">00. หน้าปก</h4>
-                </a>
-                <a href="slides/01_challenge.html" onclick="clearTimeout(timer)" class="bento-card p-3 hover:border-red-500/40 transition">
-                    <span class="mono text-[10px] text-red-400 block">SLIDE 02</span>
-                    <h4 class="text-xs font-bold text-white">01. โจทย์ & ตีความ</h4>
-                </a>
-                <a href="slides/02_features.html" onclick="clearTimeout(timer)" class="bento-card p-3 hover:border-[#1ED760]/40 transition">
-                    <span class="mono text-[10px] text-[#1ED760] block">SLIDE 03</span>
-                    <h4 class="text-xs font-bold text-white">02. ฟีเจอร์ 7 ข้อ</h4>
-                </a>
-                <a href="slides/03_c_pipeline.html" onclick="clearTimeout(timer)" class="bento-card p-3 hover:border-[#38BDF8]/40 transition">
-                    <span class="mono text-[10px] text-[#38BDF8] block">SLIDE 04</span>
-                    <h4 class="text-xs font-bold text-white">03. C Pipeline</h4>
-                </a>
-                <a href="slides/04_live_demo.html" onclick="clearTimeout(timer)" class="bento-card p-3 hover:border-purple-400/40 transition">
-                    <span class="mono text-[10px] text-purple-400 block">SLIDE 05</span>
-                    <h4 class="text-xs font-bold text-white">04. เดโม่ & QR</h4>
-                </a>
+                        <!-- Planet horizon rising at bottom -->
+                        <div class="fx-orbit-ring"></div>
+                        <div class="fx-planet"></div>
+
+                        <!-- Center Hero Content -->
+                        <div class="relative z-10 flex flex-col items-center max-w-5xl w-full -mt-10">
+
+                            <!-- Orbital Glyph Eye Core -->
+                            <div class="fx-rise relative mb-7">
+                                <div class="w-36 h-36 rounded-full border border-dashed border-white/15 flex items-center justify-center relative shadow-[0_0_60px_rgba(30,215,96,0.16)]">
+                                    <div class="w-28 h-28 rounded-full border border-white/20 bg-black/50 backdrop-blur-md flex items-center justify-center relative">
+                                        <div id="eye-outer" class="w-16 h-16 rounded-full border-2 border-white/70 flex items-center justify-center relative shadow-[inset_0_0_18px_rgba(30,215,96,0.2)]">
+                                            <div id="eye-pupil-tracker" class="flex items-center justify-center will-change-transform">
+                                                <span id="eye-pupil" class="glyph-red-dot"></span>
+                                            </div>
+                                        </div>
+                                        <div class="absolute -top-2.5 w-11 h-1 bg-white/85 rounded-full shadow-[0_0_12px_rgba(255,255,255,0.6)]"></div>
+                                        <div class="absolute -bottom-2.5 w-14 h-1 bg-[#1ED760] rounded-full shadow-[0_0_14px_rgba(30,215,96,0.8)]"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Eyebrow Telemetry Tag -->
+                            <div class="fx-rise flex items-center gap-3 mb-3" style="animation-delay:0.06s">
+                                <span class="glyph-green-dot"></span>
+                                <span class="fx-mono text-[11px] tracking-[0.34em] text-[#1ED760] uppercase">SYSTEM LAUNCH // ALL-IN-ONE SILICON IDE</span>
+                                <span class="h-px w-12 bg-gradient-to-r from-[#1ED760]/60 to-transparent"></span>
+                                <span class="fx-mono text-[11px] tracking-[0.28em] text-white/40">NEXYS A7-100T</span>
+                            </div>
+
+                            <!-- Main Dot-Matrix Hero Title -->
+                            <h1 class="fx-rise fx-dot uppercase tracking-tight text-white leading-none mb-3" style="font-size: clamp(56px, 11vh, 126px); text-shadow: 0 0 38px rgba(30,215,96,0.35); animation-delay:0.12s">
+                                <span data-scramble="FPGA ">FPGA </span><span class="text-[#1ED760]" data-scramble="STUDIO">STUDIO</span>
+                            </h1>
+
+                            <!-- Crisp Thai Subtitle -->
+                            <h2 class="fx-rise fx-thai text-white/90 font-semibold text-[clamp(16px,2.3vh,24px)] tracking-tight mb-1.5" style="animation-delay:0.18s">
+                                สตูดิโอพัฒนา ซิมูเลเตอร์ และสังเคราะห์ฮาร์ดแวร์ CPU 32-bit แบบครบวงจร
+                            </h2>
+                            <p class="fx-rise fx-mono text-[11px] md:text-xs text-white/45 tracking-[0.22em] uppercase mb-7" style="animation-delay:0.22s">
+                                DUAL 32-BIT RISC ARCHITECTURE  ·  C-TO-SILICON COMPILER  ·  REAL-TIME HARDWARE CO-SIMULATION
+                            </p>
+
+                            <!-- 4 Orbit Stat Pillars -->
+                            <div class="fx-rise grid grid-cols-4 gap-6 md:gap-10 px-7 py-4 rounded-2xl bg-white/[0.025] border border-white/10 backdrop-blur-md mb-6" style="animation-delay:0.28s">
+                                <div class="text-center">
+                                    <div class="fx-dot fx-stat-num hl">28<span style="font-family:Inter;font-weight:700">.</span>88</div>
+                                    <div class="fx-mono text-[9.5px] tracking-[0.2em] text-white/45 mt-1.5">MHz PEAK CLOCK</div>
+                                </div>
+                                <div class="text-center pl-6 border-l border-white/10">
+                                    <div class="fx-dot fx-stat-num">5-STAGE</div>
+                                    <div class="fx-mono text-[9.5px] tracking-[0.2em] text-white/45 mt-1.5">PIPELINE CORE</div>
+                                </div>
+                                <div class="text-center pl-6 border-l border-white/10">
+                                    <div class="fx-dot fx-stat-num hl">1<span style="font-family:Inter;font-weight:700">.</span>2s</div>
+                                    <div class="fx-mono text-[9.5px] tracking-[0.2em] text-white/45 mt-1.5">FAST BRAM FLASH</div>
+                                </div>
+                                <div class="text-center pl-6 border-l border-white/10">
+                                    <div class="fx-dot fx-stat-num">DUAL</div>
+                                    <div class="fx-mono text-[9.5px] tracking-[0.2em] text-white/45 mt-1.5">MIPS32 + RV32IM</div>
+                                </div>
+                            </div>
+
+                            <!-- Tech Spec Chips -->
+                            <div class="fx-rise flex flex-wrap gap-2 justify-center" style="animation-delay:0.34s">
+                                <span class="fx-chip">OPENMIPS 32-BIT</span>
+                                <span class="fx-chip">RISC-V (RV32IM)</span>
+                                <span class="fx-chip">REAL GCC + CUSTOM COMPILER</span>
+                                <span class="fx-chip">DIGILENT NEXYS A7-100T</span>
+                                <span class="fx-chip fx-chip-green">TERM PROJECT 2026</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+<section class="slide fx-slide w-full h-full" id="origin-quest-slide" data-slide="2" data-speaker="SPEAKER // ORIGIN CHALLENGE">
+
+                    <style>
+                        #oq-globe {
+                            position: absolute;
+                            inset: 0;
+                            width: 100%;
+                            height: 100%;
+                            z-index: 2;
+                            pointer-events: none;
+                        }
+
+                        .oq-stage {
+                            position: relative;
+                            z-index: 10;
+                            width: 100%;
+                            height: 100%;
+                            max-width: 1560px;
+                            margin: 0 auto;
+                            padding: clamp(28px, 4.2vh, 46px) clamp(24px, 3.2vw, 56px) clamp(28px, 4.2vh, 46px);
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: space-between;
+                        }
+
+                        .oq-grid {
+                            display: grid;
+                            grid-template-columns: minmax(0, 1fr) clamp(255px, 21vw, 335px) minmax(0, 1fr);
+                            gap: clamp(14px, 1.6vw, 26px);
+                            align-items: center;
+                            flex: 1;
+                            min-height: 0;
+                        }
+
+                        /* Hemisphere Swap Panels */
+                        .oq-swap-wrap {
+                            position: relative;
+                            width: 100%;
+                        }
+
+                        .oq-hemisphere {
+                            width: 100%;
+                            transition:
+                                opacity 0.92s cubic-bezier(0.28, 0.0, 0.2, 1),
+                                transform 0.92s cubic-bezier(0.28, 0.0, 0.2, 1);
+                            will-change: opacity, transform;
+                        }
+
+                        .oq-hemisphere.oq-inactive-left {
+                            position: absolute;
+                            inset: 0;
+                            opacity: 0;
+                            visibility: hidden;
+                            pointer-events: none;
+                            transform: translate3d(-32px, 0, 0) scale(0.96);
+                        }
+
+                        .oq-hemisphere.oq-inactive-right {
+                            position: absolute;
+                            inset: 0;
+                            opacity: 0;
+                            visibility: hidden;
+                            pointer-events: none;
+                            transform: translate3d(32px, 0, 0) scale(0.96);
+                        }
+
+                        .oq-hemisphere.oq-active {
+                            position: relative;
+                            opacity: 1;
+                            visibility: visible;
+                            pointer-events: auto;
+                            transform: translate3d(0, 0, 0) scale(1);
+                        }
+
+                        /* Delayed fade-in while planet rises from horizon */
+                        .oq-wing {
+                            opacity: 1;
+                            transform: translateY(0);
+                            transition: opacity 0.58s cubic-bezier(0.22, 1, 0.36, 1), transform 0.58s cubic-bezier(0.22, 1, 0.36, 1);
+                        }
+                        .oq-rising .oq-wing {
+                            opacity: 0;
+                            transform: translateY(18px);
+                        }
+
+                        /* Professor Crop Frame */
+                        .oq-post-paper {
+                            background: #FFFFFF;
+                            border-radius: 14px;
+                            padding: clamp(10px, 1.4vh, 15px) clamp(10px, 1vw, 14px);
+                            border: 1px solid rgba(255, 255, 255, 0.45);
+                            box-shadow:
+                                0 18px 45px rgba(0, 0, 0, 0.65),
+                                0 0 0 1px rgba(30, 215, 96, 0.18);
+                        }
+                        .oq-post-paper-red {
+                            box-shadow:
+                                0 18px 45px rgba(0, 0, 0, 0.65),
+                                0 0 0 1px rgba(248, 113, 113, 0.25);
+                        }
+                        .oq-post-paper img {
+                            width: 100%;
+                            height: auto;
+                            max-height: 31vh;
+                            object-fit: contain;
+                            display: block;
+                        }
+
+                        /* Cause -> Effect Action Cards */
+                        .oq-action-card {
+                            position: relative;
+                            border-radius: 20px;
+                            padding: clamp(18px, 2.4vh, 26px) clamp(18px, 1.6vw, 24px);
+                            background: linear-gradient(155deg, rgba(255,255,255,0.075), rgba(255,255,255,0.015) 48%, rgba(30,215,96,0.055));
+                            border: 1px solid rgba(255, 255, 255, 0.12);
+                            backdrop-filter: blur(16px);
+                            -webkit-backdrop-filter: blur(16px);
+                            box-shadow: 0 22px 52px rgba(0,0,0,0.52), inset 0 1px 0 rgba(255,255,255,0.10);
+                            display: flex;
+                            align-items: flex-start;
+                            gap: 16px;
+                            transition: border-color 0.3s ease, transform 0.3s ease;
+                        }
+                        .oq-action-card:hover {
+                            border-color: rgba(30, 215, 96, 0.45);
+                            transform: translateX(4px);
+                        }
+                        .oq-action-card.red {
+                            background: linear-gradient(155deg, rgba(255,255,255,0.075), rgba(255,255,255,0.015) 48%, rgba(248,113,113,0.06));
+                            border-color: rgba(248, 113, 113, 0.22);
+                        }
+                        .oq-action-card.red:hover {
+                            border-color: rgba(248, 113, 113, 0.52);
+                        }
+
+                        .oq-icon-box {
+                            width: 48px;
+                            height: 48px;
+                            border-radius: 14px;
+                            flex-shrink: 0;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background: rgba(30, 215, 96, 0.11);
+                            border: 1px solid rgba(30, 215, 96, 0.38);
+                            color: #1ED760;
+                            box-shadow: 0 0 24px rgba(30, 215, 96, 0.20);
+                            margin-top: 2px;
+                        }
+                        .oq-action-card.red .oq-icon-box {
+                            background: rgba(248, 113, 113, 0.11);
+                            border-color: rgba(248, 113, 113, 0.42);
+                            color: #FF6B7A;
+                            box-shadow: 0 0 24px rgba(248, 113, 113, 0.20);
+                        }
+                        .oq-icon-box svg {
+                            width: 24px;
+                            height: 24px;
+                        }
+
+                        @media (max-width: 1024px) {
+                            .oq-grid {
+                                grid-template-columns: 1fr;
+                                gap: 14px;
+                            }
+                            #oq-globe-anchor {
+                                height: 180px !important;
+                            }
+                        }
+                    </style>
+
+                    <div class="fx-root" id="oq-root">
+
+                        <!-- Deep space layers -->
+                        <canvas class="fx-stars"></canvas>
+                        <div class="fx-nebula"></div>
+                        <div class="fx-grid"></div>
+
+                        <!-- 3D Planet Canvas (seamlessly morphs Slide 1 <-> Slide 2 <-> Slide 3) -->
+                        <canvas id="oq-globe"></canvas>
+
+                        <!-- Foreground Layout -->
+                        <div class="oq-stage">
+
+                            <!-- Compact Top Title Row -->
+                            <div class="flex flex-wrap items-end justify-between gap-3 pb-3 border-b border-white/10">
+                                <div>
+                                    <div class="flex items-center gap-2.5 mb-1">
+                                        <span id="oq-top-dot" class="glyph-green-dot"></span>
+                                        <span id="oq-eyebrow" class="fx-mono text-[10.5px] tracking-[0.3em] text-[#1ED760] uppercase">QUEST 01 // PROFESSOR'S BRIEF → VIRTUAL BOARD SIMULATOR</span>
+                                    </div>
+                                    <div class="flex flex-wrap items-baseline gap-4">
+                                        <h2 class="fx-dot uppercase text-white leading-none" style="font-size: clamp(34px, 5.2vh, 60px); text-shadow: 0 0 26px rgba(30,215,96,0.32);">
+                                            <span data-scramble="ORIGIN ">ORIGIN </span><span id="oq-title-accent" class="text-[#1ED760]" data-scramble="QUEST">QUEST</span>
+                                        </h2>
+                                        <h3 class="fx-thai text-white/90 font-semibold text-[clamp(15px,2.1vh,22px)] tracking-tight">
+                                            จากโจทย์ของอาจารย์ สู่เครื่องมือที่เราสร้างขึ้นมาเชื่อมระบบ
+                                        </h3>
+                                    </div>
+                                </div>
+
+                                <div class="hidden md:flex items-center gap-2">
+                                    <span id="oq-side-indicator" class="fx-chip fx-chip-green">QUEST 01 // SIMULATOR</span>
+                                    <span class="fx-chip">FPGA STUDIO v4.4</span>
+                                </div>
+                            </div>
+
+                            <!-- 3-Column Stage: Professor Post | 3D Globe | What We Built -->
+                            <div class="oq-grid my-auto py-2">
+
+                                <!-- ========================================== -->
+                                <!-- LEFT WING: PROFESSOR'S POST (1 AT A TIME)  -->
+                                <!-- ========================================== -->
+                                <div class="oq-wing oq-swap-wrap">
+
+                                    <!-- SIDE 01 POST (prof_crop_1.png) -->
+                                    <div class="oq-hemisphere oq-active" id="oq-left-0">
+                                        <div class="fx-glass p-[clamp(18px,2.3vh,26px)]">
+                                            <div class="fx-scan"></div>
+                                            <div class="flex items-center justify-between mb-3">
+                                                <div class="flex items-center gap-2">
+                                                    <span class="w-2 h-2 rounded-full bg-[#1ED760] shadow-[0_0_10px_#1ED760]"></span>
+                                                    <span class="fx-thai text-sm font-semibold text-white">อาจารย์บอกแบบนี้</span>
+                                                </div>
+                                                <span class="fx-mono text-[10px] tracking-[0.22em] text-[#1ED760]">POST 01 // SIMULATOR BRIEF</span>
+                                            </div>
+
+                                            <div class="oq-post-paper mb-3.5">
+                                                <img src="assets/prof_crop_1.png" alt="โพสต์อาจารย์ชุดที่ 1" onerror="this.src='prof_crop_1.png'">
+                                            </div>
+
+                                            <div class="flex items-center justify-between gap-3 pt-2 border-t border-white/10">
+                                                <span class="fx-thai text-[clamp(12.5px,1.55vh,14.5px)] text-white/80">
+                                                    โจทย์ทางเลือก <strong class="text-white">เขียนโปรแกรมคำนวณ + รันบน Simulator</strong>
+                                                </span>
+                                                <span class="fx-chip fx-chip-green shrink-0">VIRTUAL SIM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- SIDE 02 POST (prof_crop_2.png) -->
+                                    <div class="oq-hemisphere oq-inactive-left" id="oq-left-1">
+                                        <div class="fx-glass fx-glass-red p-[clamp(18px,2.3vh,26px)]">
+                                            <div class="fx-scan"></div>
+                                            <div class="flex items-center justify-between mb-3">
+                                                <div class="flex items-center gap-2">
+                                                    <span class="w-2 h-2 rounded-full bg-[#FF5A6E] shadow-[0_0_10px_#FF5A6E]"></span>
+                                                    <span class="fx-thai text-sm font-semibold text-white">อาจารย์ท้าไว้แบบนี้</span>
+                                                </div>
+                                                <span class="fx-mono text-[10px] tracking-[0.22em] text-red-400">POST 02 // GRADE A QUEST</span>
+                                            </div>
+
+                                            <div class="oq-post-paper oq-post-paper-red mb-3.5">
+                                                <img src="assets/prof_crop_2.png" alt="โพสต์อาจารย์ชุดที่ 2" onerror="this.src='prof_crop_2.png'">
+                                            </div>
+
+                                            <div class="flex items-center justify-between gap-3 pt-2 border-t border-white/10">
+                                                <span class="fx-thai text-[clamp(12.5px,1.55vh,14.5px)] text-white/80">
+                                                    <strong class="text-red-300">“อีก 3 รุ่นจะทำได้ไหมไม่รู้ ใครทำได้ให้ A!”</strong>
+                                                </span>
+                                                <span class="fx-chip fx-chip-red shrink-0">GRADE A CHALLENGE</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <!-- ========================================== -->
+                                <!-- CENTER ANCHOR: 3D ROTATING GLOBE           -->
+                                <!-- ========================================== -->
+                                <div class="flex flex-col items-center justify-center relative select-none pointer-events-none">
+                                    <div id="oq-globe-anchor" class="w-full aspect-square max-h-[320px]"></div>
+                                </div>
+
+                                <!-- ========================================== -->
+                                <!-- RIGHT WING: CONCISE CAUSE -> EFFECT CARDS  -->
+                                <!-- ========================================== -->
+                                <div class="oq-wing oq-swap-wrap">
+
+                                    <!-- SIDE 01 RESPONSE: 1 HERO CARD (VIRTUAL BOARD SIM) -->
+                                    <div class="oq-hemisphere oq-active flex flex-col justify-center" id="oq-right-0">
+
+                                        <div class="oq-action-card">
+                                            <div class="oq-icon-box">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                                    <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 10h2m4 0h4"/>
+                                                </svg>
+                                            </div>
+                                            <div class="min-w-0 flex-1">
+                                                <div class="fx-thai text-[clamp(12px,1.5vh,14px)] text-white/55 mb-1">
+                                                    อาจารย์บอก: “ทำโปรแกรมคำนวณ และ Python Simulator ที่รันเอาผลลัพธ์ออกมาได้”
+                                                </div>
+                                                <div class="fx-thai text-[clamp(20px,2.6vh,26px)] font-bold text-[#1ED760] leading-snug mb-2">
+                                                    → ผมเลยทำ Virtual Board Sim
+                                                </div>
+                                                <div class="fx-thai text-[clamp(13.5px,1.7vh,15.5px)] text-white/80 leading-relaxed mb-4">
+                                                    จำลองบอร์ด Nexys A7 ทั้งใบ กดสวิตช์ 16 ขา ดูไฟ 7-Segment สดๆ บนจอ ไม่ต้องง้อบอร์ดจริง
+                                                </div>
+                                                <div class="flex flex-wrap gap-2 pt-3 border-t border-white/10">
+                                                    <span class="fx-chip fx-chip-green">16 SWITCHES &amp; LEDS</span>
+                                                    <span class="fx-chip">7-SEG DEC / HEX</span>
+                                                    <span class="fx-chip">LIVE 32-REG DEBUG</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- SIDE 02 RESPONSE: 2 CARDS (AUTO I/O + VGA & GCC + CUSTOM COMPILER) -->
+                                    <div class="oq-hemisphere oq-inactive-right flex flex-col gap-4" id="oq-right-1">
+
+                                        <div class="oq-action-card red">
+                                            <div class="oq-icon-box">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                                    <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/>
+                                                </svg>
+                                            </div>
+                                            <div class="min-w-0 flex-1">
+                                                <div class="fx-thai text-[clamp(11.5px,1.45vh,13.5px)] text-white/55 mb-1">
+                                                    อาจารย์บอก: “เป็นระบบคอมที่รับอินพุต ประมวลผล ส่งออกเอาท์พุต (จอภาพได้ยิ่งดี)”
+                                                </div>
+                                                <div class="fx-thai text-[clamp(16.5px,2.15vh,21px)] font-bold text-[#FF6B7A] leading-snug mb-1.5">
+                                                    → ผมเลยทำระบบผูกขา CPU เข้ากับ I/O และจอ VGA อัตโนมัติ
+                                                </div>
+                                                <div class="fx-thai text-[clamp(12.5px,1.55vh,14.5px)] text-white/80 leading-relaxed">
+                                                    เปลี่ยน CPU เปล่าๆ ให้เป็นระบบคอมครบวงจร รับค่าสวิตช์/ปุ่มกด ประมวลผล แล้วส่งออก LED, 7-Seg และจอ VGA
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="oq-action-card red">
+                                            <div class="oq-icon-box">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                                    <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="14" y1="4" x2="10" y2="20"/>
+                                                </svg>
+                                            </div>
+                                            <div class="min-w-0 flex-1">
+                                                <div class="fx-thai text-[clamp(11.5px,1.45vh,13.5px)] text-white/55 mb-1">
+                                                    อาจารย์ท้า: “หา Compiler แปลงภาษา C เป็น MIPS opcode มาเขียนโปรแกรมสนุกๆ (ใครทำได้ให้ A)”
+                                                </div>
+                                                <div class="fx-thai text-[clamp(16.5px,2.15vh,21px)] font-bold text-white leading-snug mb-1.5">
+                                                    → ผมเลยเชื่อม <span class="text-[#1ED760]">GCC เข้า IDE</span> + ทำระบบนำเข้า Custom Compiler
+                                                </div>
+                                                <div class="fx-thai text-[clamp(12.5px,1.55vh,14.5px)] text-white/80 leading-relaxed">
+                                                    จับคอมไพเลอร์ C มาผูกกับ <code class="fx-mono text-xs text-[#1ED760]">start.S</code> และ <code class="fx-mono text-xs text-[#1ED760]">link.ld</code> กดปุ่มเดียวแปลงโค้ด C เป็นคำสั่ง MIPS พร้อมรันทันที
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <!-- Subtle Spacer at bottom -->
+                            <div class="h-1"></div>
+
+                        </div>
+
+                    </div>
+
+                    <script>
+                    (function() {
+                        const slideEl = document.getElementById('origin-quest-slide');
+                        const rootEl  = document.getElementById('oq-root');
+                        const canvas  = document.getElementById('oq-globe');
+                        const anchor  = document.getElementById('oq-globe-anchor');
+                        if (!canvas || !slideEl) return;
+
+                        // Mount canvas into #carousel-viewport so the 3D planet stays centered in viewport
+                        // and morphs seamlessly across Slide 1 <-> Slide 2 <-> Slide 3 <-> Slide 4 with ZERO flicker
+                        const viewport = document.getElementById('carousel-viewport');
+                        if (viewport && canvas.parentElement !== viewport) {
+                            viewport.insertBefore(canvas, viewport.firstChild);
+                        }
+                        document.body.classList.add('has-unified-globe');
+
+                        const ctx = canvas.getContext('2d');
+                        let W = 0, H = 0, dpr = 1;
+
+                        // State: 0 = Post 1 (Virtual Board Sim), 1 = Post 2 (Auto I/O + VGA & GCC + Custom Compiler)
+                        let activeSide = 0;
+                        let sideMix = 0;          // 0.0 -> 1.0 smooth color/ring interpolation
+                        let rotY = 0;             // Current 3D Y rotation (never snapped!)
+                        let baseSpinOffset = 0;   // Target hemisphere offset (0 or Math.PI)
+                        let curSpinOffset  = 0;
+                        let spinVel = 0;
+
+                        // Unified 920ms Tween State (matches #carousel-track 0.92s cubic-bezier(0.28, 0.0, 0.2, 1) identically!)
+                        const TRANSITION_MS = 920;
+                        let currentSlideNum = 2;
+                        let liftProgress = 1;
+                        let targetLift   = 1;
+                        let curHorizonPx = 140;
+                        let activeHorizonMode = 'slide1'; // 'slide1' | 'slide3' | 'sunk'
+
+                        let tweenStartMs  = 0;
+                        let startLift     = 1;
+                        let startHorPx    = 140;
+                        let startSideMix  = 0;
+                        let targetSideMix = 0;
+                        let startSpinOff  = 0;
+
+                        // Build Fibonacci 3D Sphere Lattice
+                        const DOT_COUNT = 860;
+                        const sphereDots = [];
+                        const golden = Math.PI * (3 - Math.sqrt(5));
+                        for (let i = 0; i < DOT_COUNT; i++) {
+                            const y = 1 - (i / (DOT_COUNT - 1)) * 2;
+                            const rad = Math.sqrt(Math.max(0, 1 - y * y));
+                            const theta = golden * i;
+                            const x = Math.cos(theta) * rad;
+                            const z = Math.sin(theta) * rad;
+                            const patchA = Math.max(0, z * 0.85 + y * 0.25) * (0.55 + 0.45 * Math.sin(x * 5.2 + y * 4.1));
+                            const patchB = Math.max(0, -z * 0.85 - y * 0.15) * (0.55 + 0.45 * Math.cos(x * 4.8 - y * 4.6));
+                            sphereDots.push({ x, y, z, patchA, patchB });
+                        }
+
+                        function resize() {
+                            const rect = canvas.getBoundingClientRect();
+                            W = rect.width || window.innerWidth;
+                            H = rect.height || window.innerHeight;
+                            dpr = Math.min(window.devicePixelRatio || 1, 2);
+                            canvas.width = W * dpr;
+                            canvas.height = H * dpr;
+                            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                        }
+                        window.addEventListener('resize', resize);
+                        resize();
+
+                        function applySideDOM(side) {
+                            const left0   = document.getElementById('oq-left-0');
+                            const left1   = document.getElementById('oq-left-1');
+                            const right0  = document.getElementById('oq-right-0');
+                            const right1  = document.getElementById('oq-right-1');
+                            const eyebrow = document.getElementById('oq-eyebrow');
+                            const topDot  = document.getElementById('oq-top-dot');
+                            const accent  = document.getElementById('oq-title-accent');
+                            const badge   = document.getElementById('oq-side-indicator');
+
+                            if (side === 0) {
+                                left0.className  = 'oq-hemisphere oq-active';
+                                left1.className  = 'oq-hemisphere oq-inactive-left';
+                                right0.className = 'oq-hemisphere oq-active flex flex-col justify-center';
+                                right1.className = 'oq-hemisphere oq-inactive-right flex flex-col gap-4';
+                                if (eyebrow) {
+                                    eyebrow.textContent = "QUEST 01 // PROFESSOR'S BRIEF → VIRTUAL BOARD SIMULATOR";
+                                    eyebrow.style.color = '#1ED760';
+                                }
+                                if (topDot) topDot.className = 'glyph-green-dot';
+                                if (accent) accent.style.color = '#1ED760';
+                                if (badge) {
+                                    badge.textContent = 'QUEST 01 // SIMULATOR';
+                                    badge.className = 'fx-chip fx-chip-green';
+                                }
+                            } else {
+                                left0.className  = 'oq-hemisphere oq-inactive-left';
+                                left1.className  = 'oq-hemisphere oq-active';
+                                right0.className = 'oq-hemisphere oq-inactive-right flex flex-col justify-center';
+                                right1.className = 'oq-hemisphere oq-active flex flex-col gap-4';
+                                if (eyebrow) {
+                                    eyebrow.textContent = 'QUEST 02 // GRADE A CHALLENGE → AUTO I/O + VGA & C COMPILER';
+                                    eyebrow.style.color = '#FF6B7A';
+                                }
+                                if (topDot) topDot.className = 'glyph-red-dot';
+                                if (accent) accent.style.color = '#FF6B7A';
+                                if (badge) {
+                                    badge.textContent = 'QUEST 02 // GRADE A';
+                                    badge.className = 'fx-chip fx-chip-red';
+                                }
+                            }
+                        }
+
+                        function getTargetHorizonPx(mode) {
+                            const h3 = Math.min(195, Math.max(128, (H || 900) * 0.19));
+                            if (mode === 'slide3') return h3;
+                            if (mode === 'sunk')   return h3 - (H || 900);
+                            return Math.min(160, Math.max(105, (H || 900) * 0.15));
+                        }
+
+                        function beginTween(newLift, newHorizonMode, newSideMix, newSpinOff) {
+                            startLift     = liftProgress;
+                            startHorPx    = curHorizonPx;
+                            startSideMix  = sideMix;
+                            startSpinOff  = curSpinOffset;
+                            targetLift    = newLift;
+                            activeHorizonMode = newHorizonMode;
+                            targetSideMix = newSideMix;
+                            baseSpinOffset = newSpinOff;
+                            tweenStartMs  = performance.now();
+                        }
+
+                        window.setOriginQuestSide = function(side) {
+                            const next = side ? 1 : 0;
+                            if (next !== activeSide) {
+                                const delta = next > activeSide ? Math.PI : -Math.PI;
+                                activeSide = next;
+                                applySideDOM(activeSide);
+                                beginTween(targetLift, activeHorizonMode, activeSide === 1 ? 1 : 0, baseSpinOffset + delta);
+                            }
+                        };
+
+                        window.getOriginQuestSide = function() {
+                            return activeSide;
+                        };
+
+                        // Hook for presentation.js nextSlide / prevSlide inside Slide 2
+                        window.stepOriginQuest = function(dir) {
+                            if (dir > 0 && activeSide === 0) {
+                                window.setOriginQuestSide(1);
+                                return true;
+                            }
+                            if (dir < 0 && activeSide === 1) {
+                                window.setOriginQuestSide(0);
+                                return true;
+                            }
+                            return false;
+                        };
+
+                        // Unified Zero-Flicker Slide Sync for Slide 1 <-> Slide 2 <-> Slide 3 <-> Slide 4 (forward & backward)
+                        window.syncOriginQuestSlide = function(slideKey, prevSlideKey) {
+                            resize();
+                            currentSlideNum = slideKey;
+                            const forceSide2  = window.location.search.includes('side=2') || window.location.hash === '#side2';
+                            const forceSettle = window.location.search.includes('settle=1');
+                            if (forceSide2 || forceSettle) {
+                                slideEl.querySelectorAll('.oq-hemisphere').forEach(el => { el.style.transition = 'none'; });
+                            }
+
+                            if (slideKey === 2) {
+                                if (forceSide2) {
+                                    activeSide = 1;
+                                    sideMix = 1; startSideMix = 1; targetSideMix = 1;
+                                    baseSpinOffset = Math.PI; curSpinOffset = Math.PI; startSpinOff = Math.PI;
+                                    liftProgress = 1; startLift = 1; targetLift = 1;
+                                    rootEl.classList.remove('oq-rising');
+                                    applySideDOM(1);
+                                } else if (forceSettle) {
+                                    activeSide = 0;
+                                    sideMix = 0; startSideMix = 0; targetSideMix = 0;
+                                    baseSpinOffset = 0; curSpinOffset = 0; startSpinOff = 0;
+                                    liftProgress = 1; startLift = 1; targetLift = 1;
+                                    rootEl.classList.remove('oq-rising');
+                                    applySideDOM(0);
+                                } else if (prevSlideKey >= 3) {
+                                    // Returning backward from Slide 3 -> Slide 2: smoothly lift from current position onto Side 02
+                                    activeSide = 1;
+                                    applySideDOM(1);
+                                    beginTween(1, 'slide3', 1, Math.PI);
+                                } else {
+                                    // Entering forward from Slide 1 -> Slide 2: smoothly lift from current position onto Side 01
+                                    if (!prevSlideKey || prevSlideKey === 0) {
+                                        liftProgress = 0;
+                                        curHorizonPx = getTargetHorizonPx('slide1');
+                                    }
+                                    activeSide = 0;
+                                    applySideDOM(0);
+                                    beginTween(1, 'slide1', 0, 0);
+                                }
+                            } else if (slideKey === 1) {
+                                activeSide = 0;
+                                if (!prevSlideKey || prevSlideKey === 0) {
+                                    liftProgress = 0; startLift = 0; targetLift = 0;
+                                    curHorizonPx = getTargetHorizonPx('slide1');
+                                    startHorPx = curHorizonPx;
+                                    activeHorizonMode = 'slide1';
+                                } else {
+                                    beginTween(0, 'slide1', 0, 0);
+                                }
+                            } else if (slideKey === 3) {
+                                activeSide = 0;
+                                beginTween(0, 'slide3', 0, 0);
+                            } else {
+                                // Slide 4 (Pipeline Video) & Slide 5: planet moves down by exact 100vh in sync with Slide 3!
+                                activeSide = 0;
+                                beginTween(0, 'sunk', 0, 0);
+                            }
+                        };
+
+                        window.enterOriginQuest = function(direction) {
+                            window.syncOriginQuestSlide(2, direction === 'backward' ? 3 : 1);
+                        };
+
+                        // Support mouse wheel to rotate between Hemisphere 01 & 02
+                        let wheelLock = 0;
+                        window.addEventListener('wheel', (e) => {
+                            if (!slideEl.classList.contains('active')) return;
+                            const now = performance.now();
+                            if (now - wheelLock < 620) return;
+                            const d = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+                            if (Math.abs(d) < 12) return;
+                            if (d > 0 && activeSide === 0) {
+                                wheelLock = now;
+                                window.setOriginQuestSide(1);
+                            } else if (d < 0 && activeSide === 1) {
+                                wheelLock = now;
+                                window.setOriginQuestSide(0);
+                            }
+                        }, { passive: true });
+
+                        function rotate3D(x, y, z, ry, rx, rzTilt) {
+                            const cy = Math.cos(ry), sy = Math.sin(ry);
+                            let x1 = x * cy + z * sy;
+                            let z1 = -x * sy + z * cy;
+                            let y1 = y;
+                            const cx = Math.cos(rx), sx = Math.sin(rx);
+                            let y2 = y1 * cx - z1 * sx;
+                            let z2 = y1 * sx + z1 * cx;
+                            let x2 = x1;
+                            if (rzTilt) {
+                                const cz = Math.cos(rzTilt), sz = Math.sin(rzTilt);
+                                const x3 = x2 * cz - y2 * sz;
+                                const y3 = x2 * sz + y2 * cz;
+                                x2 = x3; y2 = y3;
+                            }
+                            return { x: x2, y: y2, z: z2 };
+                        }
+
+                        function easeInOutCubic(t) {
+                            return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+                        }
+
+                        function drawOrbitRing(cx, cy, R, ringMult, rx, rzTilt, rCol, gCol, bCol, alphaScale, dashed, half, time) {
+                            const segs = 96;
+                            const fov = R * 3.8;
+                            ctx.save();
+                            if (dashed) ctx.setLineDash([4, 7]);
+                            ctx.lineWidth = dashed ? 1.1 : 1.5;
+
+                            for (let i = 0; i < segs; i++) {
+                                const a0 = (i / segs) * Math.PI * 2;
+                                const a1 = ((i + 1) / segs) * Math.PI * 2;
+                                const p0 = rotate3D(Math.cos(a0) * ringMult, 0, Math.sin(a0) * ringMult, time * 0.25, rx, rzTilt);
+                                const p1 = rotate3D(Math.cos(a1) * ringMult, 0, Math.sin(a1) * ringMult, time * 0.25, rx, rzTilt);
+
+                                const isFront = ((p0.z + p1.z) * 0.5) >= 0;
+                                if ((half === 'front' && !isFront) || (half === 'back' && isFront)) continue;
+
+                                const k0 = fov / (fov - p0.z * R * 0.45);
+                                const k1 = fov / (fov - p1.z * R * 0.45);
+                                const sx0 = cx + p0.x * R * k0;
+                                const sy0 = cy + p0.y * R * k0;
+                                const sx1 = cx + p1.x * R * k1;
+                                const sy1 = cy + p1.y * R * k1;
+
+                                const depthAlpha = isFront ? (0.34 + 0.42 * p0.z) : 0.11;
+                                ctx.strokeStyle = `rgba(${rCol},${gCol},${bCol},${depthAlpha * alphaScale})`;
+                                ctx.beginPath();
+                                ctx.moveTo(sx0, sy0);
+                                ctx.lineTo(sx1, sy1);
+                                ctx.stroke();
+                            }
+                            ctx.restore();
+
+                            if (!dashed) {
+                                const satAngle = time * 1.15;
+                                const sp = rotate3D(Math.cos(satAngle) * ringMult, 0, Math.sin(satAngle) * ringMult, time * 0.25, rx, rzTilt);
+                                const satFront = sp.z >= 0;
+                                if ((half === 'front' && satFront) || (half === 'back' && !satFront)) {
+                                    const ks = fov / (fov - sp.z * R * 0.45);
+                                    const sx = cx + sp.x * R * ks;
+                                    const sy = cy + sp.y * R * ks;
+                                    const glow = ctx.createRadialGradient(sx, sy, 0, sx, sy, 12);
+                                    glow.addColorStop(0, `rgba(255,255,255,${0.95 * alphaScale})`);
+                                    glow.addColorStop(0.35, `rgba(${rCol},${gCol},${bCol},${0.75 * alphaScale})`);
+                                    glow.addColorStop(1, `rgba(${rCol},${gCol},${bCol},0)`);
+                                    ctx.fillStyle = glow;
+                                    ctx.beginPath();
+                                    ctx.arc(sx, sy, 12, 0, Math.PI * 2);
+                                    ctx.fill();
+                                }
+                            }
+                        }
+
+                        function drawLinkBeams(cx, cy, R, rCol, gCol, bCol, alpha, time) {
+                            if (alpha <= 0.02 || W < 1024) return;
+                            const leftStart  = cx - R - 86;
+                            const leftEnd    = cx - R - 10;
+                            const rightStart = cx + R + 10;
+                            const rightEnd   = cx + R + 86;
+
+                            ctx.save();
+                            ctx.lineWidth = 1.25;
+
+                            // Left Beam: Professor Post -> 3D Globe
+                            const gLeft = ctx.createLinearGradient(leftStart, cy, leftEnd, cy);
+                            gLeft.addColorStop(0, `rgba(${rCol},${gCol},${bCol},0.05)`);
+                            gLeft.addColorStop(1, `rgba(${rCol},${gCol},${bCol},${0.68 * alpha})`);
+                            ctx.strokeStyle = gLeft;
+                            ctx.setLineDash([3, 5]);
+                            ctx.beginPath();
+                            ctx.moveTo(leftStart, cy);
+                            ctx.lineTo(leftEnd, cy);
+                            ctx.stroke();
+
+                            const pIn = (time * 0.9) % 1;
+                            const pxIn = leftStart + (leftEnd - leftStart) * pIn;
+                            ctx.fillStyle = `rgba(255,255,255,${0.9 * alpha})`;
+                            ctx.beginPath();
+                            ctx.arc(pxIn, cy, 2.6, 0, Math.PI * 2);
+                            ctx.fill();
+
+                            // Right Beams: 1 central beam on Side 01 (1 Hero Card), 2 branching beams on Side 02 (2 Cards)
+                            const offsetsY = activeSide === 0 ? [0] : [-68, 68];
+                            offsetsY.forEach((dy, idx) => {
+                                const targetY = cy + dy;
+                                const gRight = ctx.createLinearGradient(rightStart, cy, rightEnd, targetY);
+                                gRight.addColorStop(0, `rgba(30,215,96,${0.72 * alpha})`);
+                                gRight.addColorStop(1, `rgba(${rCol},${gCol},${bCol},0.10)`);
+                                ctx.strokeStyle = gRight;
+                                ctx.beginPath();
+                                ctx.moveTo(rightStart, cy + dy * 0.18);
+                                ctx.bezierCurveTo(
+                                    rightStart + 34, cy + dy * 0.18,
+                                    rightEnd - 34, targetY,
+                                    rightEnd, targetY
+                                );
+                                ctx.stroke();
+
+                                const pOut = (time * 0.85 + idx * 0.42) % 1;
+                                const bx = rightStart + (rightEnd - rightStart) * pOut;
+                                const by = (cy + dy * 0.18) + (targetY - (cy + dy * 0.18)) * (pOut * pOut * (3 - 2 * pOut));
+                                ctx.fillStyle = `rgba(180,255,215,${0.9 * alpha})`;
+                                ctx.beginPath();
+                                ctx.arc(bx, by, 2.5, 0, Math.PI * 2);
+                                ctx.fill();
+                            });
+
+                            ctx.restore();
+                        }
+
+                        // Exact CSS cubic-bezier(0.28, 0.0, 0.2, 1) solver so #oq-globe matches #carousel-track 100%
+                        function solveCubicBezier(p1x, p1y, p2x, p2y, x) {
+                            if (x <= 0) return 0;
+                            if (x >= 1) return 1;
+                            const cx = 3 * p1x;
+                            const bx = 3 * (p2x - p1x) - cx;
+                            const ax = 1 - cx - bx;
+                            const cy = 3 * p1y;
+                            const by = 3 * (p2y - p1y) - cy;
+                            const ay = 1 - cy - by;
+                            let t = x;
+                            for (let i = 0; i < 6; i++) {
+                                const xEst = ((ax * t + bx) * t + cx) * t - x;
+                                if (Math.abs(xEst) < 1e-5) break;
+                                const d = (3 * ax * t + 2 * bx) * t + cx;
+                                if (Math.abs(d) < 1e-5) break;
+                                t -= xEst / d;
+                            }
+                            return ((ay * t + by) * t + cy) * t;
+                        }
+
+                        function render(now) {
+                            requestAnimationFrame(render);
+                            if (!W || !H) { resize(); if (!W) return; }
+
+                            const time = now * 0.001;
+                            const rawU = tweenStartMs > 0 ? Math.min(1, Math.max(0, (now - tweenStartMs) / TRANSITION_MS)) : 1;
+                            const ease = solveCubicBezier(0.28, 0.0, 0.2, 1.0, rawU);
+
+                            liftProgress  = startLift + (targetLift - startLift) * ease;
+                            const goalHorizonPx = getTargetHorizonPx(activeHorizonMode);
+                            curHorizonPx  = startHorPx + (goalHorizonPx - startHorPx) * ease;
+                            sideMix       = Math.max(0, Math.min(1, startSideMix + (targetSideMix - startSideMix) * ease));
+                            const prevSpin = curSpinOffset;
+                            curSpinOffset = startSpinOff + (baseSpinOffset - startSpinOff) * ease;
+                            spinVel       = Math.min(1, Math.abs(curSpinOffset - prevSpin) * 18);
+                            rotY          = curSpinOffset + time * 0.24;
+
+                            // Skip drawing only if completely sunk off-screen below Slide 4/5
+                            if (liftProgress < 0.002 && curHorizonPx <= goalHorizonPx + 2 && activeHorizonMode === 'sunk') {
+                                ctx.clearRect(0, 0, W, H);
+                                return;
+                            }
+
+                            const e = liftProgress;
+
+                            // Bottom Horizon Geometry
+                            const R0    = 1250;
+                            const topY0 = H - curHorizonPx;
+                            const cx0   = W * 0.5;
+
+                            // Center 3D Globe Geometry on Slide 2
+                            const cx1   = W * 0.5;
+                            const cy1   = H * 0.525;
+                            const R1    = Math.min(Math.max(Math.min(W * 0.086, H * 0.172), 110), 152);
+                            const topY1 = cy1 - R1;
+
+                            const R    = R0 + (R1 - R0) * e;
+                            const topY = topY0 + (topY1 - topY0) * e;
+                            const cy   = topY + R;
+                            const cx   = cx0 + (cx1 - cx0) * e;
+
+                            // Blend accent RGB: Side 0 = Emerald (30,215,96), Side 1 = Grade-A Crimson-Coral (255,90,110)
+                            const rCol = Math.round(30  + (255 - 30)  * sideMix);
+                            const gCol = Math.round(215 + (90  - 215) * sideMix);
+                            const bCol = Math.round(96  + (110 - 96)  * sideMix);
+
+                            ctx.clearRect(0, 0, W, H);
+
+                            // 1. Volumetric Atmospheric Outer Halo
+                            const haloR = R * (1.28 + 0.55 * e + 0.16 * spinVel);
+                            const halo = ctx.createRadialGradient(cx, cy, R * 0.82, cx, cy, haloR);
+                            halo.addColorStop(0, `rgba(${rCol},${gCol},${bCol},${0.26 + 0.12 * spinVel})`);
+                            halo.addColorStop(0.45, `rgba(30,215,96,0.08)`);
+                            halo.addColorStop(1, 'rgba(0,0,0,0)');
+                            ctx.fillStyle = halo;
+                            ctx.beginPath();
+                            ctx.arc(cx, cy, haloR, 0, Math.PI * 2);
+                            ctx.fill();
+
+                            const settledAlpha = Math.max(0, (e - 0.58) / 0.42);
+                            const ringTiltZ = -0.34 + 0.68 * sideMix;
+
+                            // 2. Cause -> Effect Energy Link Beams
+                            drawLinkBeams(cx, cy, R, rCol, gCol, bCol, settledAlpha, time);
+
+                            // 3. Back Half of 3D Orbital Rings (occluded behind planet)
+                            if (settledAlpha > 0.02) {
+                                drawOrbitRing(cx, cy, R, 1.38, 0.36, ringTiltZ, rCol, gCol, bCol, settledAlpha, false, 'back', time);
+                                drawOrbitRing(cx, cy, R, 1.22, -0.44, -ringTiltZ * 0.75, 30, 215, 96, settledAlpha * 0.9, true, 'back', -time * 0.8);
+                            }
+
+                            // 4. 3D Dark-Silicon Planetary Core Body
+                            const coreGrad = ctx.createRadialGradient(
+                                cx - R * 0.25 * e, cy - R * (0.95 - 0.61 * e), R * 0.06,
+                                cx, cy, R
+                            );
+                            if (sideMix < 0.5) {
+                                coreGrad.addColorStop(0, '#0f2b1c');
+                                coreGrad.addColorStop(0.48, '#040b07');
+                                coreGrad.addColorStop(1, '#010302');
+                            } else {
+                                coreGrad.addColorStop(0, '#2a1219');
+                                coreGrad.addColorStop(0.50, '#080a09');
+                                coreGrad.addColorStop(1, '#010202');
+                            }
+                            ctx.fillStyle = coreGrad;
+                            ctx.beginPath();
+                            ctx.arc(cx, cy, R, 0, Math.PI * 2);
+                            ctx.fill();
+
+                            const tiltX = -0.24 * e;
+                            const fov = Math.max(R * 3.4, 420);
+
+                            // 5. Back-Hemisphere Holographic Dots (subtle depth inside globe)
+                            if (e > 0.35) {
+                                for (let i = 0; i < DOT_COUNT; i++) {
+                                    const d = sphereDots[i];
+                                    const p = rotate3D(d.x, d.y, d.z, rotY, tiltX, 0);
+                                    if (p.z >= 0) continue;
+                                    const sx = cx + p.x * R;
+                                    const sy = cy + p.y * R;
+                                    ctx.fillStyle = `rgba(${rCol},${gCol},${bCol},${0.075 * e})`;
+                                    ctx.fillRect(sx - 0.6, sy - 0.6, 1.2, 1.2);
+                                }
+                            }
+
+                            // 6. Front-Hemisphere 3D Latitude & Longitude Wireframe Grid
+                            if (e > 0.22) {
+                                ctx.save();
+                                ctx.lineWidth = 0.85;
+                                const lats = [-0.92, -0.48, 0, 0.48, 0.92];
+                                for (const ly of lats) {
+                                    const lr = Math.sqrt(Math.max(0, 1 - ly * ly));
+                                    ctx.beginPath();
+                                    let started = false;
+                                    for (let s = 0; s <= 60; s++) {
+                                        const a = (s / 60) * Math.PI * 2;
+                                        const p = rotate3D(Math.cos(a) * lr, ly, Math.sin(a) * lr, rotY, tiltX, 0);
+                                        if (p.z > -0.05) {
+                                            const sx = cx + p.x * R;
+                                            const sy = cy + p.y * R;
+                                            if (!started) { ctx.moveTo(sx, sy); started = true; }
+                                            else ctx.lineTo(sx, sy);
+                                        } else {
+                                            started = false;
+                                        }
+                                    }
+                                    ctx.strokeStyle = `rgba(${rCol},${gCol},${bCol},${(ly === 0 ? 0.22 : 0.10) * e})`;
+                                    ctx.stroke();
+                                }
+
+                                for (let m = 0; m < 10; m++) {
+                                    const lon = (m / 10) * Math.PI;
+                                    const cl = Math.cos(lon), sl = Math.sin(lon);
+                                    ctx.beginPath();
+                                    let started = false;
+                                    for (let s = 0; s <= 60; s++) {
+                                        const a = (s / 60) * Math.PI * 2;
+                                        const ux = Math.cos(a) * cl;
+                                        const uy = Math.sin(a);
+                                        const uz = Math.cos(a) * sl;
+                                        const p = rotate3D(ux, uy, uz, rotY, tiltX, 0);
+                                        if (p.z > -0.05) {
+                                            const sx = cx + p.x * R;
+                                            const sy = cy + p.y * R;
+                                            if (!started) { ctx.moveTo(sx, sy); started = true; }
+                                            else ctx.lineTo(sx, sy);
+                                        } else {
+                                            started = false;
+                                        }
+                                    }
+                                    ctx.strokeStyle = `rgba(255,255,255,${0.065 * e})`;
+                                    ctx.stroke();
+                                }
+                                ctx.restore();
+                            }
+
+                            // 7. Front-Hemisphere 3D Fibonacci Dot-Matrix Continents
+                            for (let i = 0; i < DOT_COUNT; i++) {
+                                const d = sphereDots[i];
+                                const p = rotate3D(d.x, d.y, d.z, rotY, tiltX, 0);
+                                if (p.z < 0) continue;
+
+                                const k = 0.94 + 0.06 * (fov / (fov - p.z * R * 0.3));
+                                const sx = cx + p.x * R * k;
+                                const sy = cy + p.y * R * k;
+                                if (sy < -10 || sy > H + 10 || sx < -10 || sx > W + 10) continue;
+
+                                const continentBoost = d.patchA * (1 - sideMix) + d.patchB * sideMix;
+                                const alpha = Math.min(1, (0.18 + 0.58 * p.z + 0.42 * continentBoost));
+                                const dotR  = (1.05 + 0.95 * p.z + 0.55 * continentBoost) * (1 + (1 - e) * 0.35);
+
+                                if (continentBoost > 0.32) {
+                                    ctx.fillStyle = `rgba(${rCol},${gCol},${bCol},${alpha})`;
+                                } else {
+                                    ctx.fillStyle = `rgba(195,255,220,${alpha * 0.72})`;
+                                }
+                                ctx.beginPath();
+                                ctx.arc(sx, sy, dotR, 0, Math.PI * 2);
+                                ctx.fill();
+                            }
+
+                            // 8. Surface Quest Beacons (Side 01 at +Z, Side 02 at -Z)
+                            if (settledAlpha > 0.15) {
+                                const beacons = [
+                                    { x: 0, y: 0.06, z: 1,  r: 30,  g: 215, b: 96,  label: 'QUEST 01' },
+                                    { x: 0, y: -0.05, z: -1, r: 255, g: 90,  b: 110, label: 'QUEST 02' }
+                                ];
+                                beacons.forEach((b) => {
+                                    const p = rotate3D(b.x, b.y, b.z, rotY, tiltX, 0);
+                                    if (p.z <= 0.18) return;
+                                    const sx = cx + p.x * R;
+                                    const sy = cy + p.y * R;
+                                    const vis = ((p.z - 0.18) / 0.82) * settledAlpha;
+                                    const pulse = 8 + 6 * (0.5 + 0.5 * Math.sin(time * 3.8));
+
+                                    ctx.save();
+                                    ctx.strokeStyle = `rgba(${b.r},${b.g},${b.b},${0.75 * vis})`;
+                                    ctx.lineWidth = 1.4;
+                                    ctx.beginPath();
+                                    ctx.arc(sx, sy, pulse, 0, Math.PI * 2);
+                                    ctx.stroke();
+
+                                    ctx.fillStyle = `rgba(255,255,255,${0.95 * vis})`;
+                                    ctx.beginPath();
+                                    ctx.arc(sx, sy, 3.2, 0, Math.PI * 2);
+                                    ctx.fill();
+
+                                    ctx.font = "600 9.5px 'JetBrains Mono', monospace";
+                                    ctx.fillStyle = `rgba(255,255,255,${0.82 * vis})`;
+                                    ctx.textAlign = 'center';
+                                    ctx.fillText(b.label, sx, sy - 14);
+                                    ctx.restore();
+                                });
+                            }
+
+                            // 9. Crisp Fresnel Atmospheric Rim Ring
+                            ctx.save();
+                            ctx.strokeStyle = `rgba(${rCol},${gCol},${bCol},0.85)`;
+                            ctx.lineWidth = 1.7;
+                            ctx.shadowColor = `rgba(${rCol},${gCol},${bCol},0.75)`;
+                            ctx.shadowBlur = 20;
+                            ctx.beginPath();
+                            ctx.arc(cx, cy, R, 0, Math.PI * 2);
+                            ctx.stroke();
+                            ctx.restore();
+
+                            // 10. Front Half of 3D Orbital Rings (wrapping in front of planet)
+                            if (settledAlpha > 0.02) {
+                                drawOrbitRing(cx, cy, R, 1.22, -0.44, -ringTiltZ * 0.75, 30, 215, 96, settledAlpha * 0.9, true, 'front', -time * 0.8);
+                                drawOrbitRing(cx, cy, R, 1.38, 0.36, ringTiltZ, rCol, gCol, bCol, settledAlpha, false, 'front', time);
+                            }
+                        }
+
+                        requestAnimationFrame(render);
+                    })();
+                    </script>
+
+                </section>
+<section class="slide fx-slide w-full h-full" style="--horizon: clamp(128px, 19vh, 195px);" data-slide="3" data-speaker="SPEAKER // SYSTEM FEATURES">
+
+                    <style>
+                        /* ---------- Orbiting feature orbs ---------- */
+                        .fx-pivot {
+                            position: absolute; left: 50%;
+                            top: calc(100% - var(--horizon) + var(--R));
+                            width: 0; height: 0;
+                            z-index: 30;
+                        }
+                        .fx-orb-pos {
+                            position: absolute; left: 0; top: 0;
+                            --fx-a: 0deg;
+                            transform: rotate(var(--fx-a)) translateY(calc(-1 * (var(--R) + var(--lift)))) rotate(calc(-1 * var(--fx-a)));
+                            transition: --fx-a 1.05s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease;
+                        }
+                        .fx-orb-float {
+                            position: absolute; left: 0; top: 0;
+                            animation: fxBob 4.8s ease-in-out infinite;
+                        }
+                        @keyframes fxBob {
+                            0%, 100% { transform: translateY(0); }
+                            50% { transform: translateY(-9px); }
+                        }
+                        .fx-orb {
+                            position: absolute;
+                            width: 58px; height: 58px; left: -29px; top: -29px;
+                            border-radius: 50%;
+                            display: flex; align-items: center; justify-content: center;
+                            cursor: pointer;
+                            color: rgba(255, 255, 255, 0.78);
+                            background:
+                                radial-gradient(circle at 30% 24%, rgba(255,255,255,0.22), rgba(255,255,255,0.03) 42%, rgba(0,0,0,0.55) 100%),
+                                rgba(12, 16, 14, 0.75);
+                            border: 1px solid rgba(255, 255, 255, 0.16);
+                            backdrop-filter: blur(10px);
+                            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.28), inset 0 -10px 18px rgba(0,0,0,0.5);
+                            transition: width 0.5s cubic-bezier(0.22,1,0.36,1), height 0.5s cubic-bezier(0.22,1,0.36,1), left 0.5s cubic-bezier(0.22,1,0.36,1), top 0.5s cubic-bezier(0.22,1,0.36,1), color 0.4s, border-color 0.4s, box-shadow 0.4s;
+                        }
+                        .fx-orb svg { width: 24px; height: 24px; transition: transform 0.5s cubic-bezier(0.22,1,0.36,1), filter 0.4s; }
+                        .fx-orb:hover { color: #fff; border-color: rgba(255,255,255,0.45); }
+
+                        .fx-orb.active {
+                            width: 82px; height: 82px; left: -41px; top: -41px;
+                            color: var(--g);
+                            border-color: rgba(30, 215, 96, 0.9);
+                            background:
+                                radial-gradient(circle at 30% 24%, rgba(190,255,215,0.30), rgba(30,215,96,0.10) 45%, rgba(0,0,0,0.6) 100%),
+                                rgba(6, 20, 12, 0.85);
+                            box-shadow: 0 0 0 6px rgba(30,215,96,0.07), 0 0 40px rgba(30, 215, 96, 0.55), 0 22px 50px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.35);
+                        }
+                        .fx-orb.active svg { transform: scale(1.3); filter: drop-shadow(0 0 8px rgba(30,215,96,0.9)); }
+                        .fx-orb.active::before, .fx-orb.active::after {
+                            content: ''; position: absolute; inset: -2px; border-radius: 50%;
+                            border: 1px solid rgba(30, 215, 96, 0.6);
+                            animation: fxPing 2.6s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+                            pointer-events: none;
+                        }
+                        .fx-orb.active::after { animation-delay: 1.3s; }
+                        @keyframes fxPing {
+                            0%   { transform: scale(1); opacity: 0.8; }
+                            100% { transform: scale(1.9); opacity: 0; }
+                        }
+
+                        /* ground shadow under each orb (levitation) */
+                        .fx-shadow {
+                            position: absolute; left: -22px; top: calc(var(--lift) - 6px);
+                            width: 44px; height: 8px; border-radius: 50%;
+                            background: radial-gradient(closest-side, rgba(30,215,96,0.35), transparent);
+                            animation: fxShadow 4.8s ease-in-out infinite;
+                            pointer-events: none;
+                        }
+                        @keyframes fxShadow {
+                            0%, 100% { transform: scaleX(1); opacity: 0.8; }
+                            50% { transform: scaleX(0.7); opacity: 0.4; }
+                        }
+
+                        /* ---------- Active label above the apex ---------- */
+                        .fx-apex-label {
+                            position: absolute; left: 50%;
+                            bottom: calc(var(--horizon) + var(--lift) + 58px);
+                            transform: translateX(-50%);
+                            z-index: 25; pointer-events: none;
+                            display: flex; align-items: center; gap: 10px;
+                            white-space: nowrap;
+                        }
+
+                        /* ---------- Bottom interaction halves ---------- */
+                        .fx-zone {
+                            position: absolute; left: 0; right: 0; bottom: 0;
+                            height: calc(var(--horizon) + var(--lift) + 110px);
+                            z-index: 20;
+                        }
+                        .fx-half {
+                            position: absolute; top: 0; bottom: 0; width: 50%;
+                            cursor: pointer;
+                            transition: background 0.4s ease;
+                        }
+                        .fx-half.left  { left: 0;  }
+                        .fx-half.right { right: 0; }
+                        .fx-half.left:hover  { background: radial-gradient(60% 80% at 0% 80%, rgba(30,215,96,0.07), transparent 70%); }
+                        .fx-half.right:hover { background: radial-gradient(60% 80% at 100% 80%, rgba(30,215,96,0.07), transparent 70%); }
+
+                        /* ---------- Segment progress ---------- */
+                        .fx-progress {
+                            position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%);
+                            display: flex; gap: 6px; z-index: 40;
+                        }
+                        .fx-seg {
+                            width: 28px; height: 3px; border-radius: 3px;
+                            background: rgba(255,255,255,0.14);
+                            overflow: hidden; cursor: pointer; position: relative;
+                        }
+                        .fx-seg.done { background: rgba(30,215,96,0.45); }
+                        .fx-seg > i {
+                            position: absolute; inset: 0; transform-origin: left; transform: scaleX(0);
+                            background: var(--g); box-shadow: 0 0 8px var(--g);
+                        }
+                        .fx-seg.active > i { animation: fxFill var(--fx-dur, 8s) linear forwards; }
+                        .fx-paused .fx-seg.active > i { animation-play-state: paused; }
+                        @keyframes fxFill { to { transform: scaleX(1); } }
+
+                        /* ---------- Content stage (centered vertically, never over-stretched) ---------- */
+                        .fx-content {
+                            position: absolute; left: 0; right: 0;
+                            top: 56px;
+                            bottom: calc(var(--horizon) + var(--lift) + 92px);
+                            z-index: 10;
+                            padding: 0 clamp(32px, 5vw, 84px);
+                            display: grid;
+                            grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
+                            gap: clamp(28px, 3.8vw, 68px);
+                            align-items: center;
+                        }
+                    </style>
+
+                    <div class="fx-root" id="fx-root">
+
+                        <!-- Deep space backdrop -->
+                        <canvas class="fx-stars" id="fx-stars"></canvas>
+                        <div class="fx-nebula"></div>
+                        <div class="fx-grid"></div>
+                        <div class="fx-aurora"></div>
+                        <div class="fx-watermark fx-dot" id="fx-watermark">01</div>
+
+                        <!-- Planet horizon -->
+                        <div class="fx-orbit-ring"></div>
+                        <div class="fx-planet"></div>
+
+                        <!-- Feature content (rendered directly on space) -->
+                        <div class="fx-content" id="fx-content"></div>
+
+                        <!-- Active feature label above apex -->
+                        <div class="fx-apex-label" id="fx-apex-label"></div>
+
+                        <!-- Bottom interaction: click left half = previous, right half = next, wheel = rotate -->
+                        <div class="fx-zone" id="fx-zone" data-no-nav>
+                            <div class="fx-half left" onclick="rotateArc(-1)"></div>
+                            <div class="fx-half right" onclick="rotateArc(1)"></div>
+                        </div>
+
+                        <!-- Orbiting icon orbs -->
+                        <div class="fx-pivot" id="fx-pivot" data-no-nav></div>
+
+                        <!-- Segment progress -->
+                        <div class="fx-progress" id="fx-progress" data-no-nav></div>
+                    </div>
+
+                    <script>
+                        (function () {
+                            const ICONS = {
+                                cpu:    '<rect x="5" y="5" width="14" height="14" rx="2"/><rect x="9" y="9" width="6" height="6" rx="1"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/>',
+                                plug:   '<path d="M9 7V2M15 7V2M6 7h12v4a6 6 0 0 1-12 0V7zM12 17v5"/>',
+                                board:  '<rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4M6 8h2M6 11h2M11 8h7M11 11h5"/>',
+                                debug:  '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6M19 5l1.5 1.5"/>',
+                                code:   '<path d="M8 6l-6 6 6 6M16 6l6 6-6 6M14 4l-4 16"/>',
+                                zap:    '<path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/>',
+                                export: '<path d="M12 15V3M7 8l5-5 5 5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/>'
+                            };
+                            const svg = (k) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICONS[k]}</svg>`;
+
+                            const FEATURES = [
+                                {
+                                    icon: 'cpu', code: 'CPU CORE',
+                                    th: 'ฮาร์ดแวร์ & สถาปัตยกรรม CPU 32-bit',
+                                    tagline: 'คอร์ OpenMIPS 5-Stage Pipeline + RISC-V RV32IM พร้อมตัวหาร div.v 32 ไซเคิล ดันคล็อกทะลุ 28.88 MHz',
+                                    stats: [['28.88', 'MHz CLOCK', true], ['+722%', 'TIMING BOOST', true], ['+5.34', 'NS SLACK', false], ['5', 'STAGES', false]],
+                                    bullets: [
+                                        '<strong>5-Stage Pipeline</strong> — <code>IF → ID → EX → MEM → WB</code> พร้อมวงจร Hazard Forwarding &amp; Stall Unit',
+                                        '<strong>Dual-Architecture</strong> — สลับคอร์ OpenMIPS 32-bit ↔ RISC-V (RV32IM) ได้ทันทีในคลิกเดียว',
+                                        '<strong>div.v 32-Cycle Divider</strong> — ตัวหารฮาร์ดแวร์แก้คอขวด Timing บน Artix-7 จาก 3.51 → 28.88 MHz'
+                                    ],
+                                    side: { title: 'PIPELINE TRACE', rows: [['IF', 'ADDIU $t0,$zero,1', '#1ED760'], ['ID', 'Decode R / I-Type', '#7dd3fc'], ['EX', 'ALU · Div 32-step', '#fcd34d'], ['MEM', 'BRAM R/W', '#c4b5fd'], ['WB', '$t0 ← result', '#fca5a5']] },
+                                    tags: ['MIPS32', 'RV32IM', 'HAZARD UNIT', 'ARTIX-7']
+                                },
+                                {
+                                    icon: 'plug', code: 'CUSTOM CPU',
+                                    th: 'นำเข้า CPU นอก & ผูกขา MMIO อัตโนมัติ',
+                                    tagline: 'CPU Setup Wizard + HDL AST Parser สแกนขา Verilog/VHDL และเชื่อมบัสเข้ากับอุปกรณ์จริงให้อัตโนมัติ',
+                                    stats: [['AST', 'HDL PARSER', true], ['AUTO', 'MMIO BIND', true], ['16×16', 'LED / SW', false], ['6', 'DEVICES', false]],
+                                    bullets: [
+                                        '<strong>CPU Setup Wizard &amp; AST Parser</strong> — สแกนพอร์ต <code>clk</code> <code>rst</code> <code>addr</code> <code>data</code> ออกมาเอง ไม่ต้องกรอกมือ',
+                                        '<strong>Auto MMIO Bus Binding</strong> — เชื่อมบัสหน่วยความจำของ CPU เข้ากับ Address อุปกรณ์ Nexys A7 ทันที',
+                                        '<strong>Auto-Bundle &amp; Manifest</strong> — รวบไฟล์โมดูลย่อยและสร้าง <code>cpu_manifest.json</code> พร้อมจำลองทันที'
+                                    ],
+                                    side: { title: 'MEMORY MAP', rows: [['0xF0000000', 'LED × 16', '#fca5a5'], ['0xF0000004', 'SWITCH × 16', '#1ED760'], ['0xF0000008', '7-SEG × 8', '#fcd34d'], ['0xF000000C', 'BUTTON × 5', '#6ee7b7'], ['0xF0000010', 'UART TX/RX', '#7dd3fc'], ['0xFF000000', 'VGA FRAME', '#c4b5fd']] },
+                                    tags: ['CPU WIZARD', 'VERILOG / VHDL', 'AUTO MMIO', 'NEXYS A7']
+                                },
+                                {
+                                    icon: 'board', code: 'VIRTUAL BOARD',
+                                    th: 'จำลองบอร์ด Nexys A7 เสมือนจริง (Ctrl+J)',
+                                    tagline: 'จำลอง Nexys A7 ทั้งบอร์ดบนหน้าจอ — สวิตช์ ไฟ LED 7-Segment UART และจอ VGA ตอบสนองตามบิตจริง',
+                                    stats: [['16', 'SWITCHES', false], ['16', 'LEDS', false], ['8', 'DIGIT 7-SEG', true], ['115200', 'BAUD 8N1', true]],
+                                    bullets: [
+                                        '<strong>Interactive Nexys A7</strong> — สับสวิตช์ 16 ตัว, LED 16 ดวง, RGB 2 ดวง, ปุ่มกด 5 ทิศ (<code>Shift-Click</code> ค้าง)',
+                                        '<strong>8-Digit 7-Segment</strong> — Dynamic Multiplexing แสดงผลได้ทั้งเลขฐาน 10 (Dec) และฐาน 16 (Hex)',
+                                        '<strong>UART Console &amp; VGA</strong> — พอร์ต 115200 รองรับ <code>printf()</code> โต้ตอบสด และจอภาพ 640×480 12-bit'
+                                    ],
+                                    side: { title: 'VIRTUAL I/O', rows: [['SW / LED', '16-bit bitmask', '#ffffff'], ['7-SEG', 'dynamic scan', '#fcd34d'], ['UART', 'printf("Hello\\n")', '#1ED760'], ['VGA', '640×480 · 12-bit', '#c4b5fd']] },
+                                    tags: ['CTRL+J', 'DEC / HEX', 'UART 115200', 'VGA 640×480']
+                                },
+                                {
+                                    icon: 'debug', code: 'DEBUG & SIM',
+                                    th: 'ดีบักสดทุกไซเคิล, ปรับ Clock & RTL Co-Sim',
+                                    tagline: 'ส่อง 32 รีจิสเตอร์สด ไฮไลต์บรรทัด C คู่ ASM ปรับความเร็ว 1 Hz ถึง 50M+ cyc/s พร้อมรันเทียบ Verilog จริง',
+                                    stats: [['1 Hz', 'SLOWEST', true], ['50M+', 'CYC/S RUST', true], ['32', 'LIVE REGS', false], ['F10', 'STEP INST', false]],
+                                    bullets: [
+                                        '<strong>5 Clock Speeds &amp; Step (F10)</strong> — ปรับสปีด <code>1 Hz</code> ถึง <code>Max Speed</code> (เอนจิน Rust 50M+ cyc/s) ก้าวทีละคำสั่ง',
+                                        '<strong>Live 32-Reg &amp; PC Tracker</strong> — ดูค่า <code>$zero–$ra</code>, <code>HI/LO</code> สด และไฮไลต์บรรทัด C คู่ Opcode ปัจจุบัน',
+                                        '<strong>RTL Co-Sim &amp; GTKWave</strong> — จำลองเทียบฮาร์ดแวร์จริงด้วย <code>iverilog</code> และเปิดกราฟคลื่น <code>.vcd</code> ทันที'
+                                    ],
+                                    side: { title: 'DEBUG & SPEED', rows: [['1 Hz / 5 Hz', 'visual step', '#1ED760'], ['MAX SPEED', '50M+ cyc/s Rust', '#fcd34d'], ['CTRL+H', '32 GPRs + HI/LO', '#7dd3fc'], ['CO-SIM', 'iverilog + GTKWave', '#c4b5fd']] },
+                                    tags: ['32 REGS LIVE', 'PC TRACKER', 'IVERILOG', 'GTKWAVE']
+                                },
+                                {
+                                    icon: 'code', code: 'COMPILER SUITE',
+                                    th: 'Dual Real GCC & นำเข้า Custom Compiler อิสระ',
+                                    tagline: 'ฝัง GCC แท้ในตัว พร้อม Setup Wizard นำเข้าคอมไพเลอร์นอก และรันไทม์ภาษา C บน Bare-Metal ครบวงจร',
+                                    stats: [['12.2', 'MIPS GCC', true], ['15.2', 'RISC-V GCC', true], ['ANY', 'CUSTOM TOOLCHAIN', true], ['0x8001M', 'STACK TOP', false]],
+                                    bullets: [
+                                        '<strong>Dual Embedded GCC</strong> — ฝัง <code>MIPS GCC 12.2</code> และ <code>RISC-V GCC 15.2</code> แปลง C/C++/ASM ทันทีขณะพิมพ์',
+                                        '<strong>Custom Compiler Wizard</strong> — นำเข้า Toolchain นอก (<code>.exe</code> <code>.py</code> <code>.bat</code>) พร้อม Smoke Test และตั้ง Flag อิสระ',
+                                        '<strong>start.S &amp; link.ld Runtime</strong> — ตั้ง SP ที่ <code>0x80010000</code> ก่อนเข้า <code>main()</code> แยก <code>.text/.data</code> ลง BRAM อัตโนมัติ'
+                                    ],
+                                    side: { title: 'COMPILER & BOOT VECTOR', code: '# Built-in GCC + Custom (.exe/.py/.bat)\n_start:                 # start.S\n    lui  $sp, 0x8001    # SP = 0x80010000\n    jal  main           # enter main()' },
+                                    tags: ['REAL GCC', 'CUSTOM COMPILER', 'start.S', 'link.ld']
+                                },
+                                {
+                                    icon: 'zap', code: 'SILICON DEPLOY',
+                                    th: 'ต่อบอร์ดจริง 1.2 วินาที & สังเคราะห์ Zero-Vivado',
+                                    tagline: 'อัปโหลดไบนารีลงบอร์ดในพริบตา แฟลชชิปจากในแอป สั่ง Step บนซิลิคอนจริง และสังเคราะห์ออฟไลน์ได้',
+                                    stats: [['1.2s', 'UART UPLOAD', true], ['0 GB', 'VIVADO NEEDED', true], ['F7', 'JTAG FLASH', false], ['F11', 'BOARD STEP', false]],
+                                    bullets: [
+                                        '<strong>1.2s Fast UART Upload</strong> — ส่งไบนารีผ่าน Micro-USB ทับ Block RAM ทันที ไม่ต้องรอ Vivado 15 นาที',
+                                        '<strong>In-App JTAG (F7) &amp; Board Step (F11)</strong> — แฟลช <code>.bit</code> ตรงจากแอป และสั่งก้าวคำสั่งบนชิปจริง 25 MHz',
+                                        '<strong>Zero-Vivado WSL &amp; Cloud</strong> — ฝัง <code>Yosys + nextpnr</code> สังเคราะห์ <code>.bit</code> ออฟไลน์ ไม่ต้องลง Vivado 80 GB'
+                                    ],
+                                    side: { title: 'HARDWARE LINK', rows: [['JTAG FLASH', 'F7 (openFPGALoader)', '#fcd34d'], ['USB UPLOAD', '1.2 s UART RAM', '#1ED760'], ['BOARD STEP', 'F11 Real Chip', '#7dd3fc'], ['SYNTHESIS', 'WSL Yosys / Cloud', '#c4b5fd']] },
+                                    tags: ['MICRO-USB', 'IN-APP JTAG', 'YOSYS', 'NEXTPNR']
+                                },
+                                {
+                                    icon: 'export', code: 'EXPORT SUITE',
+                                    th: 'ส่งออกไฟล์ครบทุกมาตรฐานอุตสาหกรรม',
+                                    tagline: 'จากโค้ดชุดเดียว ส่งออกได้ตั้งแต่โปรเจกต์ Vivado SoC สำเร็จรูป ไปจนถึงคลื่นสัญญาณดิจิทัล .vcd',
+                                    stats: [['.TCL', 'VIVADO SOC', true], ['.COE', 'BRAM INIT', true], ['.VHD', 'ROM MODULE', false], ['.VCD', 'WAVEFORM', false]],
+                                    bullets: [
+                                        '<strong>Vivado SoC Project</strong> — ส่งออก <code>.v</code> + <code>.xdc</code> + <code>.tcl</code> ครบชุด เปิดรันใน Vivado ได้ทันที',
+                                        '<strong>HDL ROM &amp; BRAM Init</strong> — สร้าง <code>instruction_memory</code> (<code>.vhd</code>/<code>.v</code>) และ <code>program.coe</code> (8/32-bit)',
+                                        '<strong>Binary &amp; Waveform</strong> — ส่งออก <code>machine_code_32bit.txt</code>, <code>.bin</code>, <code>.hex</code> และคลื่น <code>.vcd</code>'
+                                    ],
+                                    side: { title: 'OUTPUT FORMATS', rows: [['VIVADO SOC', '.v .xdc .tcl', '#c4b5fd'], ['ROM', '.vhd / .v', '#1ED760'], ['BRAM', '.coe / .coe32', '#fcd34d'], ['MACHINE', '.txt / .bin / .hex', '#7dd3fc'], ['WAVE', '.vcd (GTKWave)', '#fca5a5']] },
+                                    tags: ['VIVADO SOC', 'VHDL / VERILOG', 'COE', 'GTKWAVE']
+                                }
+                            ];
+
+                            const TOTAL = FEATURES.length;
+                            const DURATION = 8000;
+                            let active = 0;
+                            let built = false;
+                            let timer = null;
+                            let hoverPause = false;
+
+                            const $ = (id) => document.getElementById(id);
+                            const root = () => $('fx-root');
+                            const slideEl = () => root() && root().closest('.slide');
+                            const isOnScreen = () => { const s = slideEl(); return s && s.classList.contains('active'); };
+                            const pad = (n) => String(n).padStart(2, '0');
+
+                            function scramble(el, finalText) {
+                                const glyphs = '01#%&*+<>/=?ABCDEFXYZ';
+                                const len = finalText.length;
+                                let frame = 0;
+                                const totalFrames = 20;
+                                cancelAnimationFrame(el._raf);
+                                const tick = () => {
+                                    let out = '';
+                                    for (let i = 0; i < len; i++) {
+                                        const ch = finalText[i];
+                                        const revealAt = (i / len) * totalFrames * 0.8;
+                                        if (ch === ' ' || frame >= revealAt + 5) out += ch;
+                                        else out += glyphs[Math.floor(Math.random() * glyphs.length)];
+                                    }
+                                    el.textContent = out;
+                                    frame++;
+                                    if (frame <= totalFrames + 5) el._raf = requestAnimationFrame(tick);
+                                    else el.textContent = finalText;
+                                };
+                                tick();
+                            }
+
+                            function build() {
+                                const pivot = $('fx-pivot');
+                                const prog = $('fx-progress');
+                                if (!pivot || !prog) return false;
+
+                                pivot.innerHTML = '';
+                                prog.innerHTML = '';
+                                FEATURES.forEach((f, i) => {
+                                    const pos = document.createElement('div');
+                                    pos.className = 'fx-orb-pos';
+                                    pos.id = 'fx-pos-' + i;
+                                    pos.innerHTML = `
+                                        <div class="fx-orb-float" style="animation-delay:${(i * 0.55).toFixed(2)}s">
+                                            <div class="fx-shadow" style="animation-delay:${(i * 0.55).toFixed(2)}s"></div>
+                                            <div class="fx-orb" id="fx-orb-${i}" title="${f.code}">${svg(f.icon)}</div>
+                                        </div>`;
+                                    pos.querySelector('.fx-orb').addEventListener('click', (e) => { e.stopPropagation(); setActive(i); });
+                                    pivot.appendChild(pos);
+
+                                    const seg = document.createElement('div');
+                                    seg.className = 'fx-seg';
+                                    seg.innerHTML = '<i></i>';
+                                    seg.addEventListener('click', (e) => { e.stopPropagation(); setActive(i); });
+                                    prog.appendChild(seg);
+                                });
+
+                                const zone = $('fx-zone');
+                                const wheelHandler = (e) => {
+                                    e.preventDefault();
+                                    const now = Date.now();
+                                    if (zone._last && now - zone._last < 380) return;
+                                    zone._last = now;
+                                    rotate((e.deltaY || e.deltaX) > 0 ? 1 : -1);
+                                };
+                                [zone, pivot].forEach(el => {
+                                    el.addEventListener('wheel', wheelHandler, { passive: false });
+                                    el.addEventListener('mouseenter', () => { hoverPause = true; root().classList.add('fx-paused'); });
+                                    el.addEventListener('mouseleave', () => { hoverPause = false; root().classList.remove('fx-paused'); });
+                                });
+                                return true;
+                            }
+
+                            function layout() {
+                                FEATURES.forEach((f, i) => {
+                                    const pos = $('fx-pos-' + i);
+                                    const orb = $('fx-orb-' + i);
+                                    if (!pos || !orb) return;
+                                    let diff = i - active;
+                                    if (diff > TOTAL / 2) diff -= TOTAL;
+                                    if (diff < -TOTAL / 2) diff += TOTAL;
+                                    const prev = pos._diff;
+                                    if (prev !== undefined && Math.abs(diff - prev) > 1.5) {
+                                        pos.style.transition = 'none';
+                                        pos.style.setProperty('--fx-a', `calc(var(--step) * ${diff + (diff > 0 ? 1 : -1)})`);
+                                        pos.style.opacity = 0;
+                                        void pos.offsetWidth;
+                                        pos.style.transition = '';
+                                    }
+                                    pos._diff = diff;
+                                    pos.style.setProperty('--fx-a', `calc(var(--step) * ${diff})`);
+                                    const d = Math.abs(diff);
+                                    pos.style.opacity = d === 0 ? 1 : Math.max(0.18, 0.92 - d * 0.2).toFixed(2);
+                                    pos.style.zIndex = 30 - d;
+                                    orb.classList.toggle('active', d === 0);
+                                });
+
+                                document.querySelectorAll('#fx-progress .fx-seg').forEach((s, i) => {
+                                    s.classList.remove('active', 'done');
+                                    if (i < active) s.classList.add('done');
+                                    if (i === active) {
+                                        void s.offsetWidth;
+                                        s.classList.add('active');
+                                    }
+                                });
+                                const r = root();
+                                if (r) r.style.setProperty('--fx-dur', DURATION + 'ms');
+                            }
+
+                            function render() {
+                                const f = FEATURES[active];
+                                const box = $('fx-content');
+                                if (!box) return;
+
+                                const wm = $('fx-watermark');
+                                if (wm) wm.textContent = pad(active + 1);
+
+                                const apex = $('fx-apex-label');
+                                if (apex) {
+                                    apex.innerHTML = `
+                                        <span class="fx-rise fx-mono text-[10px] tracking-[0.3em] text-white/40">${pad(active + 1)} / ${pad(TOTAL)}</span>
+                                        <span class="fx-rise fx-dot text-[18px] text-[#1ED760]" style="animation-delay:.05s;text-shadow:0 0 14px rgba(30,215,96,.6)">${f.code}</span>`;
+                                }
+
+                                let d = 0;
+                                const delay = () => `animation-delay:${(d++ * 0.05).toFixed(2)}s`;
+
+                                const stats = f.stats.map(([v, l, hl], i) => `
+                                    <div class="fx-rise flex-1 ${i ? 'pl-5 border-l border-white/10' : ''}" style="${delay()}">
+                                        <div class="fx-dot fx-stat-num ${hl ? 'hl' : ''}">${v.replace(/\./g, '<span style="font-family:Inter;font-weight:700">.</span>')}</div>
+                                        <div class="fx-mono text-[9.5px] tracking-[0.18em] text-white/45 mt-2">${l}</div>
+                                    </div>`).join('');
+
+                                const tags = f.tags.map(t => `<span class="fx-chip">${t}</span>`).join('');
+
+                                const bullets = f.bullets.map(b => `
+                                    <li class="fx-rise fx-bullet text-[clamp(12.5px,1.55vh,14.5px)] leading-[1.6] text-white/70" style="${delay()}">
+                                        <span>${b}</span>
+                                    </li>`).join('');
+
+                                let sideHtml;
+                                if (f.side.code) {
+                                    const esc = f.side.code.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+                                    sideHtml = `<pre class="fx-mono text-[11.5px] leading-[1.7] text-[#b9f6cf] whitespace-pre m-0">${esc}</pre>`;
+                                } else {
+                                    sideHtml = '<div class="grid grid-cols-2 gap-x-6">' + f.side.rows.map(([k, v, c]) => `
+                                        <div class="fx-row">
+                                            <span style="color:${c}" class="font-semibold">${k}</span>
+                                            <span class="text-white/65">${v}</span>
+                                        </div>`).join('') + '</div>';
+                                }
+
+                                const titleWords = f.code.split(' ');
+                                const plain = titleWords.length > 1 ? titleWords.slice(0, -1).join(' ') + ' ' : '';
+
+                                box.innerHTML = `
+                                    <!-- LEFT: Hero -->
+                                    <div class="flex flex-col justify-center">
+                                        <div class="fx-rise flex items-center gap-3 mb-4" style="${delay()}">
+                                            <span class="glyph-green-dot"></span>
+                                            <span class="fx-mono text-[10.5px] tracking-[0.32em] text-[#1ED760]">FEATURE ${pad(active + 1)}</span>
+                                            <span class="h-px w-16 bg-gradient-to-r from-[#1ED760]/60 to-transparent"></span>
+                                            <span class="fx-mono text-[10.5px] tracking-[0.32em] text-white/35">FPGA STUDIO v4.4</span>
+                                        </div>
+                                        <h2 class="fx-rise fx-dot fx-title uppercase" style="${delay()}">
+                                            <span id="fx-title-plain">${plain}</span><span class="g" id="fx-title-accent">${titleWords[titleWords.length - 1]}</span>
+                                        </h2>
+                                        <h3 class="fx-rise fx-thai text-white font-semibold mt-4 text-[clamp(18px,2.5vh,26px)] tracking-tight" style="${delay()}">${f.th}</h3>
+                                        <p class="fx-rise text-white/55 mt-2 text-[clamp(13px,1.65vh,15px)] leading-relaxed max-w-[48ch]" style="${delay()}">${f.tagline}</p>
+
+                                        <div class="flex items-end mt-7 pt-5 border-t border-white/10">${stats}</div>
+                                        <div class="fx-rise flex flex-wrap gap-2 mt-5" style="${delay()}">${tags}</div>
+                                    </div>
+
+                                    <!-- RIGHT: Compact Balanced Glass Spec Card -->
+                                    <div class="fx-rise fx-glass flex flex-col p-[clamp(20px,2.8vh,30px)]" style="animation-delay:.10s">
+                                        <div class="fx-scan"></div>
+                                        <div class="flex items-center justify-between mb-4">
+                                            <span class="fx-mono text-[10px] tracking-[0.3em] text-white/40">WHAT'S INSIDE</span>
+                                            <span class="fx-mono text-[10px] tracking-[0.2em] text-[#1ED760]">● LIVE SPEC</span>
+                                        </div>
+                                        <ul class="space-y-3">${bullets}</ul>
+                                        <div class="mt-5 pt-4 border-t border-white/10">
+                                            <div class="fx-mono text-[10px] tracking-[0.3em] text-white/40 mb-1.5">${f.side.title}</div>
+                                            ${sideHtml}
+                                        </div>
+                                    </div>`;
+
+                                const pEl = $('fx-title-plain');
+                                const aEl = $('fx-title-accent');
+                                if (pEl && plain) scramble(pEl, plain);
+                                if (aEl) scramble(aEl, titleWords[titleWords.length - 1]);
+                            }
+
+                            function setActive(i) {
+                                active = (i + TOTAL) % TOTAL;
+                                layout();
+                                render();
+                                restartTimer();
+                            }
+                            function rotate(dir) { setActive(active + dir); }
+
+                            function restartTimer() {
+                                clearInterval(timer);
+                                timer = setInterval(() => {
+                                    if (!hoverPause && isOnScreen()) setActive(active + 1);
+                                }, DURATION);
+                            }
+
+                            let starsStarted = false;
+                            function startStars() {
+                                if (starsStarted) return;
+                                const canvas = $('fx-stars');
+                                if (!canvas) return;
+                                starsStarted = true;
+                                const ctx = canvas.getContext('2d');
+                                let W = 0, H = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
+                                let stars = [];
+                                let shooting = null;
+                                let mx = 0, my = 0;
+
+                                function resize() {
+                                    const r = canvas.getBoundingClientRect();
+                                    const w = r.width || window.innerWidth;
+                                    const h = r.height || window.innerHeight;
+                                    if (!w || !h) return;
+                                    W = w; H = h;
+                                    canvas.width = W * dpr; canvas.height = H * dpr;
+                                    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                                    const count = Math.round((W * H) / 5200);
+                                    stars = Array.from({ length: count }, () => ({
+                                        x: Math.random() * W,
+                                        y: Math.random() * H,
+                                        z: Math.random() * 0.9 + 0.1,
+                                        p: Math.random() * Math.PI * 2,
+                                        tw: 0.6 + Math.random() * 1.8,
+                                        g: Math.random() < 0.14
+                                    }));
+                                }
+                                window.addEventListener('resize', resize);
+                                window.addEventListener('mousemove', (e) => {
+                                    mx = (e.clientX / window.innerWidth - 0.5);
+                                    my = (e.clientY / window.innerHeight - 0.5);
+                                });
+
+                                function frame(t) {
+                                    requestAnimationFrame(frame);
+                                    if (!isOnScreen()) return;
+                                    if (!W) { resize(); if (!W) return; }
+                                    ctx.clearRect(0, 0, W, H);
+                                    const time = t / 1000;
+                                    for (const s of stars) {
+                                        s.x -= s.z * 0.06;
+                                        if (s.x < -4) s.x = W + 4;
+                                        const a = (0.35 + 0.65 * (0.5 + 0.5 * Math.sin(time * s.tw + s.p))) * s.z;
+                                        const x = s.x - mx * 22 * s.z;
+                                        const y = s.y - my * 14 * s.z;
+                                        const size = s.z * 1.4;
+                                        ctx.fillStyle = s.g ? `rgba(120,255,170,${a})` : `rgba(255,255,255,${a})`;
+                                        ctx.fillRect(x, y, size, size);
+                                    }
+                                    if (!shooting && Math.random() < 0.004) {
+                                        shooting = { x: Math.random() * W * 0.7 + W * 0.2, y: Math.random() * H * 0.35, l: 0 };
+                                    }
+                                    if (shooting) {
+                                        shooting.l += 14;
+                                        const sx = shooting.x - shooting.l, sy = shooting.y + shooting.l * 0.35;
+                                        const grad = ctx.createLinearGradient(sx, sy, sx + 120, sy - 42);
+                                        grad.addColorStop(0, 'rgba(190,255,215,0.9)');
+                                        grad.addColorStop(1, 'rgba(190,255,215,0)');
+                                        ctx.strokeStyle = grad; ctx.lineWidth = 1.2;
+                                        ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx + 120, sy - 42); ctx.stroke();
+                                        if (shooting.l > W * 0.5) shooting = null;
+                                    }
+                                }
+                                resize();
+                                requestAnimationFrame(frame);
+                            }
+
+                            window.initArcCarousel = function () {
+                                if (!built) built = build();
+                                if (!built) return;
+                                layout();
+                                render();
+                                restartTimer();
+                                startStars();
+                            };
+                            window.updateArcPositions = layout;
+                            window.setArcActive = setActive;
+                            window.rotateArc = rotate;
+
+                            window.addEventListener('keydown', (e) => {
+                                if (!isOnScreen()) return;
+                                if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') rotate(-1);
+                                else if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') rotate(1);
+                                else if (e.key >= '1' && e.key <= '7') setActive(parseInt(e.key, 10) - 1);
+                            });
+
+                            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', window.initArcCarousel);
+                            else window.initArcCarousel();
+                        })();
+                    </script>
+
+                </section>
+<section class="slide fx-slide w-full h-full" id="pipeline-video-slide" data-slide="4" data-speaker="SPEAKER // C-TO-SILICON PIPELINE">
+
+                    <style>
+                        .pv-stage {
+                            position: relative;
+                            z-index: 10;
+                            width: 100%;
+                            height: 100%;
+                            max-width: 1540px;
+                            margin: 0 auto;
+                            padding: clamp(20px, 3vh, 36px) clamp(24px, 3.2vw, 56px);
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            align-items: center;
+                            gap: clamp(12px, 1.8vh, 20px);
+                        }
+
+                        /* High-orbit entry animation as camera ascends above the world */
+                        .pv-header-bar {
+                            transform: translate3d(0, -32px, 0);
+                            opacity: 0;
+                            transition:
+                                transform 0.92s cubic-bezier(0.28, 0.0, 0.2, 1),
+                                opacity 0.92s cubic-bezier(0.28, 0.0, 0.2, 1);
+                            will-change: transform, opacity;
+                        }
+
+                        .slide.active .pv-header-bar {
+                            transform: translate3d(0, 0, 0);
+                            opacity: 1;
+                        }
+
+                        .pv-rise-card {
+                            width: 100%;
+                            max-width: 1360px;
+                            transform: translate3d(0, -54px, 0) scale(0.95);
+                            opacity: 0;
+                            transition:
+                                transform 0.92s cubic-bezier(0.28, 0.0, 0.2, 1),
+                                opacity 0.92s cubic-bezier(0.28, 0.0, 0.2, 1);
+                            will-change: transform, opacity;
+                        }
+
+                        .slide.active .pv-rise-card {
+                            transform: translate3d(0, 0, 0) scale(1);
+                            opacity: 1;
+                        }
+
+                        .pv-frame {
+                            position: relative;
+                            width: 100%;
+                            border-radius: 22px;
+                            overflow: hidden;
+                            background: #000000;
+                            border: 1px solid rgba(30, 215, 96, 0.32);
+                            box-shadow:
+                                0 0 70px rgba(30, 215, 96, 0.14),
+                                0 32px 90px rgba(0, 0, 0, 0.88),
+                                inset 0 1px 0 rgba(255, 255, 255, 0.14);
+                        }
+
+                        .pv-frame::before {
+                            content: '';
+                            position: absolute;
+                            top: 0;
+                            left: 12%;
+                            right: 12%;
+                            height: 1px;
+                            z-index: 5;
+                            background: linear-gradient(90deg, transparent, rgba(30, 215, 96, 0.9), transparent);
+                            pointer-events: none;
+                        }
+
+                        .pv-video {
+                            width: 100%;
+                            max-height: 75vh;
+                            aspect-ratio: 16 / 9;
+                            object-fit: contain;
+                            display: block;
+                            background: #000;
+                        }
+
+                        .pv-controls {
+                            display: flex;
+                            align-items: center;
+                            gap: 12px;
+                            padding: 10px 18px;
+                            background: rgba(6, 11, 8, 0.92);
+                            border-top: 1px solid rgba(255, 255, 255, 0.09);
+                            backdrop-filter: blur(14px);
+                        }
+
+                        .pv-btn {
+                            cursor: pointer;
+                            padding: 5px 12px;
+                            border-radius: 999px;
+                            font-family: 'JetBrains Mono', monospace;
+                            font-size: 10.5px;
+                            letter-spacing: 0.1em;
+                            border: 1px solid rgba(30, 215, 96, 0.4);
+                            background: rgba(30, 215, 96, 0.1);
+                            color: #1ED760;
+                            transition: all 0.2s ease;
+                            flex-shrink: 0;
+                        }
+                        .pv-btn:hover {
+                            background: rgba(30, 215, 96, 0.22);
+                            color: #fff;
+                        }
+
+                        .pv-chap {
+                            cursor: pointer;
+                            padding: 3px 9px;
+                            border-radius: 6px;
+                            font-family: 'JetBrains Mono', monospace;
+                            font-size: 9.5px;
+                            letter-spacing: 0.06em;
+                            color: rgba(255, 255, 255, 0.55);
+                            background: rgba(255, 255, 255, 0.04);
+                            border: 1px solid rgba(255, 255, 255, 0.08);
+                            transition: all 0.2s ease;
+                            white-space: nowrap;
+                        }
+                        .pv-chap:hover {
+                            color: #1ED760;
+                            border-color: rgba(30, 215, 96, 0.45);
+                            background: rgba(30, 215, 96, 0.08);
+                        }
+
+                        .pv-scrubber {
+                            flex: 1;
+                            height: 5px;
+                            border-radius: 999px;
+                            background: rgba(255, 255, 255, 0.14);
+                            cursor: pointer;
+                            position: relative;
+                            overflow: hidden;
+                        }
+                        .pv-scrubber-fill {
+                            height: 100%;
+                            width: 0%;
+                            background: linear-gradient(90deg, #1ED760, #6EE7B7);
+                            box-shadow: 0 0 10px #1ED760;
+                        }
+                    </style>
+
+                    <div class="fx-root">
+
+                        <!-- Deep space layers -->
+                        <canvas class="fx-stars"></canvas>
+                        <div class="fx-nebula"></div>
+                        <div class="fx-grid"></div>
+
+                        <div class="pv-stage">
+
+                            <!-- Compact Header Bar -->
+                            <div class="pv-header-bar w-full max-w-[1360px] flex flex-wrap items-end justify-between gap-3">
+                                <div>
+                                    <div class="flex items-center gap-2.5 mb-1">
+                                        <span class="glyph-green-dot"></span>
+                                        <span class="fx-mono text-[10.5px] tracking-[0.28em] text-[#1ED760]">SILICON PIPELINE // C TO 7-SEGMENT EXECUTION</span>
+                                    </div>
+                                    <div class="flex flex-wrap items-baseline gap-4">
+                                        <h2 class="fx-dot uppercase text-white leading-none" style="font-size: clamp(28px, 4.2vh, 48px); text-shadow: 0 0 24px rgba(30,215,96,0.3);">
+                                            <span data-scramble="PIPELINE ">PIPELINE </span><span class="text-[#1ED760]" data-scramble="EXECUTION">EXECUTION</span>
+                                        </h2>
+                                        <span class="fx-thai text-white/85 font-semibold text-[clamp(14px,1.9vh,19px)]">
+                                            จากโค้ดภาษา C ผ่านสาย USB เข้าสู่ 5-Stage CPU จนแสดงผลออกจอ 7-Segment
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="hidden lg:flex items-center gap-2">
+                                    <span class="fx-chip fx-chip-green">C → GCC → UART → 5-STAGE CPU → 7-SEG</span>
+                                </div>
+                            </div>
+
+                            <!-- Rising Video Cinema Card -->
+                            <div class="pv-rise-card">
+                                <div class="pv-frame">
+                                    <video
+                                        id="pipeline-video"
+                                        class="pv-video"
+                                        src="assets/pipeline_demo.mp4"
+                                        playsinline
+                                        preload="auto"
+                                        autoplay
+                                        muted
+                                        loop
+                                        onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='pipeline_demo.mp4';}"
+                                    ></video>
+
+                                    <!-- Interactive Video Controls & Chapter Quick-Jumps (data-no-nav prevents accidental slide change) -->
+                                    <div class="pv-controls" data-no-nav>
+                                        <button type="button" id="pv-play-btn" class="pv-btn" onclick="window.togglePipelineVideo()">
+                                            ⏸ PAUSE
+                                        </button>
+
+                                        <div class="pv-scrubber" id="pv-scrubber" onclick="window.seekPipelineVideo(event)">
+                                            <div class="pv-scrubber-fill" id="pv-scrubber-fill"></div>
+                                        </div>
+
+                                        <span id="pv-time" class="fx-mono text-[10.5px] text-white/60 whitespace-nowrap shrink-0">00:00 / 02:53</span>
+
+                                        <div class="hidden xl:flex items-center gap-1.5 pl-2 border-l border-white/10">
+                                            <button type="button" class="pv-chap" onclick="window.jumpPipelineVideo(0)">10C3</button>
+                                            <button type="button" class="pv-chap" onclick="window.jumpPipelineVideo(8)">FLOW</button>
+                                            <button type="button" class="pv-chap" onclick="window.jumpPipelineVideo(17)">C CODE</button>
+                                            <button type="button" class="pv-chap" onclick="window.jumpPipelineVideo(28)">OPCODE</button>
+                                            <button type="button" class="pv-chap" onclick="window.jumpPipelineVideo(40)">UART</button>
+                                            <button type="button" class="pv-chap" onclick="window.jumpPipelineVideo(59)">IF·ID·EX·MEM</button>
+                                            <button type="button" class="pv-chap" onclick="window.jumpPipelineVideo(138)">7-SEG 191Hz</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <script>
+                    (function() {
+                        const vid  = document.getElementById('pipeline-video');
+                        const btn  = document.getElementById('pv-play-btn');
+                        const fill = document.getElementById('pv-scrubber-fill');
+                        const timeEl = document.getElementById('pv-time');
+                        const scrub  = document.getElementById('pv-scrubber');
+                        if (!vid) return;
+
+                        if (window.location.search.includes('settle=1')) {
+                            vid.addEventListener('loadedmetadata', () => { vid.currentTime = 3.0; }, { once: true });
+                        }
+
+                        function fmt(sec) {
+                            if (!isFinite(sec) || sec < 0) return '00:00';
+                            const m = Math.floor(sec / 60);
+                            const s = Math.floor(sec % 60);
+                            return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+                        }
+
+                        vid.addEventListener('timeupdate', () => {
+                            const dur = vid.duration || 173;
+                            const pct = Math.min(100, (vid.currentTime / dur) * 100);
+                            if (fill) fill.style.width = pct.toFixed(2) + '%';
+                            if (timeEl) timeEl.textContent = fmt(vid.currentTime) + ' / ' + fmt(dur);
+                        });
+
+                        vid.addEventListener('play', () => {
+                            if (btn) btn.textContent = '⏸ PAUSE';
+                        });
+
+                        vid.addEventListener('pause', () => {
+                            if (btn) btn.textContent = '▶ PLAY';
+                        });
+
+                        window.togglePipelineVideo = function() {
+                            if (vid.paused) vid.play();
+                            else vid.pause();
+                        };
+
+                        window.jumpPipelineVideo = function(sec) {
+                            vid.currentTime = sec;
+                            vid.play().catch(() => {});
+                        };
+
+                        window.seekPipelineVideo = function(e) {
+                            if (!scrub) return;
+                            const rect = scrub.getBoundingClientRect();
+                            const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+                            vid.currentTime = ratio * (vid.duration || 173);
+                        };
+                    })();
+                    </script>
+
+                </section>
+<section class="slide fx-slide w-full h-full" data-slide="5" data-speaker="SPEAKER // LIVE DEMO">
+
+                    <style>
+                        .ld-left-panel {
+                            transform: translate3d(-48px, 16px, 0) scale(0.96);
+                            opacity: 0;
+                            transition:
+                                transform 0.92s cubic-bezier(0.28, 0.0, 0.2, 1) 0.04s,
+                                opacity 0.75s cubic-bezier(0.28, 0.0, 0.2, 1) 0.04s;
+                            will-change: transform, opacity;
+                        }
+
+                        .ld-right-card {
+                            transform: translate3d(52px, 20px, 0) scale(0.94);
+                            opacity: 0;
+                            transition:
+                                transform 0.96s cubic-bezier(0.28, 0.0, 0.2, 1) 0.12s,
+                                opacity 0.78s cubic-bezier(0.28, 0.0, 0.2, 1) 0.12s,
+                                box-shadow 0.4s ease;
+                            will-change: transform, opacity;
+                        }
+
+                        .ld-step-item {
+                            transform: translate3d(-20px, 8px, 0);
+                            opacity: 0;
+                            transition:
+                                transform 0.82s cubic-bezier(0.28, 0.0, 0.2, 1),
+                                opacity 0.72s cubic-bezier(0.28, 0.0, 0.2, 1);
+                        }
+
+                        .slide.active .ld-left-panel,
+                        .slide.active .ld-right-card,
+                        .slide.active .ld-step-item {
+                            transform: translate3d(0, 0, 0) scale(1);
+                            opacity: 1;
+                        }
+                    </style>
+
+                    <div class="fx-root flex items-center justify-center px-[clamp(32px,5vw,84px)] py-10">
+
+                        <!-- Deep space layers (No planet — pure deep space orbit) -->
+                        <canvas class="fx-stars"></canvas>
+                        <div class="fx-nebula"></div>
+                        <div class="fx-grid"></div>
+
+                        <!-- Centered Balanced Split Stage -->
+                        <div class="relative z-10 w-full max-w-[1480px] grid grid-cols-1 lg:grid-cols-12 gap-[clamp(28px,3.6vw,64px)] items-center">
+
+                            <!-- LEFT 7 COLS: Hero + 3 Live Hardware Verification Cases -->
+                            <div class="ld-left-panel lg:col-span-7 flex flex-col justify-center">
+                                <div class="fx-rise flex items-center gap-3 mb-3">
+                                    <span class="glyph-red-dot"></span>
+                                    <span class="fx-mono text-[10.5px] tracking-[0.32em] text-[#1ED760]">LIVE VERIFICATION // HARDWARE &amp; HANDOVER</span>
+                                    <span class="h-px w-14 bg-gradient-to-r from-[#1ED760]/60 to-transparent"></span>
+                                    <span class="fx-mono text-[10.5px] tracking-[0.28em] text-white/35">NEXYS A7-100T</span>
+                                </div>
+
+                                <h2 class="fx-rise fx-dot fx-title uppercase" style="font-size: clamp(40px, 7.2vh, 88px); animation-delay:0.06s">
+                                    <span data-scramble="LIVE ">LIVE </span><span class="g" data-scramble="LAUNCH">LAUNCH</span>
+                                </h2>
+
+                                <h3 class="fx-rise fx-thai text-white font-semibold mt-3.5 text-[clamp(18px,2.4vh,26px)] tracking-tight" style="animation-delay:0.12s">
+                                    การทดสอบบนบอร์ดจริง &amp; สแกนทดลองใช้งานทันที
+                                </h3>
+
+                                <!-- 3 Live Verification Cases -->
+                                <ul class="space-y-3 mt-4 text-[clamp(12.5px,1.55vh,14.5px)] leading-[1.6] text-white/70">
+                                    <li class="fx-bullet ld-step-item" style="transition-delay:0.14s">
+                                        <span><strong>[TEST 01] เบิร์น CPU ลงบอร์ด FPGA (Burn CPU Bitstream):</strong> อัปโหลดสถาปัตยกรรม 5-Stage Pipeline CPU พร้อมวงจร I/O และตัวหาร 32 ไซเคิล ลงชิป Artix-7 บนบอร์ด Nexys A7-100T ผ่าน In-App JTAG (<code>F7</code>)</span>
+                                    </li>
+                                    <li class="fx-bullet ld-step-item" style="transition-delay:0.22s">
+                                        <span><strong>[TEST 02] แฟลชโค้ดลงบอร์ดใน 1.2 วินาที (Flash Code via USB):</strong> คอมไพล์โค้ดแล้วกด <code>Upload to Board</code> ยิงไบนารีผ่าน Micro-USB ทับหน่วยความจำ Block RAM ของบอร์ดจริงโดยตรง ไม่ต้องรอสังเคราะห์วงจรใหม่</span>
+                                    </li>
+                                    <li class="fx-bullet ld-step-item" style="transition-delay:0.30s">
+                                        <span><strong>[TEST 03] คำนวณ nCk ออกจอ 7-Segment (Run nCk Calculation):</strong> รันฟังก์ชันภาษา C คำนวณ <code>10 C 3 = 120</code> บนฮาร์ดแวร์คูณ/หารของ CPU แสดงผลลัพธ์ <code>00000120</code> บนหน้าปัด 7-Segment ของบอร์ดจริงทันที</span>
+                                    </li>
+                                </ul>
+
+                                <!-- Live 7-Seg Readout + Stats -->
+                                <div class="ld-step-item flex items-end mt-6 pt-5 border-t border-white/10" style="transition-delay:0.36s">
+                                    <div class="flex-1">
+                                        <div class="fx-dot fx-stat-num text-red-400" style="text-shadow:0 0 18px rgba(248,113,113,0.55)">00000120</div>
+                                        <div class="fx-mono text-[9.5px] tracking-[0.18em] text-white/45 mt-1.5">7-SEG OUTPUT (10 C 3)</div>
+                                    </div>
+                                    <div class="flex-1 pl-5 border-l border-white/10">
+                                        <div class="fx-dot fx-stat-num hl">1<span style="font-family:Inter;font-weight:700">.</span>2s</div>
+                                        <div class="fx-mono text-[9.5px] tracking-[0.18em] text-white/45 mt-1.5">USB BRAM UPLOAD</div>
+                                    </div>
+                                    <div class="flex-1 pl-5 border-l border-white/10">
+                                        <div class="fx-dot fx-stat-num">599 MB</div>
+                                        <div class="fx-mono text-[9.5px] tracking-[0.18em] text-white/45 mt-1.5">SETUP.EXE INSTALLER</div>
+                                    </div>
+                                </div>
+
+                                <div class="ld-step-item flex flex-wrap gap-2 mt-4" style="transition-delay:0.42s">
+                                    <span class="fx-chip fx-chip-red">7-SEG VERIFIED</span>
+                                    <span class="fx-chip">IN-APP JTAG F7</span>
+                                    <span class="fx-chip">BOARD STEP F11</span>
+                                    <span class="fx-chip fx-chip-green">ALL-IN-ONE INSTALLER</span>
+                                </div>
+                            </div>
+
+                            <!-- RIGHT 5 COLS: Compact Glass QR Code & Grade A Handover Card -->
+                            <div class="ld-right-card lg:col-span-5 fx-glass flex flex-col items-center text-center p-[clamp(22px,3vh,32px)]">
+                                <div class="fx-scan"></div>
+
+                                <div class="w-full flex items-center justify-between mb-5">
+                                    <span class="fx-mono text-[10px] tracking-[0.3em] text-white/40">SCAN TO DOWNLOAD</span>
+                                    <span class="fx-mono text-[10px] tracking-[0.2em] text-[#1ED760]">● OFFICIAL RELEASE v4.4</span>
+                                </div>
+
+                                <div class="flex flex-col items-center">
+                                    <div class="relative p-3.5 rounded-2xl bg-white shadow-[0_0_45px_rgba(30,215,96,0.28)] mb-4">
+                                        <img src="assets/github_qr.png" alt="GitHub Repo QR Code" class="w-40 h-40 md:w-44 md:h-44 object-contain" onerror="this.src='github_qr.png'">
+                                    </div>
+                                    <div class="fx-mono text-xs md:text-sm text-white font-semibold tracking-wider">
+                                        github.com/posweeza558/fpga-studio
+                                    </div>
+                                    <p class="fx-thai text-xs text-white/55 mt-1.5 max-w-[34ch]">
+                                        สแกนเพื่อดาวน์โหลดตัวติดตั้ง <code class="fx-mono text-[#b9f6cf]">Setup.exe (599 MB)</code> พร้อมคู่มือและทดลองใช้งานได้ทันที
+                                    </p>
+                                </div>
+
+                                <div class="w-full mt-5 pt-4 border-t border-white/10">
+                                    <p class="fx-thai text-xs md:text-[13.5px] text-[#1ED760] font-semibold leading-relaxed">
+                                        “พวกเราตอบโจทย์อาจารย์ครบทุกข้อ โดยไม่ต้องรอถึง 3 รุ่น...<br>หวังว่าผลงานนี้จะคู่ควรกับเกรด A ของอาจารย์ครับ! 🙏”
+                                    </p>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
             </div>
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="w-full flex items-center justify-between pt-4 border-t border-[#282828] mono text-xs text-white/40">
-        <div>TIP: ดับเบิลคลิก build.bat เพื่อรวมโค้ดใหม่ทุกครั้งหลังเพื่อน pull request</div>
-        <div>NOTHING (R) TRAILER CAROUSEL DESIGN</div>
-    </footer>
+    <!-- SPEAKER CUES DRAWER (กดปุ่ม C เพื่อเปิด/ปิด) -->
+    <div id="cues-drawer" class="fixed bottom-10 left-1/2 -translate-x-1/2 max-w-4xl w-[92%] bento-card p-5 border-[#484848] shadow-2xl z-50 hidden transition-all">
+        <div class="flex justify-between items-center mb-2 border-b border-[#282828] pb-2">
+            <div class="flex items-center space-x-2">
+                <span class="glyph-red-dot"></span>
+                <span class="mono text-xs text-red-400 font-bold uppercase" id="cue-title">CUE SHEET (กดปุ่ม C)</span>
+            </div>
+            <button onclick="toggleCues()" class="text-xs mono text-white/50 hover:text-white">[ ปิด X ]</button>
+        </div>
+        <p id="cue-content" class="text-xs md:text-sm text-white/90 leading-relaxed whitespace-pre-line font-normal"></p>
+    </div>
+
+    <!-- GENERATED SCRIPTS -->
+    <script>
+        window.speakerScripts = {1: "【บทพูดเปิดตัว: แนะนำโปรเจกต์】\nสวัสดีครับอาจารย์และเพื่อนๆ ทุกคน วันนี้กลุ่มพวกเราขอเสนอ 'FPGA Studio' เครื่องมือพัฒนาและจำลองสถาปัตยกรรมคอมพิวเตอร์แบบ All-in-One ครับ", 2: '【บทพูดเพจ 2: โลก 3D จุดกำเนิดโปรเจกต์】\n[ฝั่งที่ 1] จุดเริ่มต้นมาจากโพสต์แรกของอาจารย์ที่ให้ทำโปรแกรมคำนวณควบคู่กับ Python Simulator เพื่อรันดูผลลัพธ์ครับ แทนที่จะดูผลเป็นตัวหนังสือในคอมมานด์ไลน์ พวกเราเลยสร้าง Virtual Board Simulator จำลองบอร์ด Nexys A7 ทั้งใบ กดสวิตช์ 16 ขาและดูไฟ 7-Segment สดๆ บนจอได้เลยโดยไม่ต้องง้อบอร์ดจริง\n\n[หมุนโลก 180° ไปฝั่งที่ 2] ต่อมาอาจารย์โพสต์ว่าอยากเห็นระบบคอมที่รับอินพุต ประมวลผล ส่งออกเอาท์พุตและจอภาพ รวมถึงท้าให้หา Compiler แปลงภาษา C เป็น MIPS opcode ใครทำได้ให้เกรด A... พวกเราเลยทำระบบผูกขา CPU เข้ากับ I/O รอบบอร์ดและจอ VGA อัตโนมัติ พร้อมเชื่อม GCC เข้ากับ IDE และทำระบบนำเข้า Custom Compiler ให้กดปุ่มเดียวแปลงโค้ด C เป็นคำสั่ง MIPS พร้อมรันทันทีครับ!', 3: '【บทพูดเพจ 3: 7 ฟีเจอร์หลัก (Orbit Launch)】\nฟีเจอร์ทั้ง 7 ลอยโคจรอยู่บนขอบดาวด้านล่าง คลิกฝั่งซ้าย/ขวาของโซนล่าง หรือ Scroll เมาส์เพื่อหมุน:\n1. CPU CORE — 5-Stage Pipeline, MIPS + RISC-V, div.v 32 ไซเคิล ดันคล็อกถึง 28.88 MHz\n2. CUSTOM CPU — CPU Setup Wizard + AST Parser สแกนขาอัตโนมัติ และผูก MMIO เข้ากับ Address จริงของ Nexys A7\n3. VIRTUAL BOARD — จำลองสวิตช์ LED 7-Segment UART printf และจอ VGA\n4. DEBUG & SIM — ปรับ Clock 1 Hz ถึง 50M+ cyc/s Rust, ส่อง 32 รีจิสเตอร์สดคู่บรรทัด C/ASM, และรัน Co-Sim ด้วย iverilog + GTKWave\n5. COMPILER SUITE — ฝัง Real GCC ทั้ง MIPS/RISC-V พร้อม Custom Compiler Wizard นำเข้าคอมไพเลอร์นอกได้ และมี start.S + link.ld\n6. SILICON DEPLOY — อัปโหลด 1.2 วินาที, JTAG F7 ในแอป, Step บอร์ดจริง F11, Zero-Vivado WSL\n7. EXPORT SUITE — Vivado SoC, .vhd/.v, .coe, .txt/.bin และ .vcd สำหรับ GTKWave', 4: '【บทพูดเพจ 4: วิดีโอจำลองการทำงาน C-to-Silicon Pipeline】\nเมื่อเลื่อนขึ้นมาจากหน้าฟีเจอร์ คลิปนี้จะแสดงเส้นทางตั้งแต่การเขียนโค้ดภาษา C คำนวณ 10 เลือก 3 (10C3 = 120) แปลงผ่าน GCC เป็นรหัสเครื่อง 32-bit ส่งผ่านสาย UART เข้าสู่หน่วยความจำคำสั่ง แล้วรันผ่าน 5-Stage Pipeline (IF, ID, EX, MEM, WB) จนแสดงผลออกจอ 7-Segment ด้วยความถี่สแกน 191 Hz ครับ', 5: '【บทพูดเพจ 5: ทดสอบของจริง & ส่งมอบผลงาน】\nและนี่คือการทดสอบบนบอร์ดจริงในห้องเรียน 3 ขั้นตอนครับ ขั้นตอนแรกคือเบิร์นสถาปัตยกรรม CPU ลงบอร์ด FPGA, ขั้นตอนที่สองคือแฟลชโค้ดโปรแกรมผ่านสาย USB ลงหน่วยความจำ BRAM ใน 1.2 วินาที, และขั้นตอนที่สามคือรันโปรแกรมคำนวณ 10 C 3 ได้ผลลัพธ์ 120 ออกหน้าปัด 7-Segment บนบอร์ดจริงทันทีครับ\nทุกคนในห้องสามารถยกมือถือสแกน QR Code เพื่อดาวน์โหลดตัวติดตั้ง Setup.exe ขนาด 599MB ไปทดลองใช้งานได้ทันทีโดยไม่ต้องรอถึง 3 รุ่นครับ... พวกเราตอบโจทย์อาจารย์ครบทุกข้อ หวังว่าโปรเจกต์นี้จะคู่ควรกับเกรด A ของอาจารย์ครับ ขอบคุณครับ!'};
+    </script>
+    <script src="js/presentation.js"></script>
 </body>
 </html>
