@@ -30,7 +30,7 @@ SLIDE_FILES = [
 
 def compile_presentation():
     print("=" * 60)
-    print("[*] FPGA STUDIO PRESENTATION COMPILER (SPOTIFY DARK & NOTHING EDITION)")
+    print("[*] FPGA STUDIO PRESENTATION COMPILER (NOTHING TRAILER CAROUSEL)")
     print("=" * 60)
 
     all_sections = []
@@ -91,7 +91,7 @@ def compile_presentation():
     css_rel = "css/nothing.css"
     js_rel = "js/presentation.js"
 
-    # Build final HTML matching FPGA Studio theme with edge navigation buttons
+    # Build final HTML with horizontal carousel viewport & track (no buttons, click anywhere)
     html_template = f"""<!DOCTYPE html>
 <html lang="th">
 <head>
@@ -109,14 +109,6 @@ def compile_presentation():
 
     <!-- Interactive Warping Dot Matrix Canvas -->
     <canvas id="bg-canvas"></canvas>
-
-    <!-- Floating Edge Navigation Buttons (ปุ่มซ้าย-ขวาขอบจอเหมือนสไลด์) -->
-    <button onclick="prevSlide()" class="nav-edge-btn nav-edge-prev" title="Previous Slide (←)">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
-    </button>
-    <button onclick="nextSlide()" class="nav-edge-btn nav-edge-next" title="Next Slide (→)">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
-    </button>
 
     <!-- TOP BAR (CLEAN MINIMAL) -->
     <header class="w-full flex items-center justify-between pb-4 border-b border-[#282828] z-20">
@@ -139,9 +131,13 @@ def compile_presentation():
         </div>
     </header>
 
-    <!-- MAIN SLIDE CONTAINER -->
+    <!-- MAIN SLIDE CONTAINER (CAROUSEL VIEWPORT & TRACK) -->
     <main class="flex-1 w-full flex items-center justify-center py-6 relative z-10 overflow-hidden">
+        <div id="carousel-viewport">
+            <div id="carousel-track">
 {chr(10).join(all_sections)}
+            </div>
+        </div>
     </main>
 
     <!-- SPEAKER CUES DRAWER (กดปุ่ม C เพื่อเปิด/ปิด) -->

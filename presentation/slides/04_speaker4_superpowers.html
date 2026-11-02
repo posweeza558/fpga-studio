@@ -15,14 +15,6 @@
     <!-- Interactive Warping Dot Matrix Canvas -->
     <canvas id="bg-canvas"></canvas>
 
-    <!-- Floating Edge Navigation Buttons -->
-    <button onclick="prevSlide()" class="nav-edge-btn nav-edge-prev" title="Previous Slide (←)">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
-    </button>
-    <button onclick="nextSlide()" class="nav-edge-btn nav-edge-next" title="Next Slide (→)">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
-    </button>
-
     <!-- TOP BAR (CLEAN MINIMAL) -->
     <header class="w-full flex items-center justify-between pb-4 border-b border-[#282828] z-20">
         <div class="flex items-center space-x-3">
@@ -42,113 +34,117 @@
         </div>
     </header>
 
-    <!-- MAIN SLIDE CONTAINER -->
+    <!-- MAIN SLIDE CONTAINER (CAROUSEL VIEWPORT) -->
     <main class="flex-1 w-full flex items-center justify-center py-6 relative z-10 overflow-hidden">
+        <div id="carousel-viewport">
+            <div id="carousel-track">
 
-        <!-- ======================================================== -->
-        <!-- SLIDE 1: PROJECT SUPERPOWERS -->
-        <!-- ======================================================== -->
-        <section class="slide active flex-col justify-center max-w-6xl w-full h-full" data-slide="1" data-speaker="SPEAKER 04 // PROJECT SUPERPOWERS">
-            <div class="flex items-center space-x-2 text-xs mono text-[#B3B3B3]/60 mb-2">
-                <span>SYSTEM CAPABILITIES</span>
-            </div>
-            <h2 class="text-4xl font-bold ndot uppercase tracking-tight text-white mb-6">
-                ขุมพลังระดับลึกของ FPGA STUDIO
-            </h2>
-
-            <div class="grid grid-cols-2 gap-4">
-                <div class="bento-card p-5">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="mono text-xs text-red-400 font-bold">01 • EXTENSIBLE ENGINE</span>
-                        <span class="text-xs mono text-[#727272]">HDL ANALYZER</span>
+                <!-- ======================================================== -->
+                <!-- SLIDE 1: PROJECT SUPERPOWERS -->
+                <!-- ======================================================== -->
+                <section class="slide active flex-col justify-center max-w-6xl w-full h-full" data-slide="1" data-speaker="SPEAKER 04 // PROJECT SUPERPOWERS">
+                    <div class="flex items-center space-x-2 text-xs mono text-[#B3B3B3]/60 mb-2">
+                        <span>SYSTEM CAPABILITIES</span>
                     </div>
-                    <h4 class="text-lg font-bold text-white mb-1.5">Custom CPU & Compiler Import</h4>
-                    <p class="text-xs text-[#B3B3B3] leading-relaxed">
-                        ใครเขียน CPU Verilog/VHDL มา สามารถโยนไฟล์เข้าโปรแกรมได้เลย ระบบมี HDL AST Parser ตรวจจับพอร์ต Clock, Reset, Memory Bus อัตโนมัติ และสร้างหน้าต่าง Pin Binding แม็ปเข้าบอร์ดเสมือนให้ทันที!
-                    </p>
-                </div>
+                    <h2 class="text-4xl font-bold ndot uppercase tracking-tight text-white mb-6">
+                        ขุมพลังระดับลึกของ FPGA STUDIO
+                    </h2>
 
-                <div class="bento-card p-5">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="mono text-xs text-[#1ED760] font-bold">02 • DUAL ARCHITECTURE</span>
-                        <span class="text-xs mono text-[#727272]">MIPS + RISC-V</span>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bento-card p-5">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="mono text-xs text-red-400 font-bold">01 • EXTENSIBLE ENGINE</span>
+                                <span class="text-xs mono text-[#727272]">HDL ANALYZER</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-white mb-1.5">Custom CPU & Compiler Import</h4>
+                            <p class="text-xs text-[#B3B3B3] leading-relaxed">
+                                ใครเขียน CPU Verilog/VHDL มา สามารถโยนไฟล์เข้าโปรแกรมได้เลย ระบบมี HDL AST Parser ตรวจจับพอร์ต Clock, Reset, Memory Bus อัตโนมัติ และสร้างหน้าต่าง Pin Binding แม็ปเข้าบอร์ดเสมือนให้ทันที!
+                            </p>
+                        </div>
+
+                        <div class="bento-card p-5">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="mono text-xs text-[#1ED760] font-bold">02 • DUAL ARCHITECTURE</span>
+                                <span class="text-xs mono text-[#727272]">MIPS + RISC-V</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-white mb-1.5">รองรับทั้ง OpenMIPS และ RISC-V</h4>
+                            <p class="text-xs text-[#B3B3B3] leading-relaxed">
+                                ไม่ได้มีแค่ MIPS แต่เราใส่คอร์สถาปัตยกรรมยุคใหม่อย่าง **RISC-V (RV32IM)** พร้อมคอมไพเลอร์ GCC 15.2 มาให้ในตัว สามารถเขียนโค้ดภาษา C เดียวกันแล้วสลับเปรียบเทียบผลลัพธ์ของทั้ง 2 คอร์ได้ทันที
+                            </p>
+                        </div>
+
+                        <div class="bento-card p-5">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="mono text-xs text-[#38BDF8] font-bold">03 • TIMING OPTIMIZATION</span>
+                                <span class="text-xs mono text-[#727272]">RTL FIX</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-white mb-1.5">วงจรหาร 32 ไซเคิล (3.51 $\rightarrow$ 28.88 MHz)</h4>
+                            <p class="text-xs text-[#B3B3B3] leading-relaxed">
+                                แก้ปัญหา Timing ระดับฮาร์ดแวร์ โดยแทนที่วงจรหารแบบทางเดินเดี่ยวด้วยโมดูล <span class="mono text-white">div.v</span> แบบ Multi-Cycle Restoring Divider ทำให้ความถี่พุ่งเกินเกณฑ์ 25 MHz ของ Nexys A7 ฉลุย
+                            </p>
+                        </div>
+
+                        <div class="bento-card p-5">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="mono text-xs text-amber-400 font-bold">04 • ZERO-VIVADO SYNTHESIS</span>
+                                <span class="text-xs mono text-[#727272]">OPENXC7 / WSL</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-white mb-1.5">สังเคราะห์ Bitstream ในเครื่องผ่าน WSL</h4>
+                            <p class="text-xs text-[#B3B3B3] leading-relaxed">
+                                เชื่อมต่อ **Yosys + nextpnr-xilinx** สังเคราะห์โค้ด Verilog กลายเป็นไฟล์ <span class="mono text-white">.bit</span> ได้ในเครื่องตัวเองแบบออฟไลน์ 100% โดยไม่ต้องพึ่งพา Vivado ขนาด 80GB
+                            </p>
+                        </div>
                     </div>
-                    <h4 class="text-lg font-bold text-white mb-1.5">รองรับทั้ง OpenMIPS และ RISC-V</h4>
-                    <p class="text-xs text-[#B3B3B3] leading-relaxed">
-                        ไม่ได้มีแค่ MIPS แต่เราใส่คอร์สถาปัตยกรรมยุคใหม่อย่าง **RISC-V (RV32IM)** พร้อมคอมไพเลอร์ GCC 15.2 มาให้ในตัว สามารถเขียนโค้ดภาษา C เดียวกันแล้วสลับเปรียบเทียบผลลัพธ์ของทั้ง 2 คอร์ได้ทันที
-                    </p>
-                </div>
+                </section>
 
-                <div class="bento-card p-5">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="mono text-xs text-[#38BDF8] font-bold">03 • TIMING OPTIMIZATION</span>
-                        <span class="text-xs mono text-[#727272]">RTL FIX</span>
+                <!-- ======================================================== -->
+                <!-- SLIDE 2: THE GRAND FINALE -->
+                <!-- ======================================================== -->
+                <section class="slide flex-col justify-center max-w-6xl w-full h-full text-center" data-slide="2" data-speaker="SPEAKER 04 // THE GRAND FINALE">
+                    <div class="flex items-center justify-center space-x-2 text-xs mono text-red-500 mb-2">
+                        <span class="glyph-red-dot"></span>
+                        <span>MISSION ACCOMPLISHED</span>
                     </div>
-                    <h4 class="text-lg font-bold text-white mb-1.5">วงจรหาร 32 ไซเคิล (3.51 $\rightarrow$ 28.88 MHz)</h4>
-                    <p class="text-xs text-[#B3B3B3] leading-relaxed">
-                        แก้ปัญหา Timing ระดับฮาร์ดแวร์ โดยแทนที่วงจรหารแบบทางเดินเดี่ยวด้วยโมดูล <span class="mono text-white">div.v</span> แบบ Multi-Cycle Restoring Divider ทำให้ความถี่พุ่งเกินเกณฑ์ 25 MHz ของ Nexys A7 ฉลุย
+                    <h2 class="text-5xl md:text-6xl font-bold ndot uppercase tracking-tight text-white mb-4">
+                        ตอบโจทย์อาจารย์ครบทุกข้อ... ส่งต่อให้รุ่นน้องใช้งานจริง
+                    </h2>
+                    <p class="text-sm md:text-base text-[#B3B3B3] max-w-3xl mx-auto mb-8">
+                        โปรเจกต์นี้ไม่ได้ทำเพื่อส่งแล้วจบ แต่ถูกสร้างขึ้นเป็นซอฟต์แวร์ที่พร้อมใช้งานจริงสำหรับภาควิชา
                     </p>
-                </div>
 
-                <div class="bento-card p-5">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="mono text-xs text-amber-400 font-bold">04 • ZERO-VIVADO SYNTHESIS</span>
-                        <span class="text-xs mono text-[#727272]">OPENXC7 / WSL</span>
+                    <!-- 3 Final Bento Highlights -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left max-w-5xl mx-auto mb-8">
+                        <div class="bento-card p-5">
+                            <div class="mono text-xs text-[#727272] mb-1.5">[ PACKAGING ]</div>
+                            <h4 class="text-base font-bold text-white mb-1">Installer 599 MB</h4>
+                            <p class="text-xs text-[#B3B3B3] leading-relaxed">
+                                ไฟล์ติดตั้งขนาดกะทัดรัด แตกไฟล์ GCC ทั้ง MIPS และ RISC-V พร้อม Bitstream ครบชุด ออฟไลน์ 100%
+                            </p>
+                        </div>
+                        <div class="bento-card p-5 border-[#484848]">
+                            <div class="mono text-xs text-[#1ED760] mb-1.5">[ OPEN SOURCE ]</div>
+                            <h4 class="text-base font-bold text-white mb-1">GitHub Repository</h4>
+                            <p class="text-xs text-[#B3B3B3] leading-relaxed mono">
+                                github.com/posweeza558/fpga-studio<br>
+                                พร้อมคู่มือสถาปัตยกรรม 10 หัวข้อเชิงลึก
+                            </p>
+                        </div>
+                        <div class="bento-card p-5 border-red-500/40 bg-red-950/20">
+                            <div class="mono text-xs text-red-400 mb-1.5">[ NEXT GENERATION ]</div>
+                            <h4 class="text-base font-bold text-white mb-1">รุ่นน้องไม่ต้องรอ 3 รุ่น!</h4>
+                            <p class="text-xs text-red-200/80 leading-relaxed">
+                                รุ่นน้องปีหน้าสามารถดาวน์โหลดโปรแกรมนี้ไปใช้เรียนวิชา Microprocessor ได้ทันทีตั้งแต่วันนี้
+                            </p>
+                        </div>
                     </div>
-                    <h4 class="text-lg font-bold text-white mb-1.5">สังเคราะห์ Bitstream ในเครื่องผ่าน WSL</h4>
-                    <p class="text-xs text-[#B3B3B3] leading-relaxed">
-                        เชื่อมต่อ **Yosys + nextpnr-xilinx** สังเคราะห์โค้ด Verilog กลายเป็นไฟล์ <span class="mono text-white">.bit</span> ได้ในเครื่องตัวเองแบบออฟไลน์ 100% โดยไม่ต้องพึ่งพา Vivado ขนาด 80GB
-                    </p>
-                </div>
-            </div>
-        </section>
 
-        <!-- ======================================================== -->
-        <!-- SLIDE 2: THE GRAND FINALE -->
-        <!-- ======================================================== -->
-        <section class="slide flex-col justify-center max-w-6xl w-full h-full text-center" data-slide="2" data-speaker="SPEAKER 04 // THE GRAND FINALE">
-            <div class="flex items-center justify-center space-x-2 text-xs mono text-red-500 mb-2">
-                <span class="glyph-red-dot"></span>
-                <span>MISSION ACCOMPLISHED</span>
-            </div>
-            <h2 class="text-5xl md:text-6xl font-bold ndot uppercase tracking-tight text-white mb-4">
-                ตอบโจทย์อาจารย์ครบทุกข้อ... ส่งต่อให้รุ่นน้องใช้งานจริง
-            </h2>
-            <p class="text-sm md:text-base text-[#B3B3B3] max-w-3xl mx-auto mb-8">
-                โปรเจกต์นี้ไม่ได้ทำเพื่อส่งแล้วจบ แต่ถูกสร้างขึ้นเป็นซอฟต์แวร์ที่พร้อมใช้งานจริงสำหรับภาควิชา
-            </p>
+                    <div class="mono text-sm text-[#1ED760] font-semibold tracking-wider">
+                        “พวกเราตอบโจทย์อาจารย์ครบทุกข้อ หวังว่าโปรเจกต์นี้จะคู่ควรกับเกรด A ของอาจารย์ครับ ขอบคุณครับ! 🙏”
+                    </div>
+                </section>
 
-            <!-- 3 Final Bento Highlights -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left max-w-5xl mx-auto mb-8">
-                <div class="bento-card p-5">
-                    <div class="mono text-xs text-[#727272] mb-1.5">[ PACKAGING ]</div>
-                    <h4 class="text-base font-bold text-white mb-1">Installer 599 MB</h4>
-                    <p class="text-xs text-[#B3B3B3] leading-relaxed">
-                        ไฟล์ติดตั้งขนาดกะทัดรัด แตกไฟล์ GCC ทั้ง MIPS และ RISC-V พร้อม Bitstream ครบชุด ออฟไลน์ 100%
-                    </p>
-                </div>
-                <div class="bento-card p-5 border-[#484848]">
-                    <div class="mono text-xs text-[#1ED760] mb-1.5">[ OPEN SOURCE ]</div>
-                    <h4 class="text-base font-bold text-white mb-1">GitHub Repository</h4>
-                    <p class="text-xs text-[#B3B3B3] leading-relaxed mono">
-                        github.com/posweeza558/fpga-studio<br>
-                        พร้อมคู่มือสถาปัตยกรรม 10 หัวข้อเชิงลึก
-                    </p>
-                </div>
-                <div class="bento-card p-5 border-red-500/40 bg-red-950/20">
-                    <div class="mono text-xs text-red-400 mb-1.5">[ NEXT GENERATION ]</div>
-                    <h4 class="text-base font-bold text-white mb-1">รุ่นน้องไม่ต้องรอ 3 รุ่น!</h4>
-                    <p class="text-xs text-red-200/80 leading-relaxed">
-                        รุ่นน้องปีหน้าสามารถดาวน์โหลดโปรแกรมนี้ไปใช้เรียนวิชา Microprocessor ได้ทันทีตั้งแต่วันนี้
-                    </p>
-                </div>
             </div>
-
-            <div class="mono text-sm text-[#1ED760] font-semibold tracking-wider">
-                “พวกเราตอบโจทย์อาจารย์ครบทุกข้อ หวังว่าโปรเจกต์นี้จะคู่ควรกับเกรด A ของอาจารย์ครับ ขอบคุณครับ! 🙏”
-            </div>
-        </section>
-
+        </div>
     </main>
 
     <!-- SPEAKER CUES DRAWER (กดปุ่ม C เพื่อเปิด/ปิด) -->

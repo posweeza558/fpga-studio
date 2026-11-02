@@ -15,14 +15,6 @@
     <!-- Interactive Warping Dot Matrix Canvas -->
     <canvas id="bg-canvas"></canvas>
 
-    <!-- Floating Edge Navigation Buttons -->
-    <button onclick="prevSlide()" class="nav-edge-btn nav-edge-prev" title="Previous Slide (←)">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
-    </button>
-    <button onclick="nextSlide()" class="nav-edge-btn nav-edge-next" title="Next Slide (→)">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
-    </button>
-
     <!-- TOP BAR (CLEAN MINIMAL) -->
     <header class="w-full flex items-center justify-between pb-4 border-b border-[#282828] z-20">
         <div class="flex items-center space-x-3">
@@ -42,61 +34,65 @@
         </div>
     </header>
 
-    <!-- MAIN SLIDE CONTAINER -->
+    <!-- MAIN SLIDE CONTAINER (CAROUSEL VIEWPORT) -->
     <main class="flex-1 w-full flex items-center justify-center py-6 relative z-10 overflow-hidden">
+        <div id="carousel-viewport">
+            <div id="carousel-track">
 
-        <!-- ======================================================== -->
-        <!-- SLIDE: LIVE DEMO & VERIFICATION -->
-        <!-- ======================================================== -->
-        <section class="slide active flex-col justify-center max-w-6xl w-full h-full" data-slide="1" data-speaker="SPEAKER 03 // LIVE DEMO">
-            <div class="flex items-center space-x-2 text-xs mono text-red-500 mb-2">
-                <span class="glyph-red-dot"></span>
-                <span>LIVE DEMONSTRATION</span>
+                <!-- ======================================================== -->
+                <!-- SLIDE: LIVE DEMO & VERIFICATION -->
+                <!-- ======================================================== -->
+                <section class="slide active flex-col justify-center max-w-6xl w-full h-full" data-slide="1" data-speaker="SPEAKER 03 // LIVE DEMO">
+                    <div class="flex items-center space-x-2 text-xs mono text-red-500 mb-2">
+                        <span class="glyph-red-dot"></span>
+                        <span>LIVE DEMONSTRATION</span>
+                    </div>
+                    <h2 class="text-4xl font-bold ndot uppercase tracking-tight text-white mb-6">
+                        สาธิตการรันจริง: คำนวณคณิตศาสตร์ & ฮาร์ดแวร์ I/O
+                    </h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Case 1 -->
+                        <div class="bento-card p-5 border-red-500/30">
+                            <div class="mono text-xs text-red-400 mb-2 font-bold">[ DEMO 01 ]</div>
+                            <h3 class="text-lg font-bold text-white mb-2">คำนวณ nCk ออก 7-Segment</h3>
+                            <p class="text-xs text-[#B3B3B3] mb-4 leading-relaxed">
+                                รันโค้ดภาษา C คำนวณสูตรคอมบิเนชัน <span class="mono font-bold text-white">10 C 3 = 120</span> ผ่านตัวคูณฮาร์ดแวร์ วิ่งผ่าน 5-Stage Pipeline แสดงผลออกหลอด 7-Segment เป็นเลขฐานสิบสมบูรณ์แบบ
+                            </p>
+                            <div class="bg-black/60 p-3 rounded-xl border border-[#282828] mono text-xs text-center text-red-400 font-bold tracking-widest">
+                                RESULT: 0 0 0 0 0 1 2 0
+                            </div>
+                        </div>
+
+                        <!-- Case 2 -->
+                        <div class="bento-card p-5">
+                            <div class="mono text-xs text-[#1ED760] mb-2 font-bold">[ DEMO 02 ]</div>
+                            <h3 class="text-lg font-bold text-white mb-2">Interactive Switches & UART</h3>
+                            <p class="text-xs text-[#B3B3B3] mb-4 leading-relaxed">
+                                คลิกสับสวิตช์บนจอ ไฟ LED ติดตามบิตจริงทันที และรันคำสั่ง <span class="mono text-white">printf("Hello World\n")</span> ตัวอักษรวิ่งออกหน้าต่างคอนโซลแบบสดๆ
+                            </p>
+                            <div class="bg-black/60 p-3 rounded-xl border border-[#282828] mono text-xs text-[#1ED760]">
+                                > [UART Ready] 115200 baud<br>
+                                > Hello World from MIPS CPU!
+                            </div>
+                        </div>
+
+                        <!-- Case 3 -->
+                        <div class="bento-card p-5">
+                            <div class="mono text-xs text-[#38BDF8] mb-2 font-bold">[ DEMO 03 ]</div>
+                            <h3 class="text-lg font-bold text-white mb-2">1-Sec Live Board Flashing</h3>
+                            <p class="text-xs text-[#B3B3B3] mb-4 leading-relaxed">
+                                โชว์การกดปุ่ม <span class="mono text-white font-bold">Upload to Board</span> ส่งไบนารีผ่านสาย Micro-USB เข้า Block RAM บนบอร์ด Nexys A7 จริง โดยไม่ต้องเสียเวลารัน Vivado 15 นาที
+                            </p>
+                            <div class="bg-black/60 p-3 rounded-xl border border-[#282828] mono text-xs text-center text-[#EAEAEA]">
+                                ⚡ UPLOAD COMPLETE (1.2s)
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
             </div>
-            <h2 class="text-4xl font-bold ndot uppercase tracking-tight text-white mb-6">
-                สาธิตการรันจริง: คำนวณคณิตศาสตร์ & ฮาร์ดแวร์ I/O
-            </h2>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Case 1 -->
-                <div class="bento-card p-5 border-red-500/30">
-                    <div class="mono text-xs text-red-400 mb-2 font-bold">[ DEMO 01 ]</div>
-                    <h3 class="text-lg font-bold text-white mb-2">คำนวณ nCk ออก 7-Segment</h3>
-                    <p class="text-xs text-[#B3B3B3] mb-4 leading-relaxed">
-                        รันโค้ดภาษา C คำนวณสูตรคอมบิเนชัน <span class="mono font-bold text-white">10 C 3 = 120</span> ผ่านตัวคูณฮาร์ดแวร์ วิ่งผ่าน 5-Stage Pipeline แสดงผลออกหลอด 7-Segment เป็นเลขฐานสิบสมบูรณ์แบบ
-                    </p>
-                    <div class="bg-black/60 p-3 rounded-xl border border-[#282828] mono text-xs text-center text-red-400 font-bold tracking-widest">
-                        RESULT: 0 0 0 0 0 1 2 0
-                    </div>
-                </div>
-
-                <!-- Case 2 -->
-                <div class="bento-card p-5">
-                    <div class="mono text-xs text-[#1ED760] mb-2 font-bold">[ DEMO 02 ]</div>
-                    <h3 class="text-lg font-bold text-white mb-2">Interactive Switches & UART</h3>
-                    <p class="text-xs text-[#B3B3B3] mb-4 leading-relaxed">
-                        คลิกสับสวิตช์บนจอ ไฟ LED ติดตามบิตจริงทันที และรันคำสั่ง <span class="mono text-white">printf("Hello World\n")</span> ตัวอักษรวิ่งออกหน้าต่างคอนโซลแบบสดๆ
-                    </p>
-                    <div class="bg-black/60 p-3 rounded-xl border border-[#282828] mono text-xs text-[#1ED760]">
-                        > [UART Ready] 115200 baud<br>
-                        > Hello World from MIPS CPU!
-                    </div>
-                </div>
-
-                <!-- Case 3 -->
-                <div class="bento-card p-5">
-                    <div class="mono text-xs text-[#38BDF8] mb-2 font-bold">[ DEMO 03 ]</div>
-                    <h3 class="text-lg font-bold text-white mb-2">1-Sec Live Board Flashing</h3>
-                    <p class="text-xs text-[#B3B3B3] mb-4 leading-relaxed">
-                        โชว์การกดปุ่ม <span class="mono text-white font-bold">Upload to Board</span> ส่งไบนารีผ่านสาย Micro-USB เข้า Block RAM บนบอร์ด Nexys A7 จริง โดยไม่ต้องเสียเวลารัน Vivado 15 นาที
-                    </p>
-                    <div class="bg-black/60 p-3 rounded-xl border border-[#282828] mono text-xs text-center text-[#EAEAEA]">
-                        ⚡ UPLOAD COMPLETE (1.2s)
-                    </div>
-                </div>
-            </div>
-        </section>
-
+        </div>
     </main>
 
     <!-- SPEAKER CUES DRAWER (กดปุ่ม C เพื่อเปิด/ปิด) -->

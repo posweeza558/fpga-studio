@@ -1,33 +1,37 @@
 /**
- * FPGA Studio - Keynote Presentation Engine (Spotify Dark & Nothing Phone Edition)
- * - Interactive Elastic Dot-Matrix Canvas Background (จุดๆ พื้นหลังยวบยาบตามเมาส์)
- * - Micro Pupil Eye Tracking (จุดแดงขยับได้นิดเดียวฟีลลูกตา)
- * - Slide transitions, cues, fullscreen, and edge navigation.
+ * FPGA Studio - Keynote Presentation Engine (Nothing Phone Trailer / Carousel Edition)
+ * - Seamless Horizontal Track Carousel (เลื่อนแนวนอนแบบเทรลเลอร์ Nothing Phone ไม่มีป็อปอัพเด้ง)
+ * - Click anywhere to navigate (คลิกฝั่งซ้าย = ถอยหลัง / คลิกฝั่งขวา = เดินหน้า ไม่ต้องมีปุ่ม)
+ * - Micro Pupil Eye Tracking (จุดแดงขยับนิดเดียวฟีลลูกตามองตามเมาส์)
+ * - Interactive Elastic Dot-Matrix Canvas Background
  */
 
 let currentSlide = 1;
 let totalSlides = 1;
+let carouselTrack = null;
 
-// Mouse tracking coordinates
+// Mouse coordinates
 const mouse = {
     x: -9999,
     y: -9999,
     targetX: -9999,
     targetY: -9999,
-    radius: 145,      // Influence radius of cursor
-    strength: 30,     // Max displacement distance (pixels)
+    radius: 145,
+    strength: 30,
     active: false
 };
 
-// Pupil tracking variables (micro movement)
+// Micro pupil tracking
 let pupilX = 0;
 let pupilY = 0;
 
 // ==============================================================================
-// 1. PRESENTATION SLIDE CONTROLLER
+// 1. CAROUSEL ENGINE (NOTHING PHONE TRAILER HORIZONTAL SWEEP)
 // ==============================================================================
 
 function initPresentation() {
+    setupCarouselDOM();
+
     const slides = document.querySelectorAll('.slide');
     totalSlides = slides.length;
     
@@ -39,43 +43,68 @@ function initPresentation() {
     updateSlide();
     initDotMatrixCanvas();
     initPupilTracker();
+    initGlobalClickNavigation();
+}
+
+function setupCarouselDOM() {
+    const main = document.querySelector('main');
+    if (!main) return;
+
+    let track = document.getElementById('carousel-track');
+    if (!track) {
+        // Create viewport wrapper if missing
+        let viewport = document.getElementById('carousel-viewport');
+        if (!viewport) {
+            viewport = document.createElement('div');
+            viewport.id = 'carousel-viewport';
+            main.appendChild(viewport);
+        }
+
+        track = document.createElement('div');
+        track.id = 'carousel-track';
+        viewport.appendChild(track);
+
+        // Move all slide sections into the carousel track
+        const slides = Array.from(main.querySelectorAll('.slide'));
+        slides.forEach(s => track.appendChild(s));
+    }
+    carouselTrack = track;
 }
 
 function updateSlide() {
     const slides = document.querySelectorAll('.slide');
-    slides.forEach(s => {
-        s.classList.remove('active');
-        s.style.display = 'none';
+    if (!slides.length) return;
+
+    // Cinematic horizontal track translation (Nothing Phone trailer sweep)
+    if (carouselTrack) {
+        const offsetPercent = (currentSlide - 1) * 100;
+        carouselTrack.style.transform = `translate3d(-${offsetPercent}%, 0, 0)`;
+    }
+
+    slides.forEach((s, idx) => {
+        if (idx === currentSlide - 1) {
+            s.classList.add('active');
+        } else {
+            s.classList.remove('active');
+        }
     });
 
+    // Update Counter
+    const curElem = document.getElementById('current-slide-num');
+    if (curElem) {
+        curElem.innerText = String(currentSlide).padStart(2, '0');
+    }
+
+    // Update Speaker Cue Drawer
     const activeSlide = document.querySelector(`.slide[data-slide="${currentSlide}"]`);
-    if (activeSlide) {
-        activeSlide.style.display = 'flex';
-        // Force reflow to re-trigger CSS animation
-        void activeSlide.offsetWidth;
-        activeSlide.classList.add('active');
-
-        // Update Counter
-        const curElem = document.getElementById('current-slide-num');
-        if (curElem) {
-            curElem.innerText = String(currentSlide).padStart(2, '0');
-        }
-
-        // Update Speaker Header if present
-        const speakerName = activeSlide.getAttribute('data-speaker') || "PRESENTATION";
-        const speakerElem = document.getElementById('speaker-text');
-        if (speakerElem) {
-            speakerElem.innerText = speakerName;
-        }
-
-        // Update Speaker Cue Drawer
-        const cueTitle = document.getElementById('cue-title');
-        const cueContent = document.getElementById('cue-content');
-        if (cueTitle) cueTitle.innerText = `${speakerName} // CUE SHEET`;
-        if (cueContent) {
-            const scripts = window.speakerScripts || {};
-            cueContent.innerText = scripts[currentSlide] || "ไม่มีสคริปต์ในสไลด์นี้";
-        }
+    const speakerName = activeSlide ? activeSlide.getAttribute('data-speaker') || "PRESENTATION" : "PRESENTATION";
+    
+    const cueTitle = document.getElementById('cue-title');
+    const cueContent = document.getElementById('cue-content');
+    if (cueTitle) cueTitle.innerText = `${speakerName} // CUE SHEET`;
+    if (cueContent) {
+        const scripts = window.speakerScripts || {};
+        cueContent.innerText = scripts[currentSlide] || "ไม่มีสคริปต์ในสไลด์นี้";
     }
 }
 
@@ -114,6 +143,34 @@ function toggleFullscreen() {
     }
 }
 
+// ==============================================================================
+// 2. CLICK ANYWHERE NAVIGATION (คลิกฝั่งซ้าย = ย้อนกลับ, คลิกฝั่งขวา = เดินหน้า)
+// ==============================================================================
+
+function initGlobalClickNavigation() {
+    window.addEventListener('click', (e) => {
+        // Ignore clicks on buttons, links, inputs, cues drawer, or if text is selected
+        if (e.target.closest('button, a, input, select, textarea, #cues-drawer, [data-no-nav]')) {
+            return;
+        }
+
+        const selection = window.getSelection();
+        if (selection && selection.toString().length > 0) {
+            return;
+        }
+
+        const screenWidth = window.innerWidth;
+        const clickX = e.clientX;
+
+        // Left 42% = Previous Slide | Right 58% = Next Slide
+        if (clickX < screenWidth * 0.42) {
+            prevSlide();
+        } else {
+            nextSlide();
+        }
+    });
+}
+
 // Global Keyboard Navigation
 window.addEventListener('keydown', (e) => {
     if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
@@ -135,7 +192,7 @@ window.addEventListener('keydown', (e) => {
 
 
 // ==============================================================================
-// 2. INTERACTIVE WARPING DOT MATRIX CANVAS (จุดๆ พื้นหลังยวบยาบตามเมาส์)
+// 3. INTERACTIVE ELASTIC DOT MATRIX CANVAS (จุดๆ พื้นหลังยวบยาบ)
 // ==============================================================================
 
 class Dot {
@@ -269,7 +326,7 @@ function initDotMatrixCanvas() {
 
 
 // ==============================================================================
-// 3. MICRO PUPIL EYE TRACKING (จุดแดงขยับได้นิดเดียวฟีลลูกตามองตามเมาส์)
+// 4. MICRO PUPIL EYE TRACKING (จุดแดงขยับนิดเดียวฟีลลูกตามองตามเมาส์)
 // ==============================================================================
 
 function initPupilTracker() {
@@ -305,8 +362,8 @@ function updatePupil() {
     const dy = (mouse.targetY !== -9999 ? mouse.targetY : centerY) - centerY;
     const dist = Math.sqrt(dx * dx + dy * dy);
 
-    // Micro movement limit: strictly 6.5px max (ฟีลลูกตาขยับมองแค่นิดเดียว)
-    const maxRadius = 6.5;
+    // Subtle micro-pupil movement: strictly max 5.5px
+    const maxRadius = 5.5;
     const angle = Math.atan2(dy, dx);
 
     const strength = Math.min(dist / 350, 1) * maxRadius;
@@ -314,7 +371,6 @@ function updatePupil() {
     const targetX = Math.cos(angle) * strength;
     const targetY = Math.sin(angle) * strength;
 
-    // Organic lerp easing
     pupilX += (targetX - pupilX) * 0.12;
     pupilY += (targetY - pupilY) * 0.12;
 
