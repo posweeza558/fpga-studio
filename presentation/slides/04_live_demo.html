@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FPGA STUDIO — 04. LIVE DEMO & GITHUB</title>
+    <title>FPGA STUDIO — 05. LIVE DEMO & GITHUB</title>
     <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,7 +26,7 @@
 
         <div class="flex items-center space-x-4">
             <div class="mono text-sm font-bold tracking-widest text-[#EAEAEA]">
-                <span id="current-slide-num">04</span> <span class="text-white/30">/</span> <span id="total-slide-num">04</span>
+                <span id="current-slide-num">05</span> <span class="text-white/30">/</span> <span id="total-slide-num">05</span>
             </div>
             <button onclick="toggleFullscreen()" class="p-2 rounded-full border border-[#282828] hover:border-[#484848] hover:bg-[#2A2A2A] transition text-xs mono text-[#B3B3B3]" title="Full Screen (F)">
                 ⛶
@@ -40,9 +40,9 @@
             <div id="carousel-track">
 
                 <!-- ======================================================== -->
-                <!-- SLIDE 4: LIVE DEMO & GITHUB HANDOVER                    -->
+                <!-- SLIDE 5: LIVE DEMO & GITHUB HANDOVER                    -->
                 <!-- ======================================================== -->
-                <section class="slide active flex-col justify-center max-w-6xl w-full h-full" data-slide="4" data-speaker="SPEAKER 03 & 04 // LIVE DEMO">
+                <section class="slide active flex-col justify-center max-w-6xl w-full h-full" data-slide="5" data-speaker="SPEAKER // LIVE DEMO">
                     <div class="flex items-center space-x-2 text-xs mono text-red-500 mb-2">
                         <span class="glyph-red-dot"></span>
                         <span>LIVE VERIFICATION & GITHUB HANDOVER // ทดสอบบอร์ดจริง & แจกลิงก์</span>
@@ -72,28 +72,28 @@
                             <div class="bento-card p-4 border-[#1ED760]/30">
                                 <div class="flex justify-between items-center mb-1">
                                     <span class="mono text-xs text-[#1ED760] font-bold">[ TEST 02 ]</span>
-                                    <span class="mono text-[10px] text-white/50">I/O & SERIAL</span>
+                                    <span class="mono text-[10px] text-emerald-400 bg-emerald-950/30 px-2 py-0.5 rounded border border-emerald-500/30">1.2 SEC FLASH</span>
                                 </div>
-                                <h4 class="text-sm font-bold text-white mb-1">สวิตช์, ไฟ LED และ UART printf()</h4>
+                                <h4 class="text-sm font-bold text-white mb-1">Fast Binary BRAM Upload ใน 1 วินาที</h4>
                                 <p class="text-xs text-[#B3B3B3] leading-relaxed">
-                                    สับสวิตช์บนบอร์ดจริง ไฟ LED สว่างตามสถานะบิตทันที และคำสั่ง <span class="mono text-white">printf()</span> ส่งสตรีมตัวอักษรวิ่งออกหน้าต่างคอนโซลแบบสดๆ ด้วยความเร็ว 115200 baud
+                                    สับสวิตช์ฮาร์ดแวร์เพื่อเปลี่ยนตัวเลข หรือแก้โค้ด C แล้วกด <span class="mono text-white font-bold">Upload to Board</span> ระบบจะยิงไบนารีผ่านสาย Micro-USB ทับ Block RAM ภายใน 1.2 วินาที โดยไม่ต้องรัน Vivado 15 นาที
                                 </p>
                             </div>
 
                             <div class="bento-card p-4">
                                 <div class="flex justify-between items-center mb-1">
                                     <span class="mono text-xs text-[#38BDF8] font-bold">[ TEST 03 ]</span>
-                                    <span class="mono text-[10px] text-[#38BDF8]">SPEED FLASH</span>
+                                    <span class="mono text-[10px] text-sky-400 bg-sky-950/30 px-2 py-0.5 rounded border border-sky-500/30">DUAL CORE</span>
                                 </div>
-                                <h4 class="text-sm font-bold text-white mb-1">1-Second Live USB Board Upload</h4>
+                                <h4 class="text-sm font-bold text-white mb-1">สลับคอร์ MIPS และ RISC-V ในคลิกเดียว</h4>
                                 <p class="text-xs text-[#B3B3B3] leading-relaxed">
-                                    กดปุ่มเดียวส่งไบนารีผ่านสาย Micro-USB เข้า Block RAM บนชิป Artix-7 จริงใน 1 วินาที โค้ดใหม่เริ่มทำงานทันทีโดยไม่ต้องรัน Vivado ให้เสียเวลา
+                                    สลับระหว่าง OpenMIPS 32-bit และ RISC-V RV32IM คอมไพล์และดีบักโค้ดเดียวกัน เปรียบเทียบผลลัพธ์แบบไซเคิลต่อไซเคิล
                                 </p>
                             </div>
                         </div>
 
-                        <!-- Right 5 Cols: QR Code & GitHub Link -->
-                        <div class="md:col-span-5 bento-card p-5 border-[#1ED760]/40 bg-[#161616]/90 flex flex-col items-center justify-between text-center">
+                        <!-- Right 5 Cols: QR Code & Handover -->
+                        <div class="md:col-span-5 bento-card p-6 flex flex-col justify-between text-center border-[#1ED760]/40 bg-[#121212]/95 relative overflow-hidden">
                             <div>
                                 <div class="flex items-center justify-center space-x-2 mono text-xs text-[#1ED760] font-bold mb-2">
                                     <span class="glyph-green-dot"></span>
@@ -145,10 +145,10 @@
 
     <!-- SPEAKER SCRIPTS & NAVIGATION -->
     <script>
-        window.prevSectionUrl = '02_c_pipeline.html';
+        window.prevSectionUrl = '03_c_pipeline.html';
         window.nextSectionUrl = '00_cover.html';
         window.speakerScripts = {
-            4: "【บทพูดเพจ 4: ทดสอบของจริง & ส่งมอบผลงาน】\nและนี่คือการทดสอบบนบอร์ดจริงในห้องเรียนครับ เราคอมไพล์โค้ด 10 C 3 ผลลัพธ์ 120 ออก 7-Segment จริง, สับสวิตช์ไฟ LED ติดตามจริง, และกดอัปโหลดโค้ดใหม่ลงชิปได้ใน 1 วินาทีครับ\nสุดท้ายนี้ เราเปิดโปรเจกต์นี้เป็น Open-Source ทุกคนในห้องสามารถยกมือถือขึ้นมาสแกน QR Code เพื่อดาวน์โหลดตัวติดตั้ง Setup.exe ขนาด 599MB หรือนำโค้ดไปศึกษาต่อได้ทันทีตั้งแต่วันนี้โดยไม่ต้องรอถึง 3 รุ่นครับ... พวกเราตอบโจทย์อาจารย์ครบทุกข้อ หวังว่าโปรเจกต์นี้จะคู่ควรกับเกรด A ของอาจารย์ครับ ขอบคุณครับ!"
+            5: "【บทพูดเพจ 5: ทดสอบของจริง & ส่งมอบผลงาน】\nและนี่คือการทดสอบบนบอร์ดจริงในห้องเรียนครับ เราคอมไพล์โค้ด 10 C 3 ผลลัพธ์ 120 ออก 7-Segment จริง, สับสวิตช์ไฟ LED ติดตามจริง, และกดอัปโหลดโค้ดใหม่ลงชิปได้ใน 1 วินาทีครับ\nสุดท้ายนี้ เราเปิดโปรเจกต์นี้เป็น Open-Source ทุกคนในห้องสามารถยกมือถือขึ้นมาสแกน QR Code เพื่อดาวน์โหลดตัวติดตั้ง Setup.exe ขนาด 599MB หรือนำโค้ดไปศึกษาต่อได้ทันทีตั้งแต่วันนี้โดยไม่ต้องรอถึง 3 รุ่นครับ... พวกเราตอบโจทย์อาจารย์ครบทุกข้อ หวังว่าโปรเจกต์นี้จะคู่ควรกับเกรด A ของอาจารย์ครับ ขอบคุณครับ!"
         };
     </script>
     <script src="../js/presentation.js"></script>

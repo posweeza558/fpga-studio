@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FPGA STUDIO — 02. SYSTEM FEATURES & ARCHITECTURE</title>
+    <title>FPGA STUDIO — 03. SYSTEM FEATURES & ARCHITECTURE</title>
     <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,7 +26,7 @@
 
         <div class="flex items-center space-x-4">
             <div class="mono text-sm font-bold tracking-widest text-[#EAEAEA]">
-                <span id="current-slide-num">02</span> <span class="text-white/30">/</span> <span id="total-slide-num">04</span>
+                <span id="current-slide-num">03</span> <span class="text-white/30">/</span> <span id="total-slide-num">05</span>
             </div>
             <button onclick="toggleFullscreen()" class="p-2 rounded-full border border-[#282828] hover:border-[#484848] hover:bg-[#2A2A2A] transition text-xs mono text-[#B3B3B3]" title="Full Screen (F)">
                 ⛶
@@ -40,9 +40,9 @@
             <div id="carousel-track">
 
                 <!-- ======================================================== -->
-                <!-- SLIDE 2: COMPLETE 7-FEATURE NOTHING TECH SPEC BENTO     -->
+                <!-- SLIDE 3: COMPLETE 7-FEATURE NOTHING TECH SPEC BENTO     -->
                 <!-- ======================================================== -->
-                <section class="slide active flex-col justify-center max-w-7xl w-full h-full px-2" data-slide="2" data-speaker="SPEAKER // SYSTEM FEATURES">
+                <section class="slide active flex-col justify-center max-w-7xl w-full h-full px-2" data-slide="3" data-speaker="SPEAKER // SYSTEM FEATURES">
                     
                     <!-- Section Header -->
                     <div class="flex items-end justify-between mb-3 pb-2 border-b border-white/10">
@@ -242,10 +242,10 @@
 
     <!-- SPEAKER SCRIPTS & NAVIGATION -->
     <script>
-        window.prevSectionUrl = '00_cover.html';
-        window.nextSectionUrl = '02_c_pipeline.html';
+        window.prevSectionUrl = '01_challenge.html';
+        window.nextSectionUrl = '03_c_pipeline.html';
         window.speakerScripts = {
-            2: "【บทพูดเพจ 2: 7 ขุมพลังและฟีเจอร์ระดับลึกของ FPGA Studio】\nนี่คือ 7 ฟีเจอร์หลักที่เราพัฒนาขึ้นครับ:\n1. ฮาร์ดแวร์ CPU สถาปัตยกรรม 5-Stage Pipeline มีคอร์คู่ MIPS32 และ RISC-V RV32IM พร้อมวงจรหาร 32 ไซเคิล div.v ดันความถี่คล็อกพุ่งเป็น 28.88 MHz ผ่านเกณฑ์ 25 MHz ของ Nexys A7 ฉลุย\n2. ระบบนำเข้า Custom CPU มี HDL AST Parser สแกนขาพอร์ตอัตโนมัติ และผูกเข้ากับ Memory-Mapped I/O ทั้งสวิตช์ หลอดไฟ LED 7-Segment และ UART printf\n3. Virtual Board Simulator จำลองบอร์ด Nexys A7 เสมือนจริงบนหน้าจอ ทั้งสวิตช์ ไฟ หน้าปัด 7-Seg คอนโซล UART และจอ VGA\n4. เครื่องมือดีบัก ส่องรีจิสเตอร์สด 32 ตัว, Disassembly ติดตาม PC แบบเรียลไทม์ และกดปุ่มเดียวเปิดดูกราฟสัญญาณคลื่นใน GTKWave\n5. การจัดการโค้ด C มี start.S บูต Stack Pointer และ link.ld แยกโค้ดกับข้อมูลโหลดเข้า Block RAM อัตโนมัติ ทำให้รันภาษา C ได้สมบูรณ์\n6. การต่อบอร์ดจริง มี Fast Binary Upload ยิงโค้ดลงบอร์ดใน 1 วินาที และ Zero-Vivado WSL สังเคราะห์บิตสตรีมแบบออฟไลน์ไม่ต้องลง Vivado 80GB\n7. สามารถ Export ไฟล์ได้ครบทุกมาตรฐาน ทั้ง .bin, .hex, .coe, .coe32, .vcd, .bit และ .asm ครับ"
+            3: "【บทพูดเพจ 3: 7 ขุมพลังและฟีเจอร์ระดับลึกของ FPGA Studio】\nนี่คือ 7 ฟีเจอร์หลักที่เราพัฒนาขึ้นครับ:\n1. ฮาร์ดแวร์ CPU สถาปัตยกรรม 5-Stage Pipeline มีคอร์คู่ MIPS32 และ RISC-V RV32IM พร้อมวงจรหาร 32 ไซเคิล div.v ดันความถี่คล็อกพุ่งเป็น 28.88 MHz ผ่านเกณฑ์ 25 MHz ของ Nexys A7 ฉลุย\n2. ระบบนำเข้า Custom CPU มี HDL AST Parser สแกนขาพอร์ตอัตโนมัติ และผูกเข้ากับ Memory-Mapped I/O ทั้งสวิตช์ หลอดไฟ LED 7-Segment และ UART printf\n3. Virtual Board Simulator จำลองบอร์ด Nexys A7 เสมือนจริงบนหน้าจอ ทั้งสวิตช์ ไฟ หน้าปัด 7-Seg คอนโซล UART และจอ VGA\n4. เครื่องมือดีบัก ส่องรีจิสเตอร์สด 32 ตัว, Disassembly ติดตาม PC แบบเรียลไทม์ และกดปุ่มเดียวเปิดดูกราฟสัญญาณคลื่นใน GTKWave\n5. การจัดการโค้ด C มี start.S บูต Stack Pointer และ link.ld แยกโค้ดกับข้อมูลโหลดเข้า Block RAM อัตโนมัติ ทำให้รันภาษา C ได้สมบูรณ์\n6. การต่อบอร์ดจริง มี Fast Binary Upload ยิงโค้ดลงบอร์ดใน 1 วินาที และ Zero-Vivado WSL สังเคราะห์บิตสตรีมแบบออฟไลน์ไม่ต้องลง Vivado 80GB\n7. สามารถ Export ไฟล์ได้ครบทุกมาตรฐาน ทั้ง .bin, .hex, .coe, .coe32, .vcd, .bit และ .asm ครับ"
         };
     </script>
     <script src="../js/presentation.js"></script>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FPGA STUDIO — 03. C-TO-SILICON PIPELINE</title>
+    <title>FPGA STUDIO — 04. C-TO-SILICON PIPELINE</title>
     <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,12 +21,12 @@
             <span class="glyph-green-dot"></span>
             <span class="mono text-xs text-[#EAEAEA] font-bold tracking-widest uppercase">FPGA STUDIO</span>
             <span class="text-white/20 text-xs">|</span>
-            <span class="mono text-xs text-[#1ED760]">v4.3 RELEASE</span>
+            <span class="mono text-xs text-[#1ED760]">C-TO-SILICON PIPELINE</span>
         </div>
 
         <div class="flex items-center space-x-4">
             <div class="mono text-sm font-bold tracking-widest text-[#EAEAEA]">
-                <span id="current-slide-num">03</span> <span class="text-white/30">/</span> <span id="total-slide-num">04</span>
+                <span id="current-slide-num">04</span> <span class="text-white/30">/</span> <span id="total-slide-num">05</span>
             </div>
             <button onclick="toggleFullscreen()" class="p-2 rounded-full border border-[#282828] hover:border-[#484848] hover:bg-[#2A2A2A] transition text-xs mono text-[#B3B3B3]" title="Full Screen (F)">
                 ⛶
@@ -40,9 +40,9 @@
             <div id="carousel-track">
 
                 <!-- ======================================================== -->
-                <!-- SLIDE 3: C-TO-SILICON PIPELINE (C TRANSFORM TO OUTPUT)  -->
+                <!-- SLIDE 4: C-TO-SILICON PIPELINE (C TRANSFORM TO OUTPUT)  -->
                 <!-- ======================================================== -->
-                <section class="slide active flex-col justify-center max-w-6xl w-full h-full" data-slide="3" data-speaker="SPEAKER 02 & 03 // C-TO-SILICON">
+                <section class="slide active flex-col justify-center max-w-6xl w-full h-full" data-slide="4" data-speaker="SPEAKER // C-TO-SILICON">
                     <div class="flex items-center space-x-2 text-xs mono text-[#38BDF8] mb-2">
                         <span class="glyph-green-dot"></span>
                         <span>SOFTWARE TO SILICON // กระบวนการแปลงภาษา C สู่สัญญาณฮาร์ดแวร์</span>
@@ -170,10 +170,10 @@
 
     <!-- SPEAKER SCRIPTS & NAVIGATION -->
     <script>
-        window.prevSectionUrl = '01_features.html';
-        window.nextSectionUrl = '03_live_demo.html';
+        window.prevSectionUrl = '02_features.html';
+        window.nextSectionUrl = '04_live_demo.html';
         window.speakerScripts = {
-            3: "【บทพูดเพจ 3: C-to-Silicon Pipeline】\nเมื่อเราเขียนภาษา C ตัว IDE จะเรียก MIPS GCC 12.2 คอมไพล์และลิงก์ด้วย link.ld โดยมี start.S คอยเซ็ต Stack Pointer ไปที่ 0x80010000 และดึงส่วน .data นำไปโหลดใส่ Data RAM อัตโนมัติ ทำให้รันภาษา C ได้สมบูรณ์แบบครับ\nและ CPU จะสั่งงานฮาร์ดแวร์ผ่านตำแหน่ง Address ของบอร์ด Nexys A7: อยากสั่งไฟ LED เขียนลง 0xF0000000, อ่านสวิตช์จาก 0xF0000004, แสดงผลเลขฐานสิบออก 7-Segment ผ่าน 0xF0000008, และพ่นข้อความ printf ออก UART Serial Monitor ผ่านตำแหน่ง 0xF0000010 ครับ"
+            4: "【บทพูดเพจ 4: C-to-Silicon Pipeline】\nเมื่อเราเขียนภาษา C ตัว IDE จะเรียก MIPS GCC 12.2 คอมไพล์และลิงก์ด้วย link.ld โดยมี start.S คอยเซ็ต Stack Pointer ไปที่ 0x80010000 และดึงส่วน .data นำไปโหลดใส่ Data RAM อัตโนมัติ ทำให้รันภาษา C ได้สมบูรณ์แบบครับ\nและ CPU จะสั่งงานฮาร์ดแวร์ผ่านตำแหน่ง Address ของบอร์ด Nexys A7: อยากสั่งไฟ LED เขียนลง 0xF0000000, อ่านสวิตช์จาก 0xF0000004, แสดงผลเลขฐานสิบออก 7-Segment ผ่าน 0xF0000008, และพ่นข้อความ printf ออก UART Serial Monitor ผ่านตำแหน่ง 0xF0000010 ครับ"
         };
     </script>
     <script src="../js/presentation.js"></script>

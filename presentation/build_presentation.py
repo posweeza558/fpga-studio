@@ -20,12 +20,13 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SLIDES_DIR = os.path.join(SCRIPT_DIR, "slides")
 OUTPUT_FILE = os.path.join(SCRIPT_DIR, "presentation_all.html")
 
-# 4 Streamlined Core Slides
+# 5 Streamlined Core Slides (รวมหน้าโจทย์อาจารย์และการตีความ)
 SLIDE_FILES = [
     "00_cover.html",
-    "01_features.html",
-    "02_c_pipeline.html",
-    "03_live_demo.html"
+    "01_challenge.html",
+    "02_features.html",
+    "03_c_pipeline.html",
+    "04_live_demo.html"
 ]
 
 def compile_presentation():

@@ -28,7 +28,7 @@
         <div class="flex items-center space-x-4">
             <!-- Slide Counter -->
             <div class="mono text-sm font-bold tracking-widest text-[#EAEAEA]">
-                <span id="current-slide-num">01</span> <span class="text-white/30">/</span> <span id="total-slide-num">04</span>
+                <span id="current-slide-num">01</span> <span class="text-white/30">/</span> <span id="total-slide-num">05</span>
             </div>
             <!-- Fullscreen Button -->
             <button onclick="toggleFullscreen()" class="p-2 rounded-full border border-[#282828] hover:border-[#484848] hover:bg-[#2A2A2A] transition text-xs mono text-[#B3B3B3]" title="Full Screen (F)">
@@ -74,7 +74,118 @@
                     </div>
 
                 </section>
-<section class="slide flex-col justify-center max-w-7xl w-full h-full px-2" data-slide="2" data-speaker="SPEAKER // SYSTEM FEATURES">
+<section class="slide flex-col justify-center max-w-7xl w-full h-full px-2" data-slide="2" data-speaker="SPEAKER // ORIGIN CHALLENGE">
+                    
+                    <!-- Section Header -->
+                    <div class="flex items-end justify-between mb-3 pb-2 border-b border-white/10">
+                        <div>
+                            <div class="flex items-center space-x-2 text-xs mono text-red-400 font-bold mb-0.5">
+                                <span class="glyph-red-dot"></span>
+                                <span class="tracking-widest uppercase">[ 01. THE ORIGIN CHALLENGE // จุดประกายและการตีความโจทย์ ]</span>
+                            </div>
+                            <h2 class="text-2xl md:text-4xl font-extrabold ndot uppercase tracking-tight text-white">
+                                อาจารย์ท้า... ใครทำได้ให้เกรด A
+                            </h2>
+                        </div>
+                        <div class="hidden md:flex items-center space-x-2 mono text-xs">
+                            <span class="px-2.5 py-0.5 rounded bg-red-950/40 border border-red-500/50 text-red-400 font-bold">GRADE A QUEST</span>
+                            <span class="px-2.5 py-0.5 rounded bg-white/5 border border-white/15 text-white/70">SEPTEMBER 2026</span>
+                        </div>
+                    </div>
+
+                    <!-- 2 Professor Posts & In-Depth Interpretations -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+                        
+                        <!-- POST 1: SEP 13 (โจทย์ 3 ทางเลือก) -->
+                        <div class="bento-card p-4 border-[#282828] bg-[#121212]/90 flex flex-col justify-between">
+                            <div>
+                                <div class="flex justify-between items-center mb-2 pb-1.5 border-b border-white/10">
+                                    <div class="flex items-center space-x-2">
+                                        <span class="mono text-xs font-bold text-white/90">โพสต์ 13 ก.ย. // โจทย์ 3 ทางเลือก</span>
+                                    </div>
+                                    <span class="mono text-[10px] px-2 py-0.5 rounded bg-white/5 border border-white/10 text-white/60">โจทย์เบื้องต้น</span>
+                                </div>
+
+                                <!-- Post Screenshot -->
+                                <div class="relative rounded-xl overflow-hidden border border-[#282828] bg-black/60 mb-3 group">
+                                    <img src="assets/prof_post_sep13.png" alt="โพสต์อาจารย์ 13 ก.ย." class="w-full h-40 object-contain p-1" onerror="this.src='prof_post_sep13.png'">
+                                    <div class="absolute bottom-1 right-2 mono text-[9px] text-white/50 bg-black/70 px-1.5 py-0.5 rounded">13 SEP 2026</div>
+                                </div>
+
+                                <!-- Interpretation -->
+                                <div class="space-y-1.5 text-xs text-[#B3B3B3]">
+                                    <div class="mono text-[11px] font-bold text-[#1ED760] uppercase tracking-wider flex items-center space-x-1">
+                                        <span>⚡ การตีความโจทย์ของพวกเรา:</span>
+                                    </div>
+                                    <p class="leading-relaxed">
+                                        อาจารย์ให้เลือกทำข้อใดข้อหนึ่ง: <span class="text-white">1. วิดีโอสอนคูณหาร</span>, <span class="text-white">2. Factorial + Simulator</span>, หรือ <span class="text-white">3. ฮาร์ดแวร์คูณหารบน FPGA ออก 7-Segment</span>
+                                    </p>
+                                    <div class="bg-black/50 p-2.5 rounded-lg border border-[#1ED760]/30 text-[11px] text-white/90 leading-snug">
+                                        <span class="text-[#1ED760] font-bold">» เราไม่เลือกทำแค่ข้อเดียว แต่ "รวบทำหมดทั้ง 3 ข้อ":</span><br>
+                                        สร้างวงจรหารฮาร์ดแวร์ 32 ไซเคิลจริงบนบอร์ด Nexys A7, แสดงผลออก 7-Segment เลขฐานสิบ, และสร้าง Simulator หน้าจอเสมือนจริงในตัว
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-3 pt-2 border-t border-white/5 flex gap-1.5 mono text-[10px] text-white/60">
+                                <span class="px-2 py-0.5 rounded bg-white/5">HARDWARE DIVIDER</span>
+                                <span class="px-2 py-0.5 rounded bg-white/5">7-SEG DECIMAL</span>
+                                <span class="px-2 py-0.5 rounded bg-emerald-950/40 text-[#1ED760]">3-IN-1 SOLVED</span>
+                            </div>
+                        </div>
+
+                        <!-- POST 2: SEP 25 (โจทย์ท้าทายเกรด A) -->
+                        <div class="bento-card p-4 border-red-500/30 bg-[#121212]/90 flex flex-col justify-between">
+                            <div>
+                                <div class="flex justify-between items-center mb-2 pb-1.5 border-b border-white/10">
+                                    <div class="flex items-center space-x-2">
+                                        <span class="mono text-xs font-bold text-red-400">โพสต์ 25 ก.ย. // โจทย์ท้าทายเกรด A</span>
+                                    </div>
+                                    <span class="mono text-[10px] px-2 py-0.5 rounded bg-red-950/50 border border-red-500/40 text-red-300 font-bold">เกณฑ์ตัดสิน A</span>
+                                </div>
+
+                                <!-- Post Screenshot -->
+                                <div class="relative rounded-xl overflow-hidden border border-red-500/30 bg-black/60 mb-3 group">
+                                    <img src="assets/prof_post_sep25.png" alt="โพสต์อาจารย์ 25 ก.ย." class="w-full h-40 object-contain p-1" onerror="this.src='prof_post_sep25.png'">
+                                    <div class="absolute bottom-1 right-2 mono text-[9px] text-red-400 bg-black/70 px-1.5 py-0.5 rounded">25 SEP 2026</div>
+                                </div>
+
+                                <!-- Interpretation -->
+                                <div class="space-y-1.5 text-xs text-[#B3B3B3]">
+                                    <div class="mono text-[11px] font-bold text-red-400 uppercase tracking-wider flex items-center space-x-1">
+                                        <span>🎯 การตีความโจทย์ & ข้อพิสูจน์:</span>
+                                    </div>
+                                    <p class="leading-relaxed">
+                                        อาจารย์ท้า: <em class="text-white">“หา Compiler แปลงภาษา C เป็น MIPS opcode หรือ micro Python ที่รันบน MIPS CPU... ไม่รู้รุ่นน้องอีก 3 รุ่นจะทำได้ไหม ใครทำได้อาจารย์จะให้ A!”</em>
+                                    </p>
+                                    <div class="bg-red-950/20 p-2.5 rounded-lg border border-red-500/40 text-[11px] text-white/90 leading-snug">
+                                        <span class="text-red-400 font-bold">» เราพิสูจน์แล้วว่า "ไม่ต้องรอถึง 3 รุ่น":</span><br>
+                                        พวกเราฝัง Real MIPS GCC 12.2 + RISC-V GCC 15.2 ในตัว มี start.S บูต Stack และ link.ld จัดแรม แปลงภาษา C วิ่งลงฮาร์ดแวร์ชิป Nexys A7 ได้จริงในวินาทีเดียว!
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-3 pt-2 border-t border-white/5 flex gap-1.5 mono text-[10px] text-white/60">
+                                <span class="px-2 py-0.5 rounded bg-white/5">REAL GCC COMPILER</span>
+                                <span class="px-2 py-0.5 rounded bg-white/5">ZERO-VIVADO</span>
+                                <span class="px-2 py-0.5 rounded bg-red-950/40 text-red-400 font-bold">NO WAITING 3 GENS</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Bottom Summary Banner -->
+                    <div class="mt-3 bento-card p-2.5 px-4 bg-[#181818]/90 border-[#1ED760]/30 flex items-center justify-between text-xs mono">
+                        <div class="flex items-center space-x-2 text-white/90">
+                            <span class="glyph-green-dot"></span>
+                            <span class="font-bold text-[#1ED760]">บทสรุปการตีความ:</span>
+                            <span>ไม่ใช่แค่หาสคริปต์มาส่งอาจารย์ แต่เราสร้างสตูดิโอ EDA ตัวเต็มที่ผสานซอฟต์แวร์สู่ซิลิคอน 100%</span>
+                        </div>
+                        <span class="hidden md:inline text-white/40">NEXT: 7 CORE SYSTEM FEATURES →</span>
+                    </div>
+
+                </section>
+<section class="slide flex-col justify-center max-w-7xl w-full h-full px-2" data-slide="3" data-speaker="SPEAKER // SYSTEM FEATURES">
                     
                     <!-- Section Header -->
                     <div class="flex items-end justify-between mb-3 pb-2 border-b border-white/10">
@@ -255,7 +366,7 @@
 
                     </div>
                 </section>
-<section class="slide flex-col justify-center max-w-6xl w-full h-full" data-slide="3" data-speaker="SPEAKER 02 & 03 // C-TO-SILICON">
+<section class="slide flex-col justify-center max-w-6xl w-full h-full" data-slide="4" data-speaker="SPEAKER // C-TO-SILICON">
                     <div class="flex items-center space-x-2 text-xs mono text-[#38BDF8] mb-2">
                         <span class="glyph-green-dot"></span>
                         <span>SOFTWARE TO SILICON // กระบวนการแปลงภาษา C สู่สัญญาณฮาร์ดแวร์</span>
@@ -364,7 +475,7 @@
 
                     </div>
                 </section>
-<section class="slide flex-col justify-center max-w-6xl w-full h-full" data-slide="4" data-speaker="SPEAKER 03 & 04 // LIVE DEMO">
+<section class="slide flex-col justify-center max-w-6xl w-full h-full" data-slide="5" data-speaker="SPEAKER // LIVE DEMO">
                     <div class="flex items-center space-x-2 text-xs mono text-red-500 mb-2">
                         <span class="glyph-red-dot"></span>
                         <span>LIVE VERIFICATION & GITHUB HANDOVER // ทดสอบบอร์ดจริง & แจกลิงก์</span>
@@ -394,28 +505,28 @@
                             <div class="bento-card p-4 border-[#1ED760]/30">
                                 <div class="flex justify-between items-center mb-1">
                                     <span class="mono text-xs text-[#1ED760] font-bold">[ TEST 02 ]</span>
-                                    <span class="mono text-[10px] text-white/50">I/O & SERIAL</span>
+                                    <span class="mono text-[10px] text-emerald-400 bg-emerald-950/30 px-2 py-0.5 rounded border border-emerald-500/30">1.2 SEC FLASH</span>
                                 </div>
-                                <h4 class="text-sm font-bold text-white mb-1">สวิตช์, ไฟ LED และ UART printf()</h4>
+                                <h4 class="text-sm font-bold text-white mb-1">Fast Binary BRAM Upload ใน 1 วินาที</h4>
                                 <p class="text-xs text-[#B3B3B3] leading-relaxed">
-                                    สับสวิตช์บนบอร์ดจริง ไฟ LED สว่างตามสถานะบิตทันที และคำสั่ง <span class="mono text-white">printf()</span> ส่งสตรีมตัวอักษรวิ่งออกหน้าต่างคอนโซลแบบสดๆ ด้วยความเร็ว 115200 baud
+                                    สับสวิตช์ฮาร์ดแวร์เพื่อเปลี่ยนตัวเลข หรือแก้โค้ด C แล้วกด <span class="mono text-white font-bold">Upload to Board</span> ระบบจะยิงไบนารีผ่านสาย Micro-USB ทับ Block RAM ภายใน 1.2 วินาที โดยไม่ต้องรัน Vivado 15 นาที
                                 </p>
                             </div>
 
                             <div class="bento-card p-4">
                                 <div class="flex justify-between items-center mb-1">
                                     <span class="mono text-xs text-[#38BDF8] font-bold">[ TEST 03 ]</span>
-                                    <span class="mono text-[10px] text-[#38BDF8]">SPEED FLASH</span>
+                                    <span class="mono text-[10px] text-sky-400 bg-sky-950/30 px-2 py-0.5 rounded border border-sky-500/30">DUAL CORE</span>
                                 </div>
-                                <h4 class="text-sm font-bold text-white mb-1">1-Second Live USB Board Upload</h4>
+                                <h4 class="text-sm font-bold text-white mb-1">สลับคอร์ MIPS และ RISC-V ในคลิกเดียว</h4>
                                 <p class="text-xs text-[#B3B3B3] leading-relaxed">
-                                    กดปุ่มเดียวส่งไบนารีผ่านสาย Micro-USB เข้า Block RAM บนชิป Artix-7 จริงใน 1 วินาที โค้ดใหม่เริ่มทำงานทันทีโดยไม่ต้องรัน Vivado ให้เสียเวลา
+                                    สลับระหว่าง OpenMIPS 32-bit และ RISC-V RV32IM คอมไพล์และดีบักโค้ดเดียวกัน เปรียบเทียบผลลัพธ์แบบไซเคิลต่อไซเคิล
                                 </p>
                             </div>
                         </div>
 
-                        <!-- Right 5 Cols: QR Code & GitHub Link -->
-                        <div class="md:col-span-5 bento-card p-5 border-[#1ED760]/40 bg-[#161616]/90 flex flex-col items-center justify-between text-center">
+                        <!-- Right 5 Cols: QR Code & Handover -->
+                        <div class="md:col-span-5 bento-card p-6 flex flex-col justify-between text-center border-[#1ED760]/40 bg-[#121212]/95 relative overflow-hidden">
                             <div>
                                 <div class="flex items-center justify-center space-x-2 mono text-xs text-[#1ED760] font-bold mb-2">
                                     <span class="glyph-green-dot"></span>
@@ -466,7 +577,7 @@
 
     <!-- GENERATED SCRIPTS -->
     <script>
-        window.speakerScripts = {1: "【บทพูดเปิดตัว: แนะนำโปรเจกต์】\nสวัสดีครับอาจารย์และเพื่อนๆ ทุกคน วันนี้กลุ่มพวกเราขอเสนอ 'FPGA Studio' เครื่องมือพัฒนาและจำลองสถาปัตยกรรมคอมพิวเตอร์แบบ All-in-One ครับ", 2: '【บทพูดเพจ 2: 7 ขุมพลังและฟีเจอร์ระดับลึกของ FPGA Studio】\nนี่คือ 7 ฟีเจอร์หลักที่เราพัฒนาขึ้นครับ:\n1. ฮาร์ดแวร์ CPU สถาปัตยกรรม 5-Stage Pipeline มีคอร์คู่ MIPS32 และ RISC-V RV32IM พร้อมวงจรหาร 32 ไซเคิล div.v ดันความถี่คล็อกพุ่งเป็น 28.88 MHz ผ่านเกณฑ์ 25 MHz ของ Nexys A7 ฉลุย\n2. ระบบนำเข้า Custom CPU มี HDL AST Parser สแกนขาพอร์ตอัตโนมัติ และผูกเข้ากับ Memory-Mapped I/O ทั้งสวิตช์ หลอดไฟ LED 7-Segment และ UART printf\n3. Virtual Board Simulator จำลองบอร์ด Nexys A7 เสมือนจริงบนหน้าจอ ทั้งสวิตช์ ไฟ หน้าปัด 7-Seg คอนโซล UART และจอ VGA\n4. เครื่องมือดีบัก ส่องรีจิสเตอร์สด 32 ตัว, Disassembly ติดตาม PC แบบเรียลไทม์ และกดปุ่มเดียวเปิดดูกราฟสัญญาณคลื่นใน GTKWave\n5. การจัดการโค้ด C มี start.S บูต Stack Pointer และ link.ld แยกโค้ดกับข้อมูลโหลดเข้า Block RAM อัตโนมัติ ทำให้รันภาษา C ได้สมบูรณ์\n6. การต่อบอร์ดจริง มี Fast Binary Upload ยิงโค้ดลงบอร์ดใน 1 วินาที และ Zero-Vivado WSL สังเคราะห์บิตสตรีมแบบออฟไลน์ไม่ต้องลง Vivado 80GB\n7. สามารถ Export ไฟล์ได้ครบทุกมาตรฐาน ทั้ง .bin, .hex, .coe, .coe32, .vcd, .bit และ .asm ครับ', 3: '【บทพูดเพจ 3: C-to-Silicon Pipeline】\nเมื่อเราเขียนภาษา C ตัว IDE จะเรียก MIPS GCC 12.2 คอมไพล์และลิงก์ด้วย link.ld โดยมี start.S คอยเซ็ต Stack Pointer ไปที่ 0x80010000 และดึงส่วน .data นำไปโหลดใส่ Data RAM อัตโนมัติ ทำให้รันภาษา C ได้สมบูรณ์แบบครับ\nและ CPU จะสั่งงานฮาร์ดแวร์ผ่านตำแหน่ง Address ของบอร์ด Nexys A7: อยากสั่งไฟ LED เขียนลง 0xF0000000, อ่านสวิตช์จาก 0xF0000004, แสดงผลเลขฐานสิบออก 7-Segment ผ่าน 0xF0000008, และพ่นข้อความ printf ออก UART Serial Monitor ผ่านตำแหน่ง 0xF0000010 ครับ', 4: '【บทพูดเพจ 4: ทดสอบของจริง & ส่งมอบผลงาน】\nและนี่คือการทดสอบบนบอร์ดจริงในห้องเรียนครับ เราคอมไพล์โค้ด 10 C 3 ผลลัพธ์ 120 ออก 7-Segment จริง, สับสวิตช์ไฟ LED ติดตามจริง, และกดอัปโหลดโค้ดใหม่ลงชิปได้ใน 1 วินาทีครับ\nสุดท้ายนี้ เราเปิดโปรเจกต์นี้เป็น Open-Source ทุกคนในห้องสามารถยกมือถือขึ้นมาสแกน QR Code เพื่อดาวน์โหลดตัวติดตั้ง Setup.exe ขนาด 599MB หรือนำโค้ดไปศึกษาต่อได้ทันทีตั้งแต่วันนี้โดยไม่ต้องรอถึง 3 รุ่นครับ... พวกเราตอบโจทย์อาจารย์ครบทุกข้อ หวังว่าโปรเจกต์นี้จะคู่ควรกับเกรด A ของอาจารย์ครับ ขอบคุณครับ!'};
+        window.speakerScripts = {1: "【บทพูดเปิดตัว: แนะนำโปรเจกต์】\nสวัสดีครับอาจารย์และเพื่อนๆ ทุกคน วันนี้กลุ่มพวกเราขอเสนอ 'FPGA Studio' เครื่องมือพัฒนาและจำลองสถาปัตยกรรมคอมพิวเตอร์แบบ All-in-One ครับ", 2: "【บทพูดเพจ 2: โจทย์อาจารย์และการตีความของพวกเรา】\nจุดเริ่มต้นทั้งหมดมาจากโพสต์ของอาจารย์ครับ ในโพสต์วันที่ 13 กันยายน อาจารย์มีโจทย์ 3 ทางเลือกให้พวกเรา แต่แทนที่จะเลือกทำแค่ข้อใดข้อหนึ่ง พวกเราตัดสินใจรวบทำหมดทุกข้อ ทั้งสร้างฮาร์ดแวร์ตัวหารบนบอร์ด Nexys A7, แสดงผลออก 7-Segment เลขฐานสิบ, และมี Simulator จำลองบอร์ดในตัว\n\nและในโพสต์วันที่ 25 กันยายน อาจารย์ได้ท้าทายไว้ว่า 'หา Compiler แปลงภาษา C เป็น MIPS opcode หรือ micro Python ที่รันบน MIPS CPU... ไม่รู้รุ่นน้องอีก 3 รุ่นจะทำได้ไหม ใครทำได้อาจารย์จะให้ A!'\nวันนี้พวกเรามาพิสูจน์ให้อาจารย์เห็นแล้วครับว่า ไม่ต้องรอถึง 3 รุ่น พวกเราสร้าง FPGA Studio ที่มีคอมไพเลอร์ GCC แท้ จัดการแรมด้วย start.S และ link.ld รันภาษา C บนซิลิคอนจริงได้สำเร็จแล้วครับ!", 3: '【บทพูดเพจ 3: 7 ขุมพลังและฟีเจอร์ระดับลึกของ FPGA Studio】\nนี่คือ 7 ฟีเจอร์หลักที่เราพัฒนาขึ้นครับ:\n1. ฮาร์ดแวร์ CPU สถาปัตยกรรม 5-Stage Pipeline มีคอร์คู่ MIPS32 และ RISC-V RV32IM พร้อมวงจรหาร 32 ไซเคิล div.v ดันความถี่คล็อกพุ่งเป็น 28.88 MHz ผ่านเกณฑ์ 25 MHz ของ Nexys A7 ฉลุย\n2. ระบบนำเข้า Custom CPU มี HDL AST Parser สแกนขาพอร์ตอัตโนมัติ และผูกเข้ากับ Memory-Mapped I/O ทั้งสวิตช์ หลอดไฟ LED 7-Segment และ UART printf\n3. Virtual Board Simulator จำลองบอร์ด Nexys A7 เสมือนจริงบนหน้าจอ ทั้งสวิตช์ ไฟ หน้าปัด 7-Seg คอนโซล UART และจอ VGA\n4. เครื่องมือดีบัก ส่องรีจิสเตอร์สด 32 ตัว, Disassembly ติดตาม PC แบบเรียลไทม์ และกดปุ่มเดียวเปิดดูกราฟสัญญาณคลื่นใน GTKWave\n5. การจัดการโค้ด C มี start.S บูต Stack Pointer และ link.ld แยกโค้ดกับข้อมูลโหลดเข้า Block RAM อัตโนมัติ ทำให้รันภาษา C ได้สมบูรณ์\n6. การต่อบอร์ดจริง มี Fast Binary Upload ยิงโค้ดลงบอร์ดใน 1 วินาที และ Zero-Vivado WSL สังเคราะห์บิตสตรีมแบบออฟไลน์ไม่ต้องลง Vivado 80GB\n7. สามารถ Export ไฟล์ได้ครบทุกมาตรฐาน ทั้ง .bin, .hex, .coe, .coe32, .vcd, .bit และ .asm ครับ', 4: '【บทพูดเพจ 4: C-to-Silicon Pipeline】\nเมื่อเราเขียนภาษา C ตัว IDE จะเรียก MIPS GCC 12.2 คอมไพล์และลิงก์ด้วย link.ld โดยมี start.S คอยเซ็ต Stack Pointer ไปที่ 0x80010000 และดึงส่วน .data นำไปโหลดใส่ Data RAM อัตโนมัติ ทำให้รันภาษา C ได้สมบูรณ์แบบครับ\nและ CPU จะสั่งงานฮาร์ดแวร์ผ่านตำแหน่ง Address ของบอร์ด Nexys A7: อยากสั่งไฟ LED เขียนลง 0xF0000000, อ่านสวิตช์จาก 0xF0000004, แสดงผลเลขฐานสิบออก 7-Segment ผ่าน 0xF0000008, และพ่นข้อความ printf ออก UART Serial Monitor ผ่านตำแหน่ง 0xF0000010 ครับ', 5: '【บทพูดเพจ 5: ทดสอบของจริง & ส่งมอบผลงาน】\nและนี่คือการทดสอบบนบอร์ดจริงในห้องเรียนครับ เราคอมไพล์โค้ด 10 C 3 ผลลัพธ์ 120 ออก 7-Segment จริง, สับสวิตช์ไฟ LED ติดตามจริง, และกดอัปโหลดโค้ดใหม่ลงชิปได้ใน 1 วินาทีครับ\nสุดท้ายนี้ เราเปิดโปรเจกต์นี้เป็น Open-Source ทุกคนในห้องสามารถยกมือถือขึ้นมาสแกน QR Code เพื่อดาวน์โหลดตัวติดตั้ง Setup.exe ขนาด 599MB หรือนำโค้ดไปศึกษาต่อได้ทันทีตั้งแต่วันนี้โดยไม่ต้องรอถึง 3 รุ่นครับ... พวกเราตอบโจทย์อาจารย์ครบทุกข้อ หวังว่าโปรเจกต์นี้จะคู่ควรกับเกรด A ของอาจารย์ครับ ขอบคุณครับ!'};
     </script>
     <script src="js/presentation.js"></script>
 </body>
