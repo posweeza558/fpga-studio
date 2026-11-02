@@ -7,7 +7,7 @@
     <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Prompt:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Prompt:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/nothing.css">
 </head>
 <body class="h-screen w-screen flex flex-col justify-between p-6 relative overflow-hidden">
@@ -15,7 +15,7 @@
     <!-- Interactive Warping Dot Matrix Canvas -->
     <canvas id="bg-canvas"></canvas>
 
-    <!-- TOP BAR (CLEAN MINIMAL) -->
+    <!-- TOP BAR (CLEAN MINIMAL INDUSTRIAL) -->
     <header class="w-full flex items-center justify-between pb-4 border-b border-[#282828] z-20">
         <div class="flex items-center space-x-3">
             <span class="glyph-green-dot"></span>
@@ -26,7 +26,7 @@
 
         <div class="flex items-center space-x-4">
             <div class="mono text-sm font-bold tracking-widest text-[#EAEAEA]">
-                <span id="current-slide-num">01</span> <span class="text-white/30">/</span> <span id="total-slide-num">01</span>
+                <span id="current-slide-num">01</span> <span class="text-white/30">/</span> <span id="total-slide-num">04</span>
             </div>
             <button onclick="toggleFullscreen()" class="p-2 rounded-full border border-[#282828] hover:border-[#484848] hover:bg-[#2A2A2A] transition text-xs mono text-[#B3B3B3]" title="Full Screen (F)">
                 ⛶
@@ -40,48 +40,40 @@
             <div id="carousel-track">
 
                 <!-- ======================================================== -->
-                <!-- SLIDE 1: COVER (SPOTIFY DARK + NOTHING HYBRID) -->
+                <!-- SLIDE 1: COVER (NOTHING PHONE TRAILER HERO)              -->
                 <!-- ======================================================== -->
-                <section class="slide active flex-col items-center justify-center text-center max-w-5xl w-full h-full" data-slide="1" data-speaker="ALL // INTRODUCTION">
+                <section class="slide active flex-col items-center justify-center text-center max-w-5xl w-full h-full" data-slide="1" data-speaker="FPGA STUDIO // OVERVIEW">
                     
-                    <!-- Geometric Glyph Motif (เคาะขึ้นสูงขึ้น ไม่ชิดตัวหนังสือ & จุดแดงขยับนิดเดียวฟีลลูกตา) -->
-                    <div class="relative mb-14 -mt-6">
+                    <!-- Geometric Glyph Eye Motif (ยกสูงขึ้น ไม่ชิดตัวหนังสือ & จุดแดงขยับนิดเดียวฟีลลูกตา) -->
+                    <div class="relative mb-16 -mt-10">
                         <div class="w-32 h-32 rounded-full border border-white/20 flex items-center justify-center relative shadow-[0_0_35px_rgba(30,215,96,0.1)]">
                             <div id="eye-outer" class="w-20 h-20 rounded-full border-2 border-white/60 flex items-center justify-center relative">
                                 <div id="eye-pupil-tracker" class="flex items-center justify-center will-change-transform">
                                     <span id="eye-pupil" class="glyph-red-dot"></span>
                                 </div>
                             </div>
+                            <!-- Glyph Accent Bars -->
                             <div class="absolute -top-3 w-12 h-1 bg-white/80 rounded-full shadow-[0_0_12px_rgba(255,255,255,0.5)]"></div>
                             <div class="absolute -bottom-3 w-16 h-1 bg-[#1ED760] rounded-full shadow-[0_0_12px_rgba(30,215,96,0.6)]"></div>
                         </div>
                     </div>
 
-                    <h1 class="text-6xl md:text-7xl font-bold tracking-tight uppercase ndot mb-3 text-white">
+                    <!-- Main Brand Title -->
+                    <h1 class="text-6xl md:text-8xl font-black tracking-tight uppercase ndot mb-3 text-white">
                         FPGA STUDIO
                     </h1>
-                    <p class="mono text-xs md:text-sm text-[#B3B3B3] tracking-widest uppercase mb-10">
-                        DUAL 32-BIT RISC EDA & COMPILATION STUDIO
+                    <p class="mono text-xs md:text-sm text-[#1ED760] font-semibold tracking-[0.25em] uppercase mb-10">
+                        DUAL 32-BIT RISC EDA & SILICON SYNTHESIS SUITE
                     </p>
 
-                    <!-- Pill Badges -->
-                    <div class="flex flex-wrap gap-2.5 justify-center mb-10 mono text-xs">
-                        <span class="px-4 py-1.5 rounded-full bg-[#1F1F1F] border border-[#282828] text-[#EAEAEA]">OPENMIPS 32-BIT</span>
-                        <span class="px-4 py-1.5 rounded-full bg-[#1F1F1F] border border-[#282828] text-[#EAEAEA]">RISC-V (RV32IM)</span>
-                        <span class="px-4 py-1.5 rounded-full bg-[#1F1F1F] border border-[#282828] text-[#EAEAEA]">DIGILENT NEXYS A7-100T</span>
+                    <!-- Tech Spec Pill Badges -->
+                    <div class="flex flex-wrap gap-3 justify-center mono text-xs">
+                        <span class="px-4 py-1.5 rounded-full bg-[#161616] border border-[#282828] text-[#EAEAEA]">OPENMIPS 32-BIT</span>
+                        <span class="px-4 py-1.5 rounded-full bg-[#161616] border border-[#282828] text-[#EAEAEA]">RISC-V (RV32IM)</span>
+                        <span class="px-4 py-1.5 rounded-full bg-[#161616] border border-[#282828] text-[#EAEAEA]">DIGILENT NEXYS A7-100T</span>
                         <span class="px-4 py-1.5 rounded-full bg-emerald-950/40 border border-[#1ED760]/40 text-[#1ED760]">TERM PROJECT 2026</span>
                     </div>
 
-                    <!-- Presenter List Bento -->
-                    <div class="bento-card p-4 px-10 flex items-center space-x-8 text-xs mono text-[#B3B3B3]">
-                        <div>[ 01 ] VISION & CHALLENGE</div>
-                        <div class="text-white/20">•</div>
-                        <div>[ 02 ] ARCHITECTURE & FEATURES</div>
-                        <div class="text-white/20">•</div>
-                        <div>[ 03 ] C-TO-SILICON PIPELINE</div>
-                        <div class="text-white/20">•</div>
-                        <div>[ 04 ] LIVE DEMO & HANDOVER</div>
-                    </div>
                 </section>
 
             </div>

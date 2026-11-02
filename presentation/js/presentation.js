@@ -428,8 +428,8 @@ function updatePupil() {
     const dy = (mouse.targetY !== -9999 ? mouse.targetY : centerY) - centerY;
     const dist = Math.sqrt(dx * dx + dy * dy);
 
-    // Micro movement limit: strictly max 5.5px
-    const maxRadius = 5.5;
+    // Micro movement limit: strictly max 3.2px (ฟีลลูกตา ขยับนิดเดียวในวงกลาง)
+    const maxRadius = 3.2;
     const angle = Math.atan2(dy, dx);
 
     const strength = Math.min(dist / 350, 1) * maxRadius;
