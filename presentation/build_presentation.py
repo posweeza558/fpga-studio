@@ -30,7 +30,7 @@ SLIDE_FILES = [
 
 def compile_presentation():
     print("=" * 60)
-    print("[*] FPGA STUDIO PRESENTATION COMPILER (NOTHING EDITION)")
+    print("[*] FPGA STUDIO PRESENTATION COMPILER (SPOTIFY DARK & NOTHING EDITION)")
     print("=" * 60)
 
     all_sections = []
@@ -52,7 +52,6 @@ def compile_presentation():
         local_cues = {}
         if script_match:
             try:
-                # Safely parse JS-like dictionary by turning into python dict or regex matching
                 raw_dict = script_match.group(1)
                 entries = re.findall(r'(\d+)\s*:\s*("(?:\\.|[^"\\])*")', raw_dict)
                 for k, v in entries:
@@ -89,17 +88,16 @@ def compile_presentation():
     total_slides = current_global_slide - 1
     print(f"[OK] Extracted {total_slides} total slides successfully.")
 
-    # Read CSS and JS to link or bundle
     css_rel = "css/nothing.css"
     js_rel = "js/presentation.js"
 
-    # Build final HTML
+    # Build final HTML matching FPGA Studio theme
     html_template = f"""<!DOCTYPE html>
 <html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FPGA STUDIO — (NOTHING EDITION) KEYNOTE SLIDES</title>
+    <title>FPGA STUDIO — KEYNOTE SLIDES</title>
     <!-- Tailwind CSS allowlisted -->
     <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -107,30 +105,33 @@ def compile_presentation():
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Prompt:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{css_rel}">
 </head>
-<body class="h-screen w-screen flex flex-col justify-between p-6 dot-matrix-bg relative">
+<body class="h-screen w-screen flex flex-col justify-between p-6 relative">
+
+    <!-- Interactive Warping Dot Matrix Canvas -->
+    <canvas id="bg-canvas"></canvas>
 
     <!-- TOP GLYPH BAR / STATUS HEADER -->
-    <header class="w-full flex items-center justify-between pb-4 border-b border-white/10 z-20">
+    <header class="w-full flex items-center justify-between pb-4 border-b border-[#282828] z-20">
         <div class="flex items-center space-x-3">
-            <span class="glyph-red-dot"></span>
-            <span class="mono text-xs text-white/70 font-semibold tracking-widest uppercase">NOTHING (OS) // KEYNOTE SLIDES</span>
-            <span class="text-white/30 text-xs">|</span>
-            <span class="mono text-xs text-white/50">FPGA STUDIO v4.3</span>
+            <span class="glyph-green-dot"></span>
+            <span class="mono text-xs text-[#EAEAEA]/80 font-semibold tracking-widest uppercase">FPGA STUDIO // KEYNOTE SUITE</span>
+            <span class="text-white/20 text-xs">|</span>
+            <span class="mono text-xs text-[#1ED760]">v4.3 RELEASE</span>
         </div>
 
         <!-- Speaker Badge -->
-        <div id="speaker-badge" class="px-4 py-1.5 rounded-full border border-white/20 bg-white/5 text-xs font-medium mono tracking-wider flex items-center space-x-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+        <div id="speaker-badge" class="px-4 py-1.5 rounded-full border border-[#282828] bg-[#1F1F1F]/90 text-xs font-medium mono tracking-wider flex items-center space-x-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#1ED760]"></span>
             <span id="speaker-text">SPEAKER 01 // THE VISION</span>
         </div>
 
         <div class="flex items-center space-x-4">
             <!-- Slide Counter -->
-            <div class="mono text-sm font-bold tracking-widest text-white/90">
+            <div class="mono text-sm font-bold tracking-widest text-[#EAEAEA]">
                 <span id="current-slide-num">01</span> <span class="text-white/30">/</span> <span id="total-slide-num">{total_slides:02d}</span>
             </div>
             <!-- Fullscreen Button -->
-            <button onclick="toggleFullscreen()" class="p-2 rounded-full border border-white/10 hover:border-white/40 hover:bg-white/10 transition text-xs mono text-white/70" title="Full Screen (F)">
+            <button onclick="toggleFullscreen()" class="p-2 rounded-full border border-[#282828] hover:border-[#484848] hover:bg-[#2A2A2A] transition text-xs mono text-[#B3B3B3]" title="Full Screen (F)">
                 ⛶
             </button>
         </div>
@@ -142,8 +143,8 @@ def compile_presentation():
     </main>
 
     <!-- SPEAKER CUES DRAWER -->
-    <div id="cues-drawer" class="fixed bottom-20 left-1/2 -translate-x-1/2 max-w-4xl w-[92%] bento-card p-5 border-white/30 shadow-2xl z-40 hidden transition-all">
-        <div class="flex justify-between items-center mb-2 border-b border-white/10 pb-2">
+    <div id="cues-drawer" class="fixed bottom-20 left-1/2 -translate-x-1/2 max-w-4xl w-[92%] bento-card p-5 border-[#484848] shadow-2xl z-40 hidden transition-all">
+        <div class="flex justify-between items-center mb-2 border-b border-[#282828] pb-2">
             <div class="flex items-center space-x-2">
                 <span class="glyph-red-dot"></span>
                 <span class="mono text-xs text-red-400 font-bold uppercase" id="cue-title">SPEAKER CUE SHEET</span>
@@ -154,9 +155,9 @@ def compile_presentation():
     </div>
 
     <!-- BOTTOM CONTROL BAR -->
-    <footer class="w-full flex items-center justify-between pt-4 border-t border-white/10 z-20">
+    <footer class="w-full flex items-center justify-between pt-4 border-t border-[#282828] z-20">
         <!-- Keyboard shortcuts tip -->
-        <div class="mono text-[11px] text-white/40 hidden md:flex items-center space-x-3">
+        <div class="mono text-[11px] text-[#727272] hidden md:flex items-center space-x-3">
             <span>[ ← ] PREV</span>
             <span>[ → ] NEXT</span>
             <span>[ SPACE ] ADVANCE</span>
@@ -165,14 +166,14 @@ def compile_presentation():
         </div>
 
         <!-- Speaker Script Toggle Pill -->
-        <button onclick="toggleCues()" class="px-4 py-2 rounded-full border border-red-500/40 bg-red-950/30 hover:bg-red-900/40 text-red-300 text-xs mono tracking-wider transition flex items-center space-x-2">
+        <button onclick="toggleCues()" class="px-4 py-2 rounded-full border border-[#1ED760]/40 bg-emerald-950/30 hover:bg-emerald-900/40 text-[#1ED760] text-xs mono tracking-wider transition flex items-center space-x-2">
             <span>🎙️</span>
             <span>SPEAKER CUES (สคริปต์พูด)</span>
         </button>
 
         <!-- Navigation Buttons -->
         <div class="flex items-center space-x-3">
-            <button onclick="prevSlide()" class="px-5 py-2 rounded-full border border-white/20 bg-white/5 hover:bg-white/15 text-white mono text-xs tracking-wider transition">
+            <button onclick="prevSlide()" class="px-5 py-2 rounded-full border border-[#282828] bg-[#1F1F1F] hover:bg-[#2A2A2A] text-white mono text-xs tracking-wider transition">
                 ← PREV
             </button>
             <button onclick="nextSlide()" class="px-5 py-2 rounded-full bg-white text-black hover:bg-neutral-200 mono text-xs font-bold tracking-wider transition shadow-lg">

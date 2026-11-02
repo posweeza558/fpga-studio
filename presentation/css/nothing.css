@@ -1,25 +1,45 @@
 :root {
-    --nothing-black: #050505;
-    --nothing-surface: rgba(22, 22, 22, 0.85);
-    --nothing-border: rgba(255, 255, 255, 0.12);
-    --nothing-red: #D71921;
-    --nothing-red-glow: rgba(215, 25, 33, 0.4);
-    --nothing-white: #EDEDED;
-    --nothing-white-glow: rgba(255, 255, 255, 0.25);
+    /* FPGA Studio / Spotify Desktop Dark Theme Palette */
+    --fpga-black: #080808;
+    --fpga-dark: #121212;
+    --fpga-panel: #161616;
+    --fpga-card: rgba(31, 31, 31, 0.88);
+    --fpga-card-hover: rgba(42, 42, 42, 0.95);
+    
+    --fpga-border: #282828;
+    --fpga-border-hover: #484848;
+    
+    --fpga-green: #1ED760;
+    --fpga-green-glow: rgba(30, 215, 96, 0.35);
+    --fpga-red: #D71921;
+    --fpga-red-glow: rgba(215, 25, 33, 0.4);
+    --fpga-cyan: #38BDF8;
+    --fpga-cyan-glow: rgba(56, 189, 248, 0.3);
+    
+    --txt-bright: #FFFFFF;
+    --txt-primary: #EAEAEA;
+    --txt-muted: #B3B3B3;
+    --txt-dim: #727272;
 }
 
 body {
-    background-color: var(--nothing-black);
-    color: var(--nothing-white);
+    background-color: var(--fpga-dark);
+    color: var(--txt-primary);
     font-family: 'Prompt', 'Space Grotesk', -apple-system, sans-serif;
     overflow: hidden;
     user-select: none;
+    position: relative;
 }
 
-/* Dot Matrix Texture Background */
-.dot-matrix-bg {
-    background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px);
-    background-size: 24px 24px;
+/* Background Canvas Layer */
+#bg-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none;
 }
 
 /* Nothing Phone Dotted Typography style */
@@ -32,46 +52,64 @@ body {
     font-family: 'JetBrains Mono', monospace;
 }
 
-/* Glyph Glowing Bars */
+/* Glyph Glowing Elements */
 .glyph-bar {
     background: linear-gradient(90deg, transparent, #FFFFFF, transparent);
-    box-shadow: 0 0 14px var(--nothing-white-glow);
+    box-shadow: 0 0 14px rgba(255, 255, 255, 0.25);
 }
 
 .glyph-red-dot {
-    width: 8px;
-    height: 8px;
+    width: 9px;
+    height: 9px;
     border-radius: 9999px;
-    background-color: var(--nothing-red);
-    box-shadow: 0 0 10px var(--nothing-red-glow);
+    background-color: var(--fpga-red);
+    box-shadow: 0 0 12px var(--fpga-red-glow);
     animation: pulse-red 2s infinite ease-in-out;
+    display: inline-block;
+}
+
+.glyph-green-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 9999px;
+    background-color: var(--fpga-green);
+    box-shadow: 0 0 12px var(--fpga-green-glow);
+    animation: pulse-green 2s infinite ease-in-out;
     display: inline-block;
 }
 
 @keyframes pulse-red {
     0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(0.85); }
+    50% { opacity: 0.45; transform: scale(0.85); }
 }
 
-/* Bento Box Glass Card */
+@keyframes pulse-green {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.45; transform: scale(0.85); }
+}
+
+/* FPGA Studio Bento Elevated Card */
 .bento-card {
-    background: var(--nothing-surface);
-    border: 1px solid var(--nothing-border);
-    backdrop-filter: blur(16px);
-    border-radius: 24px;
-    transition: all 0.25s ease;
+    background: var(--fpga-card);
+    border: 1px solid var(--fpga-border);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 .bento-card:hover {
-    border-color: rgba(255, 255, 255, 0.28);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    border-color: var(--fpga-border-hover);
+    background: var(--fpga-card-hover);
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.65);
+    transform: translateY(-2px);
 }
 
 /* Slide Transitions */
 .slide {
     display: none;
     opacity: 0;
-    transform: scale(0.98);
+    transform: scale(0.985);
     transition: opacity 0.35s ease, transform 0.35s ease;
 }
 
@@ -87,9 +125,12 @@ body {
     height: 6px;
 }
 ::-webkit-scrollbar-track {
-    background: rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.3);
 }
 ::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,0.2);
+    background: #333333;
     border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #484848;
 }

@@ -1,22 +1,44 @@
 /**
- * FPGA Studio - Nothing Phone Keynote Presentation Engine
- * Handles slide transitions, speaker cues, fullscreen, and keyboard shortcuts.
+ * FPGA Studio - Keynote Presentation Engine (Spotify Dark & Nothing Phone Edition)
+ * - Interactive Elastic Dot-Matrix Canvas Background (จุดๆ พื้นหลังยวบยาบตามเมาส์)
+ * - Constrained Eye Pupil Mouse Tracking (จุดกะพริบหน้าหลักมองตามเมาส์ในวงจำกัด)
+ * - Slide transitions, speaker cues, fullscreen, and keyboard navigation.
  */
 
 let currentSlide = 1;
 let totalSlides = 1;
 
+// Mouse tracking coordinates
+const mouse = {
+    x: -9999,
+    y: -9999,
+    targetX: -9999,
+    targetY: -9999,
+    radius: 150,      // Influence radius of cursor
+    strength: 32,     // Max displacement distance (pixels)
+    active: false
+};
+
+// Pupil tracking variables
+let pupilX = 0;
+let pupilY = 0;
+
+// ==============================================================================
+// 1. PRESENTATION SLIDE CONTROLLER
+// ==============================================================================
+
 function initPresentation() {
     const slides = document.querySelectorAll('.slide');
     totalSlides = slides.length;
     
-    // Set total slide counter in header
     const totalElem = document.getElementById('total-slide-num');
     if (totalElem) {
         totalElem.innerText = String(totalSlides).padStart(2, '0');
     }
 
     updateSlide();
+    initDotMatrixCanvas();
+    initPupilTracker();
 }
 
 function updateSlide() {
@@ -56,7 +78,6 @@ function nextSlide() {
         currentSlide++;
         updateSlide();
     } else if (window.nextSectionUrl) {
-        // Jump to next topic file if configured
         window.location.href = window.nextSectionUrl;
     }
 }
@@ -66,7 +87,6 @@ function prevSlide() {
         currentSlide--;
         updateSlide();
     } else if (window.prevSectionUrl) {
-        // Jump to previous topic file if configured
         window.location.href = window.prevSectionUrl;
     }
 }
@@ -88,9 +108,8 @@ function toggleFullscreen() {
     }
 }
 
-// Global Keyboard Shortcuts
+// Global Keyboard Navigation
 window.addEventListener('keydown', (e) => {
-    // Avoid hijacking when typing in an input/textarea if any
     if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
 
     if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
@@ -107,6 +126,209 @@ window.addEventListener('keydown', (e) => {
         toggleCues();
     }
 });
+
+
+// ==============================================================================
+// 2. INTERACTIVE WARPING DOT MATRIX CANVAS (จุดๆ พื้นหลังยวบยาบตามเมาส์)
+// ==============================================================================
+
+class Dot {
+    constructor(x, y) {
+        this.originX = x;
+        this.originY = y;
+        this.x = x;
+        this.y = y;
+        this.vx = 0;
+        this.vy = 0;
+        this.radius = 1.35;
+        this.baseAlpha = 0.16;
+        this.alpha = this.baseAlpha;
+    }
+
+    update(mouseX, mouseY, radius, strength) {
+        // Distance to cursor
+        const dx = mouseX - this.originX;
+        const dy = mouseY - this.originY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        let targetX = this.originX;
+        let targetY = this.originY;
+        let targetAlpha = this.baseAlpha;
+
+        if (dist < radius && dist > 0) {
+            // Nonlinear repulsion wave: closer dots pushed away more elastically
+            const force = Math.pow(1 - dist / radius, 1.8);
+            const angle = Math.atan2(dy, dx);
+            
+            // Push away from cursor
+            targetX = this.originX - Math.cos(angle) * force * strength;
+            targetY = this.originY - Math.sin(angle) * force * strength;
+            
+            // Glow brighter near the mouse
+            targetAlpha = this.baseAlpha + force * 0.45;
+        }
+
+        // Spring physics towards target
+        const spring = 0.07;
+        const friction = 0.82;
+
+        const ax = (targetX - this.x) * spring;
+        const ay = (targetY - this.y) * spring;
+
+        this.vx = (this.vx + ax) * friction;
+        this.vy = (this.vy + ay) * friction;
+
+        this.x += this.vx;
+        this.y += this.vy;
+
+        // Smooth alpha interpolation
+        this.alpha += (targetAlpha - this.alpha) * 0.15;
+    }
+
+    draw(ctx) {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        
+        // If glowing above threshold, tint with subtle FPGA Studio green
+        if (this.alpha > 0.28) {
+            ctx.fillStyle = `rgba(30, 215, 96, ${this.alpha * 0.75})`;
+        } else {
+            ctx.fillStyle = `rgba(235, 235, 235, ${this.alpha})`;
+        }
+        ctx.fill();
+    }
+}
+
+function initDotMatrixCanvas() {
+    let canvas = document.getElementById('bg-canvas');
+    if (!canvas) {
+        canvas = document.createElement('canvas');
+        canvas.id = 'bg-canvas';
+        document.body.prepend(canvas);
+    }
+
+    const ctx = canvas.getContext('2d', { alpha: true });
+    let dots = [];
+    const spacing = 28; // Distance between dots
+
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        buildGrid();
+    }
+
+    function buildGrid() {
+        dots = [];
+        const cols = Math.ceil(canvas.width / spacing) + 1;
+        const rows = Math.ceil(canvas.height / spacing) + 1;
+
+        const offsetX = (canvas.width - (cols - 1) * spacing) / 2;
+        const offsetY = (canvas.height - (rows - 1) * spacing) / 2;
+
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+                const x = offsetX + c * spacing;
+                const y = offsetY + r * spacing;
+                dots.push(new Dot(x, y));
+            }
+        }
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    // Mouse listener with smooth lag
+    window.addEventListener('mousemove', (e) => {
+        mouse.targetX = e.clientX;
+        mouse.targetY = e.clientY;
+        mouse.active = true;
+    });
+
+    window.addEventListener('mouseleave', () => {
+        mouse.targetX = -9999;
+        mouse.targetY = -9999;
+        mouse.active = false;
+    });
+
+    // Animation Loop
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Interpolate mouse coordinates smoothly
+        mouse.x += (mouse.targetX - mouse.x) * 0.15;
+        mouse.y += (mouse.targetY - mouse.y) * 0.15;
+
+        for (let i = 0; i < dots.length; i++) {
+            dots[i].update(mouse.x, mouse.y, mouse.radius, mouse.strength);
+            dots[i].draw(ctx);
+        }
+
+        // Also update Eye Pupil Tracking on active slide
+        updatePupil();
+
+        requestAnimationFrame(animate);
+    }
+
+    requestAnimationFrame(animate);
+}
+
+
+// ==============================================================================
+// 3. EYE PUPIL TRACKING (จุดกะพริบหน้าหลักมองตามเมาส์ แต่ขยับแค่ในวงตรงกลาง)
+// ==============================================================================
+
+function initPupilTracker() {
+    // Check if tracker element exists, or create wrapper if needed
+    const pupil = document.getElementById('eye-pupil');
+    if (pupil && !document.getElementById('eye-pupil-tracker')) {
+        const parent = pupil.parentElement;
+        const wrapper = document.createElement('div');
+        wrapper.id = 'eye-pupil-tracker';
+        wrapper.style.display = 'flex';
+        wrapper.style.alignItems = 'center';
+        wrapper.style.justifyContent = 'center';
+        wrapper.style.position = 'relative';
+        wrapper.style.width = '100%';
+        wrapper.style.height = '100%';
+        wrapper.style.pointerEvents = 'none';
+
+        parent.insertBefore(wrapper, pupil);
+        wrapper.appendChild(pupil);
+    }
+}
+
+function updatePupil() {
+    const tracker = document.getElementById('eye-pupil-tracker');
+    const outerCircle = document.getElementById('eye-outer');
+
+    if (!tracker || !outerCircle) return;
+
+    // Center of the inner circular ring
+    const rect = outerCircle.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    // Vector to mouse
+    const dx = (mouse.targetX !== -9999 ? mouse.targetX : centerX) - centerX;
+    const dy = (mouse.targetY !== -9999 ? mouse.targetY : centerY) - centerY;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+
+    // Limit maximum radius strictly inside the inner circle: max 15 pixels!
+    const maxRadius = 15;
+    const angle = Math.atan2(dy, dx);
+
+    // Smooth movement sensitivity
+    const strength = Math.min(dist / 320, 1) * maxRadius;
+
+    const targetX = Math.cos(angle) * strength;
+    const targetY = Math.sin(angle) * strength;
+
+    // Lerp smoothing
+    pupilX += (targetX - pupilX) * 0.16;
+    pupilY += (targetY - pupilY) * 0.16;
+
+    tracker.style.transform = `translate3d(${pupilX.toFixed(2)}px, ${pupilY.toFixed(2)}px, 0)`;
+}
 
 // Auto-run on DOM ready
 document.addEventListener('DOMContentLoaded', initPresentation);

@@ -10,28 +10,31 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Prompt:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/nothing.css">
 </head>
-<body class="h-screen w-screen flex flex-col justify-between p-6 dot-matrix-bg relative">
+<body class="h-screen w-screen flex flex-col justify-between p-6 relative">
+
+    <!-- Interactive Warping Dot Matrix Canvas -->
+    <canvas id="bg-canvas"></canvas>
 
     <!-- TOP GLYPH BAR / STATUS HEADER -->
-    <header class="w-full flex items-center justify-between pb-4 border-b border-white/10 z-20">
+    <header class="w-full flex items-center justify-between pb-4 border-b border-[#282828] z-20">
         <div class="flex items-center space-x-3">
-            <span class="glyph-red-dot"></span>
-            <span class="mono text-xs text-white/70 font-semibold tracking-widest uppercase">NOTHING (OS) // KEYNOTE SLIDES</span>
-            <span class="text-white/30 text-xs">|</span>
-            <span class="mono text-xs text-white/50">FPGA STUDIO v4.3</span>
+            <span class="glyph-green-dot"></span>
+            <span class="mono text-xs text-[#EAEAEA]/80 font-semibold tracking-widest uppercase">FPGA STUDIO // KEYNOTE SUITE</span>
+            <span class="text-white/20 text-xs">|</span>
+            <span class="mono text-xs text-[#1ED760]">v4.3 RELEASE</span>
         </div>
 
         <!-- Speaker Badge -->
-        <div id="speaker-badge" class="px-4 py-1.5 rounded-full border border-white/20 bg-white/5 text-xs font-medium mono tracking-wider flex items-center space-x-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+        <div id="speaker-badge" class="px-4 py-1.5 rounded-full border border-[#282828] bg-[#1F1F1F]/90 text-xs font-medium mono tracking-wider flex items-center space-x-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#1ED760]"></span>
             <span id="speaker-text">ALL // INTRODUCTION</span>
         </div>
 
         <div class="flex items-center space-x-4">
-            <div class="mono text-sm font-bold tracking-widest text-white/90">
+            <div class="mono text-sm font-bold tracking-widest text-[#EAEAEA]">
                 <span id="current-slide-num">01</span> <span class="text-white/30">/</span> <span id="total-slide-num">01</span>
             </div>
-            <button onclick="toggleFullscreen()" class="p-2 rounded-full border border-white/10 hover:border-white/40 hover:bg-white/10 transition text-xs mono text-white/70" title="Full Screen (F)">
+            <button onclick="toggleFullscreen()" class="p-2 rounded-full border border-[#282828] hover:border-[#484848] hover:bg-[#2A2A2A] transition text-xs mono text-[#B3B3B3]" title="Full Screen (F)">
                 ⛶
             </button>
         </div>
@@ -41,37 +44,40 @@
     <main class="flex-1 w-full flex items-center justify-center py-4 relative z-10 overflow-hidden">
 
         <!-- ======================================================== -->
-        <!-- SLIDE: COVER (NOTHING PHONE AESTHETIC) -->
+        <!-- SLIDE: COVER (SPOTIFY DARK + NOTHING PHONE HYBRID) -->
         <!-- ======================================================== -->
         <section class="slide active flex-col items-center justify-center text-center max-w-5xl w-full h-full" data-slide="1" data-speaker="ALL // INTRODUCTION">
-            <!-- Geometric Glyph Motif -->
+            
+            <!-- Geometric Glyph Motif with Constrained Eye Pupil Tracking -->
             <div class="relative mb-6">
-                <div class="w-32 h-32 rounded-full border border-white/20 flex items-center justify-center relative">
-                    <div class="w-20 h-20 rounded-full border-2 border-white/60 flex items-center justify-center">
-                        <span class="glyph-red-dot"></span>
+                <div class="w-32 h-32 rounded-full border border-white/20 flex items-center justify-center relative shadow-[0_0_30px_rgba(30,215,96,0.08)]">
+                    <div id="eye-outer" class="w-20 h-20 rounded-full border-2 border-white/60 flex items-center justify-center relative">
+                        <div id="eye-pupil-tracker" class="flex items-center justify-center will-change-transform">
+                            <span id="eye-pupil" class="glyph-red-dot"></span>
+                        </div>
                     </div>
-                    <div class="absolute -top-3 w-12 h-1 bg-white/80 rounded-full"></div>
-                    <div class="absolute -bottom-3 w-16 h-1 bg-white/80 rounded-full"></div>
+                    <div class="absolute -top-3 w-12 h-1 bg-white/80 rounded-full shadow-[0_0_12px_rgba(255,255,255,0.5)]"></div>
+                    <div class="absolute -bottom-3 w-16 h-1 bg-[#1ED760] rounded-full shadow-[0_0_12px_rgba(30,215,96,0.6)]"></div>
                 </div>
             </div>
 
             <h1 class="text-6xl md:text-7xl font-bold tracking-tight uppercase ndot mb-3 text-white">
                 FPGA STUDIO
             </h1>
-            <p class="mono text-sm md:text-base text-white/60 tracking-widest uppercase mb-8">
-                (NOTHING EDITION) • DUAL 32-BIT RISC EDA & COMPILATION STUDIO
+            <p class="mono text-sm md:text-base text-[#B3B3B3] tracking-widest uppercase mb-8">
+                DUAL 32-BIT RISC EDA & COMPILATION STUDIO
             </p>
 
-            <!-- Pill Badges -->
+            <!-- Pill Badges (FPGA Studio Theme) -->
             <div class="flex flex-wrap gap-2.5 justify-center mb-10 mono text-xs">
-                <span class="px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-white">OPENMIPS 32-BIT</span>
-                <span class="px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-white">RISC-V (RV32IM)</span>
-                <span class="px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-white">DIGILENT NEXYS A7-100T</span>
-                <span class="px-3.5 py-1.5 rounded-full bg-red-950/40 border border-red-500/40 text-red-400">TERM PROJECT 2026</span>
+                <span class="px-3.5 py-1.5 rounded-full bg-[#1F1F1F] border border-[#282828] text-[#EAEAEA]">OPENMIPS 32-BIT</span>
+                <span class="px-3.5 py-1.5 rounded-full bg-[#1F1F1F] border border-[#282828] text-[#EAEAEA]">RISC-V (RV32IM)</span>
+                <span class="px-3.5 py-1.5 rounded-full bg-[#1F1F1F] border border-[#282828] text-[#EAEAEA]">DIGILENT NEXYS A7-100T</span>
+                <span class="px-3.5 py-1.5 rounded-full bg-emerald-950/40 border border-[#1ED760]/40 text-[#1ED760]">TERM PROJECT 2026</span>
             </div>
 
             <!-- Presenter List Bento -->
-            <div class="bento-card p-4 px-8 flex items-center space-x-8 text-xs mono text-white/60">
+            <div class="bento-card p-4 px-8 flex items-center space-x-8 text-xs mono text-[#B3B3B3]">
                 <div>[ 01 ] VISION & HOOK</div>
                 <div class="text-white/20">•</div>
                 <div>[ 02 ] PIPELINE & MMIO</div>
@@ -85,8 +91,8 @@
     </main>
 
     <!-- SPEAKER CUES DRAWER -->
-    <div id="cues-drawer" class="fixed bottom-20 left-1/2 -translate-x-1/2 max-w-4xl w-[92%] bento-card p-5 border-white/30 shadow-2xl z-40 hidden transition-all">
-        <div class="flex justify-between items-center mb-2 border-b border-white/10 pb-2">
+    <div id="cues-drawer" class="fixed bottom-20 left-1/2 -translate-x-1/2 max-w-4xl w-[92%] bento-card p-5 border-[#484848] shadow-2xl z-40 hidden transition-all">
+        <div class="flex justify-between items-center mb-2 border-b border-[#282828] pb-2">
             <div class="flex items-center space-x-2">
                 <span class="glyph-red-dot"></span>
                 <span class="mono text-xs text-red-400 font-bold uppercase" id="cue-title">ALL // CUE SHEET</span>
@@ -97,8 +103,8 @@
     </div>
 
     <!-- BOTTOM CONTROL BAR -->
-    <footer class="w-full flex items-center justify-between pt-4 border-t border-white/10 z-20">
-        <div class="mono text-[11px] text-white/40 hidden md:flex items-center space-x-3">
+    <footer class="w-full flex items-center justify-between pt-4 border-t border-[#282828] z-20">
+        <div class="mono text-[11px] text-[#727272] hidden md:flex items-center space-x-3">
             <span>[ ← ] PREV</span>
             <span>[ → ] NEXT</span>
             <span>[ SPACE ] ADVANCE</span>
@@ -106,13 +112,13 @@
             <span>[ C ] CUES</span>
         </div>
 
-        <button onclick="toggleCues()" class="px-4 py-2 rounded-full border border-red-500/40 bg-red-950/30 hover:bg-red-900/40 text-red-300 text-xs mono tracking-wider transition flex items-center space-x-2">
+        <button onclick="toggleCues()" class="px-4 py-2 rounded-full border border-[#1ED760]/40 bg-emerald-950/30 hover:bg-emerald-900/40 text-[#1ED760] text-xs mono tracking-wider transition flex items-center space-x-2">
             <span>🎙️</span>
             <span>SPEAKER CUES (สคริปต์พูด)</span>
         </button>
 
         <div class="flex items-center space-x-3">
-            <button onclick="prevSlide()" class="px-5 py-2 rounded-full border border-white/20 bg-white/5 hover:bg-white/15 text-white mono text-xs tracking-wider transition">
+            <button onclick="prevSlide()" class="px-5 py-2 rounded-full border border-[#282828] bg-[#1F1F1F] hover:bg-[#2A2A2A] text-white mono text-xs tracking-wider transition">
                 ← PREV
             </button>
             <button onclick="nextSlide()" class="px-5 py-2 rounded-full bg-white text-black hover:bg-neutral-200 mono text-xs font-bold tracking-wider transition shadow-lg">
