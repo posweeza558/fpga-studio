@@ -103,7 +103,8 @@ def compile_presentation():
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FPGA STUDIO — KEYNOTE SLIDES</title>
-    <!-- Tailwind CSS allowlisted -->
+    <!-- Tailwind CSS (Public CDN + Antigravity local fallback) -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -162,7 +163,11 @@ def compile_presentation():
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write(html_template)
 
-    print(f"[OK] Generated full presentation successfully: {OUTPUT_FILE}")
+    index_file = os.path.join(BASE_DIR, "index.html")
+    with open(index_file, "w", encoding="utf-8") as f:
+        f.write(html_template)
+
+    print(f"[OK] Generated full presentation successfully: {OUTPUT_FILE} & {index_file}")
 
 if __name__ == "__main__":
     compile_presentation()
