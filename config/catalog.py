@@ -41,6 +41,7 @@ DEFAULT_PROJECT_DIR = os.path.join(WORKSPACE_ROOT, "nexys-a7-project")
 EXTENSIONS_STATE_FILE = os.path.join(WORKSPACE_ROOT, "extensions.json")
 APP_ICON_PNG = find_asset("app_icon.png")
 APP_ICON_ICO = find_asset("app_icon.ico")
+FILE_ICONS_DIR = find_asset(os.path.join("icons", "filetypes"))   # language logos for the Explorer
 
 # ==============================================================================
 # FILE EXTENSION BADGE STYLES IN EXPLORER

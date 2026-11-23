@@ -13,6 +13,7 @@ a = Analysis(
         ('custom_cpus/openmips', 'custom_cpus/openmips'),
         ('custom_cpus/riscv', 'custom_cpus/riscv'),
         ('bitstreams', 'bitstreams'),
+        ('icons/filetypes', 'icons/filetypes'),
     ],
     hiddenimports=[
         'serial',

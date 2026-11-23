@@ -38,8 +38,9 @@ from config.catalog import (
     EXTENSIONS_CATALOG,
     EXT_TO_CATALOG,
     ISA_REFERENCE,
+    FILE_ICONS_DIR,
 )
-from ui.graphics import truncate_to_pixel_width, add_hover_border, get_antialiased_pill_photo
+from ui.graphics import truncate_to_pixel_width, add_hover_border
 from ui.widgets import SpotifyPillButton, SpotifyPopupMenu, SpotifyAutoScrollbar, attach_tooltip
 
 
@@ -185,13 +186,16 @@ class SidebarPanelsMixin:
         ("Python / Rust",  {".py", ".rs"}),
         ("Docs & Config",  None),               # everything else
     ]
+    # Language logos from Material Icon Theme (MIT, see icons/filetypes/LICENSE.md),
+    # pre-rendered to 18px PNGs so Tk can load them without extra libraries.
     TREE_FILE_ICONS = {
-        ".c": ("c", ACCENT_GREEN), ".cpp": ("c++", "#569CD6"), ".cc": ("c++", "#569CD6"),
-        ".s": ("asm", "#FFA657"), ".asm": ("asm", "#FFA657"),
-        ".h": ("h", "#79C0FF"), ".hpp": ("h", "#79C0FF"),
-        ".v": ("v", "#C586C0"), ".sv": ("sv", "#C586C0"), ".vhd": ("vhd", "#C586C0"), ".vhdl": ("vhd", "#C586C0"),
-        ".py": ("py", "#FFD43B"), ".rs": ("rs", "#DEA584"),
-        ".md": ("md", "#8B949E"), ".json": ("{ }", "#8B949E"), ".txt": ("txt", "#8B949E"),
+        ".c": "c", ".cpp": "cpp", ".cc": "cpp", ".cxx": "cpp",
+        ".s": "assembly", ".asm": "assembly",
+        ".h": "h", ".hpp": "hpp",
+        ".v": "verilog", ".sv": "verilog", ".vhd": "verilog", ".vhdl": "verilog",
+        ".py": "python", ".rs": "rust",
+        ".md": "markdown", ".json": "json", ".txt": "document",
+        ".ini": "settings", ".cfg": "settings", ".toml": "settings", ".yml": "settings", ".yaml": "settings",
     }
     TREE_ROW_BG = BG_SIDEBAR
     TREE_HOVER_BG = "#1F1F1F"
@@ -224,14 +228,17 @@ class SidebarPanelsMixin:
         except OSError:
             return []
 
-    def _draw_file_pill(self, canvas, bg):
-        label, col = canvas._pill_spec
-        photo = get_antialiased_pill_photo(30, 16, bg, col, radius=5)
-        canvas.config(bg=bg)
-        canvas.delete("all")
-        canvas.create_image(0, 0, image=photo, anchor="nw")
-        canvas.create_text(15, 8, text=label, fill="#000000", font=(FONT_CODE, 7, "bold"))
-        canvas._photo = photo
+    def _file_icon_image(self, filename):
+        """PhotoImage for a file's language icon (cached), or None if missing."""
+        cache = self.__dict__.setdefault("_file_icon_cache", {})
+        key = self.TREE_FILE_ICONS.get(os.path.splitext(filename)[1].lower(), "file")
+        if key not in cache:
+            path = os.path.join(FILE_ICONS_DIR, key + ".png")
+            try:
+                cache[key] = tk.PhotoImage(file=path)
+            except Exception:
+                cache[key] = None
+        return cache[key]
 
     def _tree_row(self, parent, depth, chevron, make_icon, text, fg, bold=False, count=None):
         """One flat tree row: [indent][chevron][icon][name ......][count]."""
@@ -256,13 +263,9 @@ class SidebarPanelsMixin:
 
     def _set_row_bg(self, parts, bg):
         for w in parts:
-            if getattr(w, "_pill_spec", None):
-                self._draw_file_pill(w, bg)
-            else:
-                w.config(bg=bg)
-            for child in w.winfo_children() if w is parts[0] else ():
-                if not getattr(child, "_pill_spec", None):
-                    child.config(bg=bg)
+            w.config(bg=bg)
+        for child in parts[0].winfo_children():     # indent spacer etc.
+            child.config(bg=bg)
 
     def _bind_row(self, parts, on_click, on_ctx=None, is_active=lambda: False):
         def _enter(e):
@@ -301,12 +304,14 @@ class SidebarPanelsMixin:
     def _render_file_row(self, parent, depth, full_p, folder_for_ctx):
         fname = os.path.basename(full_p)
         ext = os.path.splitext(fname)[1].lower()
-        label, col = self.TREE_FILE_ICONS.get(ext, ("•", "#8B949E"))
+        img = self._file_icon_image(fname)
+
         def make_pill(row):
-            c = tk.Canvas(row, width=30, height=16, bd=0, highlightthickness=0, bg=self.TREE_ROW_BG)
-            c._pill_spec = (label, col)
-            self._draw_file_pill(c, self.TREE_ROW_BG)
-            return c
+            if img is not None:
+                return tk.Label(row, image=img, bg=self.TREE_ROW_BG, width=18, height=18)
+            # icon files missing: fall back to the extension as text
+            return tk.Label(row, text=(ext[1:] or "•")[:3], bg=self.TREE_ROW_BG, fg=TXT_MUTED,
+                            width=3, font=(FONT_CODE, 7, "bold"))
 
         missing_ext = self._is_file_missing_extension(full_p) is not None
         has_err = (full_p in self.file_errors) and not missing_ext
