@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "skills": {
+    "no-ai-slop": {
+      "source": "huytieu/COG-second-brain",
+      "commit": "144c7a3a959cc99538b7dfee9c22c4b065a0e156",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/no-ai-slop/SKILL.md",
+      "computedHash": "89a5045ca078de40d95504eef29ad987c4841589529500af753963c7ba4b0dfc"
+    }
+  }
+}
