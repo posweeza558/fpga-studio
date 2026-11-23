@@ -35,7 +35,7 @@ def truncate_to_pixel_width(text, font_spec=(FONT_UI, 9, "bold"), max_px=185):
 
 
 def get_antialiased_pill_photo(w, h, bg_hex, fill_hex, outline_hex=None, radius=None):
-    """Render a 100% smooth 4x-supersampled anti-aliased capsule PhotoImage using Pillow LANCZOS."""
+    """Render an anti-aliased capsule PhotoImage (drawn at 4x, downscaled with Pillow LANCZOS)."""
     w = max(24, int(w))
     h = max(16, int(h))
     if radius is None:

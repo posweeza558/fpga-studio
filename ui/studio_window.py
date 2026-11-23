@@ -928,20 +928,20 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
             self.com_port_var = getattr(self, "com_port_var", None) or tk.StringVar(value="AUTO")
 
             m = SpotifyPopupMenu(self, tag="Board")
-            m.add_command("⚡  แฟลชบิตสตรีม CPU ลงบอร์ด (In-App JTAG)", "F7", self.open_fpga_programmer_dialog)
-            m.add_command("🚀  อัปโหลดโค้ดลงบอร์ดจริง (USB UART)", "", self.upload_to_board)
+            m.add_command("แฟลชบิตสตรีม CPU ลงบอร์ด (In-App JTAG)", "F7", self.open_fpga_programmer_dialog)
+            m.add_command("อัปโหลดโค้ดลงบอร์ดจริง (USB UART)", "", self.upload_to_board)
             m.add_separator()
-            m.add_radiobutton("🎯  โหมด Step ทีละคำสั่ง (หยุดรอที่ PC=0)", self.hw_exec_mode_var, "step", self._on_hw_mode_changed)
-            m.add_radiobutton("🚀  โหมด Auto-Run (รันเต็มสปีด 25 MHz)", self.hw_exec_mode_var, "autorun", self._on_hw_mode_changed)
+            m.add_radiobutton("โหมด Step ทีละคำสั่ง (หยุดรอที่ PC=0)", self.hw_exec_mode_var, "step", self._on_hw_mode_changed)
+            m.add_radiobutton("โหมด Auto-Run (รันเต็มสปีด 25 MHz)", self.hw_exec_mode_var, "autorun", self._on_hw_mode_changed)
             m.add_separator()
             m.add_command("▶  รันบอร์ดจริง 25 MHz", "", self.resume_hardware_board)
-            m.add_command("⚡  Step บอร์ดจริง (ก้าวทีละคำสั่ง)", "F11", self.step_hardware_board)
+            m.add_command("Step บอร์ดจริง (ก้าวทีละคำสั่ง)", "F11", self.step_hardware_board)
             m.add_command("⏸  หยุดบอร์ด (Pause)", "", self.pause_hardware_board)
-            m.add_command("🔄  รีเซ็ตบอร์ด PC=0", "", self.reset_hardware_board)
+            m.add_command("↻  รีเซ็ตบอร์ด PC=0", "", self.reset_hardware_board)
             m.add_separator()
 
             port_menu = SpotifyPopupMenu(self, tag="BoardMenuComPort")
-            port_menu.add_radiobutton("🔍 Auto-Detect (ค้นหาบอร์ด Nexys A7 อัตโนมัติ)",
+            port_menu.add_radiobutton("Auto-Detect (ค้นหาบอร์ด Nexys A7 อัตโนมัติ)",
                                       self.com_port_var, "AUTO", self._on_com_port_changed)
             try:
                 live_ports = self._detect_serial_ports()
@@ -951,11 +951,11 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
                 port_menu.add_separator()
                 for dev, desc, _ in live_ports:
                     short_desc = desc[:36] + ("..." if len(desc) > 36 else "")
-                    port_menu.add_radiobutton(f"🔌 {dev}  •  {short_desc}",
+                    port_menu.add_radiobutton(f"{dev}  •  {short_desc}",
                                               self.com_port_var, dev, self._on_com_port_changed)
             else:
-                port_menu.add_command("⚠️ ไม่พบพอร์ต USB-UART ที่เชื่อมต่ออยู่", "", None, enabled=False)
-            m.add_cascade("🔌  เลือกพอร์ต COM", port_menu)
+                port_menu.add_command("ไม่พบพอร์ต USB-UART ที่เชื่อมต่ออยู่", "", None, enabled=False)
+            m.add_cascade("เลือกพอร์ต COM", port_menu)
             return m
 
         def build_file_menu():
@@ -971,7 +971,7 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
 
             # every export lives here, once (was split across File, Run and the Explorer sidebar)
             export_menu = SpotifyPopupMenu(self, tag="FileExport")
-            export_menu.add_command("📦 โปรเจกต์ Vivado SoC ครบชุด (.v + .xdc + .tcl)...", "", lambda: self.export_file("vivado_soc"))
+            export_menu.add_command("โปรเจกต์ Vivado SoC ครบชุด (.v + .xdc + .tcl)...", "", lambda: self.export_file("vivado_soc"))
             export_menu.add_separator()
             export_menu.add_command("instruction_memory.vhd (VHDL)...", "", lambda: self.export_file("vhdl"))
             export_menu.add_command("instruction_memory.v (Verilog)...", "", lambda: self.export_file("verilog"))
@@ -979,8 +979,8 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
             export_menu.add_command("machine_code_32bit.txt...", "", lambda: self.export_file("bin"))
             m.add_cascade("ส่งออก (Export)", export_menu)
             m.add_separator()
-            m.add_command("⚡ ติดตั้ง/นำเข้า CPU (Setup Wizard)...", "", self.import_custom_cpu_dialog)
-            m.add_command("🔨 ติดตั้ง/นำเข้าคอมไพเลอร์ (Setup Wizard)...", "", self.import_custom_compiler_dialog)
+            m.add_command("ติดตั้ง/นำเข้า CPU (Setup Wizard)...", "", self.import_custom_cpu_dialog)
+            m.add_command("ติดตั้ง/นำเข้าคอมไพเลอร์ (Setup Wizard)...", "", self.import_custom_compiler_dialog)
             m.add_separator()
             m.add_command("ออกจากโปรแกรม (Exit)", "", self.destroy)
             return m
@@ -1012,11 +1012,11 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
         def build_cpu_menu():
             m = SpotifyPopupMenu(self, tag="CPU")
             m.add_radiobutton(
-                "⚡ OpenMIPS 32-bit (Digilent Nexys A7 FPGA)", self.arch_var, "openmips (Nexys A7)", self._on_cpu_changed,
+                "OpenMIPS 32-bit (Digilent Nexys A7 FPGA)", self.arch_var, "openmips (Nexys A7)", self._on_cpu_changed,
                 on_right_click=lambda e: self.show_cpu_context_menu({"name": "OpenMIPS (Nexys A7)", "path": self._get_openmips_hdl_path()}, e)
             )
             m.add_radiobutton(
-                "⚡ RISC-V RV32I 32-bit (Digilent Nexys A7 FPGA)", self.arch_var, "riscv (RV32I)", self._on_cpu_changed,
+                "RISC-V RV32I 32-bit (Digilent Nexys A7 FPGA)", self.arch_var, "riscv (RV32I)", self._on_cpu_changed,
                 on_right_click=lambda e: self.show_cpu_context_menu({"name": "RISC-V RV32I (Nexys A7)", "path": self._get_riscv_hdl_path()}, e)
             )
             if self.custom_cpus:
@@ -1024,7 +1024,7 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
                 for cpu in list(self.custom_cpus):
                     cid = f"custom:{cpu['path']}"
                     m.add_radiobutton(
-                        f"⚡ [Custom CPU] {cpu['name']}",
+                        f"[Custom CPU] {cpu['name']}",
                         self.arch_var, cid, self._on_cpu_changed,
                         on_right_click=lambda e, c=cpu: self.show_custom_cpu_context_menu(c, e)
                     )
@@ -1032,16 +1032,16 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
 
         def build_compiler_menu():
             m = SpotifyPopupMenu(self, tag="Compiler")
-            m.add_command("⚡ คอมไพล์เดี๋ยวนี้ (Build / Compile)", "Ctrl+Shift+B", self.compile_now)
+            m.add_command("คอมไพล์เดี๋ยวนี้ (Build / Compile)", "Ctrl+Shift+B", self.compile_now)
             m.add_separator()
-            m.add_radiobutton("⚙️ Real GCC Toolchain (RISC-V RV32IM)", self.compiler_mode_var, "gcc", self._on_compiler_mode_changed)
-            m.add_radiobutton("⚙️ Real GCC Toolchain (MIPS32 / OpenMIPS)", self.compiler_mode_var, "mips_gcc", self._on_compiler_mode_changed)
+            m.add_radiobutton("Real GCC Toolchain (RISC-V RV32IM)", self.compiler_mode_var, "gcc", self._on_compiler_mode_changed)
+            m.add_radiobutton("Real GCC Toolchain (MIPS32 / OpenMIPS)", self.compiler_mode_var, "mips_gcc", self._on_compiler_mode_changed)
             if self.custom_compilers:
                 m.add_separator()
                 for comp in list(self.custom_compilers):
                     cid = f"custom:{comp['path']}"
                     m.add_radiobutton(
-                        f"⚙️ [Custom] {comp['name']}",
+                        f"[Custom] {comp['name']}",
                         self.compiler_mode_var, cid, self._on_compiler_mode_changed,
                         on_right_click=lambda e, cp=comp: self.show_custom_compiler_context_menu(cp, e)
                     )
@@ -1058,16 +1058,16 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
             m.add_separator()
             speed_menu = SpotifyPopupMenu(self, tag="RunMenuSpeed")
             for label, val in [
-                ("🐢 1 Hz (1 วิ/คำสั่ง)", "1Hz"),
-                ("🚶 5 Hz (200 ms)", "5Hz"),
-                ("🏃 20 Hz (50 ms)", "20Hz"),
-                ("⚡ 100 Hz (10 ms)", "100Hz"),
-                ("🚀 Max Speed (เต็มสปีด)", "max"),
+                ("1 Hz (1 วิ/คำสั่ง)", "1Hz"),
+                ("5 Hz (200 ms)", "5Hz"),
+                ("20 Hz (50 ms)", "20Hz"),
+                ("100 Hz (10 ms)", "100Hz"),
+                ("Max Speed (เต็มสปีด)", "max"),
             ]:
                 speed_menu.add_radiobutton(label, self.sim_speed_var, val, self._on_sim_speed_changed)
-            m.add_cascade("⏱️  ความเร็วการจำลอง", speed_menu)
+            m.add_cascade("ความเร็วการจำลอง", speed_menu)
             m.add_separator()
-            m.add_command("🔬  วิเคราะห์ Pipeline & ทดสอบ RTL Testbench...", "Ctrl+Shift+P", self.open_rtl_verify_dialog)
+            m.add_command("วิเคราะห์ Pipeline & ทดสอบ RTL Testbench...", "Ctrl+Shift+P", self.open_rtl_verify_dialog)
             return m
 
         make_menubutton("File", build_file_menu)

@@ -3,7 +3,7 @@
 Interactive Peripheral Simulation Windows for Nexys A7:
 1. VGADisplayWindow: Frameless 640x480 @ 60Hz 12-bit RGB VGA Monitor screen.
    Connects directly to FPGA video output (VRAM 0xFF000000) with custom dark titlebar,
-   matching the main program window architecture (single seamless frame, no nested double borders).
+   built like the main window (one frame, no nested double borders).
 2. UARTTerminalWindow: Frameless USB-UART Serial Terminal (115200 8-N-1) with live RX log,
    TX interactive sending, custom dark titlebar, and unified frameless window style.
 """
@@ -122,7 +122,7 @@ class VGADisplayWindow(tk.Toplevel):
         self.focus_force()
 
     def _build_ui(self):
-        # 1. Custom Dark Title Bar (Seamless, directly in root window - no nested borders)
+        # 1. Custom dark title bar, placed directly in the root window (no nested borders)
         tb = tk.Frame(self, bg="#181818", height=38, padx=12)
         tb.pack(side=tk.TOP, fill=tk.X)
         tb.pack_propagate(False)
@@ -178,7 +178,7 @@ class VGADisplayWindow(tk.Toplevel):
         self.canvas = tk.Canvas(self, bg="#0A0E0C", bd=0, highlightthickness=0)
         self.canvas.pack(fill=tk.BOTH, expand=True)
 
-        # Redraw automatically on any size/configure change so display is always full & seamless
+        # Redraw on every resize so the picture always fills the window
         self.canvas.bind("<Configure>", lambda e: self.redraw())
 
     def redraw(self):
@@ -203,7 +203,7 @@ class VGADisplayWindow(tk.Toplevel):
                     hex_col = f"#{color_val & 0xFFFFFF:06X}"
                     self.canvas.create_rectangle(px0, py0, px1, py1, fill=hex_col, outline="")
         else:
-            # Full-Viewport Authentic Broadcast / FPGA Video Test Pattern Screen (ZERO black dead space!)
+            # Idle screen: broadcast-style test pattern that fills the whole viewport
             # 1. Base dark grid background
             self.canvas.create_rectangle(0, 0, w, h, fill="#0A0E0C", outline="")
             for gx in range(0, w, 40):
@@ -211,7 +211,7 @@ class VGADisplayWindow(tk.Toplevel):
             for gy in range(0, h, 40):
                 self.canvas.create_line(0, gy, w, gy, fill="#121815", width=1)
 
-            # 2. SMPTE 8-Color Bars across top (Seamless edge-to-edge)
+            # 2. SMPTE 8-colour bars across the top, edge to edge
             bar_h = 68
             bars = [
                 ("#EAEAEA", "WHITE"),
@@ -229,7 +229,7 @@ class VGADisplayWindow(tk.Toplevel):
                 bx1 = int((i + 1) * bar_w) if i < len(bars) - 1 else w
                 self.canvas.create_rectangle(bx0, 0, bx1, bar_h, fill=col, outline="")
 
-            # 3. Grayscale test ramp across bottom (Seamless edge-to-edge right to bottom edge)
+            # 3. Grayscale ramp across the bottom, edge to edge
             ramp_h = 34
             steps = 16
             ramp_w = w / steps
@@ -240,7 +240,7 @@ class VGADisplayWindow(tk.Toplevel):
                 rx1 = int((s + 1) * ramp_w) if s < steps - 1 else w
                 self.canvas.create_rectangle(rx0, h - ramp_h, rx1, h, fill=g_col, outline="")
 
-            # 4. Center High-Tech Monitor OSD Bezel Card (Fills middle area seamlessly)
+            # 4. Centre OSD card that fills the middle area
             card_margin_x = 18
             cy0 = bar_h + 12
             cy1 = h - ramp_h - 12
@@ -296,7 +296,7 @@ class UARTTerminalWindow(tk.Toplevel):
         self.focus_force()
 
     def _build_ui(self):
-        # 1. Custom Dark Title Bar (Seamless, directly in root window - no nested borders)
+        # 1. Custom dark title bar, placed directly in the root window (no nested borders)
         tb = tk.Frame(self, bg="#181818", height=38, padx=12)
         tb.pack(side=tk.TOP, fill=tk.X)
         tb.pack_propagate(False)

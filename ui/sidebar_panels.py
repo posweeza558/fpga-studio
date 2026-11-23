@@ -63,7 +63,7 @@ class SidebarPanelsMixin:
                     f.write(content)
 
     def _load_extensions_state(self):
-        # All extensions (C++, Python, Rust, Verilog) are enabled 100% out-of-the-box
+        # All extensions (C++, Python, Rust, Verilog) are built in and always enabled
         return {item["id"] for item in EXTENSIONS_CATALOG}
 
     def _save_extensions_state(self):

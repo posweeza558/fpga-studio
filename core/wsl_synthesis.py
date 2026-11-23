@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 FPGA Studio — WSL (Windows Subsystem for Linux) Synthesis Engine
-Enables local, 100% offline hardware synthesis for Digilent Nexys A7 (Artix-7)
+Runs hardware synthesis locally and offline for Digilent Nexys A7 (Artix-7)
 using Linux tools (Yosys, nextpnr-xilinx, openXC7) directly on the user's PC without Vivado 50GB.
 """
 

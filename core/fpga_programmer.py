@@ -316,7 +316,7 @@ def program_fpga_with_openfpgaloader(
         return False, f"ไม่พบไฟล์ Bitstream: {bitstream_path}"
 
     target_board = map_board_to_openfpgaloader_target(board)
-    # Detect connected Digilent FTDI serial number to ensure 100% reliable USB binding on Windows
+    # Read the Digilent FTDI serial number so the tool binds to the right USB device on Windows
     serial_num = None
     try:
         proc = subprocess.run([loader_path, "--scan-usb"], capture_output=True, text=True, timeout=3)

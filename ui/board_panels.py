@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Nexys A7 Virtual Board Simulator Panel & CPU / Registers Overview Panel Mixin
-Provides authentic Digilent Nexys A7 FPGA hardware controls:
+Provides the Digilent Nexys A7 FPGA board controls:
 - 8-Digit 7-Segment Display (AN0-7) with 16 Slide Switches (SW0-15) and LEDs (LD0-15) directly underneath
 - Dual Tri-Color RGB LEDs (LD16-17) placed above the 5-Way Directional Pushbuttons (BTNU, BTNL, BTNC, BTNR, BTND)
 - Two Red Hardware Buttons: CPU RESET and PROG B (FPGA Reconfiguration)
@@ -182,7 +182,7 @@ class BoardPanelsMixin:
             (self.btn_speed,       self._show_speed_popup,           3),
         ])
 
-        # 2. Main Hardware Modules Body (Authentic Hardware Cards + Expanding Live Console)
+        # 2. Board body: switch/LED card, button card, peripherals card with the UART log
         body = tk.Frame(self.sim_panel, bg=BG_PANEL, padx=8, pady=6)
         body.pack(fill=tk.BOTH, expand=True)
         self._board_body = body
@@ -192,7 +192,7 @@ class BoardPanelsMixin:
         self.latched_buttons = set()
 
         # ======================================================================
-        # CARD 1: 7-SEGMENT DISPLAY (TOP) & 16-BIT SWITCHES/LEDS (AUTHENTIC HARDWARE WIDTH)
+        # CARD 1: 7-SEGMENT DISPLAY (TOP) & 16-BIT SWITCHES/LEDS
         # ======================================================================
         card_main_io = tk.Frame(body, bg="#161616", width=590, padx=8, pady=4, highlightthickness=1, highlightbackground="#282828")
         card_main_io.pack(side=tk.LEFT, fill=tk.Y, padx=(0, 6))
@@ -221,7 +221,7 @@ class BoardPanelsMixin:
             d.pack(side=tk.LEFT, padx=2)
             self.seg_digits.append(d)
 
-        # 16-bit Slide Switches & LEDs (Underneath 7-segment - Perfectly Spaced across 590px)
+        # 16-bit slide switches & LEDs under the 7-segment (columns share the card width)
         sw_strip = tk.Frame(card_main_io, bg="#161616")
         sw_strip.pack(fill=tk.X, expand=True, pady=(2, 2))
 
@@ -249,7 +249,7 @@ class BoardPanelsMixin:
             tk.Label(col, text=f"{bit}", bg="#161616", fg=TXT_DIM, font=(FONT_CODE, 7)).pack()
 
         # ======================================================================
-        # CARD 2: RGB LEDS & BUTTONS (AUTHENTIC HARDWARE WIDTH)
+        # CARD 2: RGB LEDS & BUTTONS
         # ======================================================================
         card_btn = tk.Frame(body, bg="#161616", width=220, padx=6, pady=4, highlightthickness=1, highlightbackground="#282828")
         card_btn.pack(side=tk.LEFT, fill=tk.Y, padx=(0, 6))

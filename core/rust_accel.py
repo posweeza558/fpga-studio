@@ -2,7 +2,7 @@
 """
 High-Speed Rust Native Simulation Accelerator (C-ABI Bridge via ctypes)
 Enables 50x-100x speedup for CPU cycle execution and VGA rendering
-while maintaining 100% identical VS Code/Spotify UI and layout.
+without changing the UI or layout.
 """
 
 import os

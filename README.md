@@ -1,51 +1,51 @@
-# ⚡ FPGA Studio 
+# FPGA Studio
 
 [![Platform](https://img.shields.io/badge/Platform-Windows%2010%2F11-0078D6?logo=windows)](https://github.com/posweeza558/fpga-studio)
 [![Target FPGA](https://img.shields.io/badge/FPGA-Digilent%20Nexys%20A7--100T-red)](https://digilent.com/reference/programmable-logic/nexys-a7/start)
 [![Architecture](https://img.shields.io/badge/ISA-OpenMIPS%2032--bit%20%7C%20RISC--V%20RV32IM-1DB954)](https://github.com/posweeza558/fpga-studio)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-**FPGA Studio** is an all-in-one, zero-dependency Integrated Development & Educational EDA Studio for designing, programming, simulating, and deploying 32-bit RISC CPU systems onto FPGA hardware.
+FPGA Studio is an offline Windows IDE for teaching and building 32-bit RISC CPU systems. You write a program, compile it, run it on a simulated board, synthesize the CPU, and flash both onto a Digilent Nexys A7-100T.
 
-Designed with a modern **Spotify Dark Theme UI** (VS Code-like experience), it eliminates the steep learning curve and massive installation footprint (60–80 GB) of traditional FPGA toolchains.
+The editor works like VS Code, with a Spotify-style dark theme. You do not need Vivado, which takes 60 to 80 GB to install.
 
 ---
 
-## 🚀 Key Features
+## Features
 
-* **Dual Industrial 32-Bit Architectures**:
+* **Two 32-bit CPU architectures**:
   * **OpenMIPS (MIPS32 Release 1)**: 5-stage pipeline, Big-Endian, Branch Delay Slot, signed/unsigned hardware multiplier & divider.
   * **RISC-V (RV32IM)**: 5-stage pipeline, Little-Endian, M-Extension (`mul`, `mulh`, `div`, `rem`), synchronous active-high reset.
-* **Offline Real GCC Toolchains (Bundled)**:
+* **Bundled GCC toolchains (offline)**:
   * Real `mips64-elf-gcc` (GCC 12.2.0) and `riscv-none-elf-gcc` (GCC 15.2.0-1).
-  * High-performance in-memory LRU compilation cache (**0 ms latency**).
+  * An in-memory LRU cache, so a rebuild of unchanged source skips GCC.
   * Automatic bare-metal startup routine (`start.S`) and linker script (`link.ld`).
   * Automatic `.data` memory extraction and word-aligned BRAM initialization.
-* **Multi-Language Programming**:
+* **Languages**:
   * C / C++ (with standard bare-metal UART `printf` support).
   * Direct 32-bit Assembly (`.s` / `.asm`) with real-time bit-field disassembler.
   * Python (`.py`) & Rust (`.rs`) subset transpilation to bare-metal execution.
-* **Interactive Digilent Nexys A7 Virtual Board**:
-  * 16 interactive slide switches (`0xF0000004`) with click-and-toggle control.
-  * 16 glowing user LEDs (`0xF0000000`).
+* **Virtual Nexys A7 board**:
+  * 16 slide switches (`0xF0000004`). Click a switch to toggle it.
+  * 16 user LEDs (`0xF0000000`).
   * 8-digit multiplexed 7-segment display with dynamic BCD and raw cathode decoding (`0xF0000008`).
   * 5 pushbuttons (BTNC, BTNU, BTNL, BTNR, BTND) + CPU reset latch (`0xF000000C`).
-  * Live serial UART Terminal console at 115200 baud (`0xF0000010`).
-  * 640x480 Virtual VGA framebuffer display (`0xFF000000`).
-* **Ultra-Fast Simulation (Dual-Backend)**:
-  * Pure Python cycle-accurate 5-stage pipeline simulator (IF, ID, EX, MEM, WB with data forwarding & hazard detection).
-  * **Rust Native Engine (`fpga_engine_rust.dll`)** via C-ABI / ctypes FFI for **50x–100x speedup** (>50M cycles/sec).
-* **Zero-Vivado Local WSL Synthesis (openXC7)**:
-  * Synthesize Verilog directly to Artix-7 `.bit` bitstreams offline using **Yosys** + **nextpnr-xilinx** inside Windows Subsystem for Linux (WSL).
-* **1-Click Hardware Flasher**:
-  * Direct JTAG flashing via bundled **openFPGALoader**, Digilent Adept (`djtgcfg`), or Vivado CLI batch mode.
-  * **Live USB-UART RAM Bootloader (`uart_prog_loader.v`)**: updates CPU software in Block RAM on real FPGA hardware within 1 second without resynthesizing bitstreams!
-* **Custom CPU Import & Auto-Inspection**:
-  * AST parser in `hdl_analyzer.py` automatically inspects Verilog/VHDL modules, identifies I/O bus signals (`clk`, `rst`, `addr`, `din`, `dout`, `we`), classifies Standalone ALU vs. SoC CPU, and binds ports to virtual board peripherals via `cpu_manifest.json`.
+  * UART terminal at 115200 baud (`0xF0000010`).
+  * 640x480 VGA framebuffer (`0xFF000000`).
+* **Two simulator backends**:
+  * A cycle-accurate 5-stage pipeline simulator in Python (IF, ID, EX, MEM, WB, with data forwarding and hazard detection).
+  * A Rust engine (`fpga_engine_rust.dll`), called through ctypes, that runs 50 to 100 times faster (over 50M cycles per second).
+* **Local synthesis without Vivado (openXC7)**:
+  * Synthesize Verilog to an Artix-7 `.bit` bitstream offline, with Yosys and nextpnr-xilinx inside Windows Subsystem for Linux (WSL).
+* **Flashing the board**:
+  * JTAG flashing with the bundled openFPGALoader, Digilent Adept (`djtgcfg`), or Vivado in batch mode.
+  * A USB-UART bootloader (`uart_prog_loader.v`) loads a new program into Block RAM on the real board in about 1 second, without a new bitstream.
+* **Custom CPU import**:
+  * The parser in `hdl_analyzer.py` reads your Verilog/VHDL modules, finds the bus signals (`clk`, `rst`, `addr`, `din`, `dout`, `we`), decides whether the core is a standalone ALU or a full SoC CPU, and maps its ports to the virtual board in `cpu_manifest.json`.
 
 ---
 
-## 🏛️ System Architecture
+## Architecture
 
 ```mermaid
 flowchart TD
@@ -80,44 +80,42 @@ flowchart TD
 
 ---
 
-## 📁 Repository Structure
+## Repository layout
 
 ```
 fpga_studio/
 ├── config/                         # Theme styling, catalog paths, and starter templates
-├── core/                           # Core calculation, simulation, and toolchain engines
+├── core/                           # Compiler, simulator, HDL generation, synthesis, flashing
 │   ├── gcc_toolchain.py            # GCC MIPS/RISC-V integration, linker scripts & caching
 │   ├── simulator_engine.py         # 5-stage pipeline simulator with MMIO bus routing
 │   ├── rust_accel.py               # C-ABI bridge to Rust acceleration library
-│   ├── fpga_engine_rust.dll        # High-performance compiled Rust simulation backend
+│   ├── fpga_engine_rust.dll        # Compiled Rust simulation backend
 │   ├── hdl_generator.py            # Generates synthesizable VHDL/Verilog ROM & Vivado SoC
 │   ├── hdl_analyzer.py             # AST parser for custom CPU port auto-inspection
 │   ├── wsl_synthesis.py            # Local offline synthesis engine (Yosys + openXC7)
-│   ├── fpga_programmer.py          # 1-click JTAG flasher (openFPGALoader, Adept, Vivado)
+│   ├── fpga_programmer.py          # JTAG flasher (openFPGALoader, Adept, Vivado)
 │   └── transpiler.py               # Python & Rust subset transpiler to bare-metal C
 ├── custom_cpus/                    # Built-in 32-bit CPU Verilog cores
-│   ├── openmips/                   # Full OpenMIPS 32-bit core (5-stage pipeline, MULT/DIV)
+│   ├── openmips/                   # OpenMIPS 32-bit core (5-stage pipeline, MULT/DIV)
 │   └── riscv/                      # Synthesizable RISC-V RV32IM core
 ├── bitstreams/                     # Tested, ready-to-flash bitstreams for Nexys A7-100T
-├── ui/                             # Graphical User Interface (Tkinter / Custom widgets)
+├── ui/                             # Tkinter UI and custom widgets
 ├── vscode_app.py                   # Main application entry point
 ├── FPGA Studio.spec                # PyInstaller packaging configuration
 ├── installer.iss                   # Inno Setup 6 installer compilation script
-└── FPGA_Studio_System_Architecture_and_Features_Guide.md # Full Developer Manual
+└── FPGA_Studio_System_Architecture_and_Features_Guide.md # Developer guide (Thai)
 ```
 
 ---
 
-## 📥 Download & Installation
+## Download
 
-For most users, simply download the pre-packaged Windows installer and run it:
-* 🚀 **[Download FPGA Studio v4.2 Installer (.exe)](https://github.com/posweeza558/fpga-studio/releases/latest)** *(Self-contained, includes offline GCC toolchains, bitstreams, and simulators)*
+Download and run the [FPGA Studio v4.2 installer (.exe)](https://github.com/posweeza558/fpga-studio/releases/latest). It includes the GCC toolchains, bitstreams, and simulators, so it works offline.
 
 ---
 
-## 🛠️ Running from Source (For Developers)
+## Run from source
 
-If you want to modify or contribute to the source code:
 1. Clone the repository:
    ```bash
    git clone https://github.com/posweeza558/fpga-studio.git
@@ -134,6 +132,6 @@ If you want to modify or contribute to the source code:
 
 ---
 
-## 📖 Complete Developer & Architecture Guide
-For full technical implementation details, RTL pipeline stage schematics, MMIO memory map, and developer extension guides, please refer to:  
-👉 [**FPGA_Studio_System_Architecture_and_Features_Guide.md**](FPGA_Studio_System_Architecture_and_Features_Guide.md)
+## Developer guide
+
+[FPGA_Studio_System_Architecture_and_Features_Guide.md](FPGA_Studio_System_Architecture_and_Features_Guide.md) is written in Thai. It covers the implementation, the RTL pipeline stages, the MMIO memory map, and how to add a new CPU or compiler.

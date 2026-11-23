@@ -481,7 +481,7 @@ RV_TO_MIPS_ABI = {
 
 def translate_rv_ins_to_mips(ins_list):
     """
-    Translate compiled RV32 machine instructions from Real GCC into authentic MIPS-I instructions
+    Translate compiled RV32 machine instructions from Real GCC into MIPS-I instructions
     with MIPS ABI registers ($zero, $ra, $sp, $s0, $t0, etc.) and true MIPS 32-bit machine code.
     Expands multiply/divide into hardware mult/div + mflo/mfhi, recalculates all branch offsets,
     fuses 32-bit constants into lui+ori (16-bit), and resolves J/JAL targets.

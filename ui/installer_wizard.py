@@ -3,7 +3,7 @@
 FPGA Studio — Installation & Setup Wizards (Custom Frameless Spotify Dark Edition):
 - CPUInstallWizardDialog: Express / Custom installation with auto-bundle & include path sanitizing.
 - CompilerInstallWizardDialog: Express / Custom setup with smoke-test execution.
-Frameless DWM rounded modal windows with integrated dark titlebar & seamless capsule buttons.
+Frameless DWM rounded modal windows with a dark title bar and capsule buttons.
 """
 import ctypes
 import os
@@ -384,7 +384,7 @@ class CPUInstallWizardDialog(BaseFramelessWizardDialog):
                           bg_parent=BG_ELEVATED, fill_col=BG_POPUP, fg_col=TXT_BRIGHT,
                           height=28, pad_x=14).pack(side="left")
         self._on_mode_toggled()
-        # Bottom Bar (Seamless Buttons with exact matching bg_parent)
+        # Bottom bar (buttons use the bar colour as bg_parent so their corners blend in)
         bbar = tk.Frame(self.container, bg=BG_BLACK, height=48)
         bbar.pack(fill="x", side="bottom", padx=20, pady=10)
         btn_cancel = SpotifyPillButton(bbar, text="ยกเลิก (Cancel)", command=self.destroy,
