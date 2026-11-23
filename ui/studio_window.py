@@ -600,7 +600,7 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
 
         self.btn_copy_all_pill = SpotifyPillButton(
             self.r_tabbar, text="คัดลอก", bg_parent=BG_TAB_BAR,
-            fill_col=ACCENT_GREEN, fg_col=TXT_ON_WHITE, hover_fill="#D8FF52",
+            fill_col=ACCENT_GREEN, fg_col=TXT_ON_WHITE, hover_fill="#1FDF64",
             font_spec=(FONT_UI, 9, "bold"), pad_x=14, height=30,
             icon_font_name=self.icon_font_name,
             command=self.copy_right_panel
@@ -785,7 +785,7 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
 
             dot_col = ACCENT_YELLOW if missing_ext else (ACCENT_RED if has_err else None)
             fill_col = BG_PILL_ACT if is_act else BG_PILL_INACT
-            fg_col = TXT_ON_PILL if is_act else TXT_MUTED
+            fg_col = TXT_ON_PILL if is_act else TXT_BRIGHT
 
             pill = SpotifyPillButton(
                 self.tabs_strip,
@@ -1712,7 +1712,7 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
             is_act = (mode == m)
             b.set_style(
                 fill_col=BG_PILL_ACT if is_act else BG_PILL_INACT,
-                fg_col=TXT_ON_PILL if is_act else TXT_MUTED
+                fg_col=TXT_ON_PILL if is_act else TXT_BRIGHT
             )
 
         if mode == "opcode":

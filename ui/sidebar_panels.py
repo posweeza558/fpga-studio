@@ -39,7 +39,7 @@ from config.catalog import (
     EXT_TO_CATALOG,
     ISA_REFERENCE,
 )
-from ui.graphics import truncate_to_pixel_width, add_hover_border
+from ui.graphics import truncate_to_pixel_width, add_hover_border, get_antialiased_pill_photo
 from ui.widgets import SpotifyPillButton, SpotifyPopupMenu, SpotifyAutoScrollbar, attach_tooltip
 
 
@@ -172,42 +172,218 @@ class SidebarPanelsMixin:
             self.expanded_folders.add(abs_p)
         self.refresh_project_explorer()
 
+    # ==========================================================================
+    # FILE TREE (icon rows, real sub-folders + virtual type folders)
+    # ==========================================================================
+    # Virtual folders only change how the tree looks: files stay where they
+    # are on disk, so the compiler, #include and saved paths are unaffected.
+    TREE_GROUPS = [
+        ("C / C++ Source", {".c", ".cpp", ".cc", ".cxx"}),
+        ("Assembly",       {".s", ".asm"}),
+        ("Verilog / HDL",  {".v", ".sv", ".vhd", ".vhdl"}),
+        ("Headers",        {".h", ".hpp"}),
+        ("Python / Rust",  {".py", ".rs"}),
+        ("Docs & Config",  None),               # everything else
+    ]
+    TREE_FILE_ICONS = {
+        ".c": ("c", ACCENT_GREEN), ".cpp": ("c++", "#569CD6"), ".cc": ("c++", "#569CD6"),
+        ".s": ("asm", "#FFA657"), ".asm": ("asm", "#FFA657"),
+        ".h": ("h", "#79C0FF"), ".hpp": ("h", "#79C0FF"),
+        ".v": ("v", "#C586C0"), ".sv": ("sv", "#C586C0"), ".vhd": ("vhd", "#C586C0"), ".vhdl": ("vhd", "#C586C0"),
+        ".py": ("py", "#FFD43B"), ".rs": ("rs", "#DEA584"),
+        ".md": ("md", "#8B949E"), ".json": ("{ }", "#8B949E"), ".txt": ("txt", "#8B949E"),
+    }
+    TREE_ROW_BG = BG_SIDEBAR
+    TREE_HOVER_BG = "#1F1F1F"
+    TREE_ACTIVE_BG = "#232323"
+    TREE_INDENT = 16
+
+    @staticmethod
+    def _natural_key(name):
+        return [int(t) if t.isdigit() else t.lower() for t in re.split(r"(\d+)", name)]
+
+    def _tree_group_files(self, files):
+        groups = []
+        claimed = set()
+        for gname, exts in self.TREE_GROUPS:
+            if exts is None:
+                members = [f for f in files if f not in claimed]
+            else:
+                members = [f for f in files if os.path.splitext(f)[1].lower() in exts]
+            claimed.update(members)
+            if members:
+                groups.append((gname, sorted(members, key=self._natural_key)))
+        return groups
+
+    def _list_subdirs(self, folder_path):
+        try:
+            return sorted(
+                (os.path.join(folder_path, d) for d in os.listdir(folder_path)
+                 if os.path.isdir(os.path.join(folder_path, d)) and not d.startswith(".")),
+                key=lambda d: self._natural_key(os.path.basename(d)))
+        except OSError:
+            return []
+
+    def _draw_file_pill(self, canvas, bg):
+        label, col = canvas._pill_spec
+        photo = get_antialiased_pill_photo(30, 16, bg, col, radius=5)
+        canvas.config(bg=bg)
+        canvas.delete("all")
+        canvas.create_image(0, 0, image=photo, anchor="nw")
+        canvas.create_text(15, 8, text=label, fill="#000000", font=(FONT_CODE, 7, "bold"))
+        canvas._photo = photo
+
+    def _tree_row(self, parent, depth, chevron, make_icon, text, fg, bold=False, count=None):
+        """One flat tree row: [indent][chevron][icon][name ......][count]."""
+        bg = self.TREE_ROW_BG
+        row = tk.Frame(parent, bg=bg, height=28, cursor="hand2")
+        row.pack(fill=tk.X, padx=(6, 6))
+        row.pack_propagate(False)
+        tk.Frame(row, bg=bg, width=8 + depth * self.TREE_INDENT).pack(side=tk.LEFT)
+        chev = tk.Label(row, text=chevron, bg=bg, fg=TXT_MUTED, width=2, font=(FONT_UI, 10))
+        chev.pack(side=tk.LEFT)
+        icon = make_icon(row)
+        icon.pack(side=tk.LEFT, padx=(0, 8))
+        name = tk.Label(row, text=text, bg=bg, fg=fg, anchor="w",
+                        font=(FONT_UI, 9, "bold" if bold else "normal"))
+        name.pack(side=tk.LEFT, fill=tk.X, expand=True)
+        parts = [row, chev, icon, name]
+        if count is not None:
+            cnt = tk.Label(row, text=str(count), bg=bg, fg=TXT_DIM, font=(FONT_UI, 8))
+            cnt.pack(side=tk.RIGHT, padx=(4, 6))
+            parts.append(cnt)
+        return row, name, parts
+
+    def _set_row_bg(self, parts, bg):
+        for w in parts:
+            if getattr(w, "_pill_spec", None):
+                self._draw_file_pill(w, bg)
+            else:
+                w.config(bg=bg)
+            for child in w.winfo_children() if w is parts[0] else ():
+                if not getattr(child, "_pill_spec", None):
+                    child.config(bg=bg)
+
+    def _bind_row(self, parts, on_click, on_ctx=None, is_active=lambda: False):
+        def _enter(e):
+            self._set_row_bg(parts, self.TREE_HOVER_BG)
+
+        def _leave(e):
+            self._set_row_bg(parts, self.TREE_ACTIVE_BG if is_active() else self.TREE_ROW_BG)
+
+        for w in parts:
+            w.bind("<Button-1>", lambda e: on_click())
+            w.bind("<Enter>", _enter)
+            w.bind("<Leave>", _leave)
+            if on_ctx:
+                w.bind("<Button-3>", on_ctx)
+
+    def _folder_icon(self, parent, is_open, color=TXT_BRIGHT):
+        icon_font = getattr(self, "icon_font_name", "Segoe MDL2 Assets")
+        return tk.Label(parent, text="" if is_open else "", bg=self.TREE_ROW_BG,
+                        fg=color, font=(icon_font, 11))
+
+    def _toggle_tree_key(self, key):
+        exp = self._tree_expanded()
+        if key in exp:
+            exp.remove(key)
+        else:
+            exp.add(key)
+        self.refresh_project_explorer()
+
+    def _tree_expanded(self):
+        if not hasattr(self, "_tree_open_keys"):
+            # start tidy: only the C/C++ source folder of each project is open
+            self._tree_open_keys = {f"{os.path.abspath(f)}|C / C++ Source"
+                                    for f in self._list_workspace_folders()}
+        return self._tree_open_keys
+
+    def _render_file_row(self, parent, depth, full_p, folder_for_ctx):
+        fname = os.path.basename(full_p)
+        ext = os.path.splitext(fname)[1].lower()
+        label, col = self.TREE_FILE_ICONS.get(ext, ("•", "#8B949E"))
+        def make_pill(row):
+            c = tk.Canvas(row, width=30, height=16, bd=0, highlightthickness=0, bg=self.TREE_ROW_BG)
+            c._pill_spec = (label, col)
+            self._draw_file_pill(c, self.TREE_ROW_BG)
+            return c
+
+        missing_ext = self._is_file_missing_extension(full_p) is not None
+        has_err = (full_p in self.file_errors) and not missing_ext
+        display = truncate_to_pixel_width(fname, (FONT_UI, 9), max_px=180)
+        row, name, parts = self._tree_row(parent, depth, "", make_pill, display, TXT_PRIMARY)
+        pill = parts[2]
+        err_dot = tk.Label(row, text="●" if (has_err or missing_ext) else "", bg=self.TREE_ROW_BG,
+                           fg=ACCENT_YELLOW if missing_ext else ACCENT_RED, font=(FONT_UI, 8, "bold"))
+        err_dot.pack(side=tk.RIGHT, padx=(2, 6))
+        parts.append(err_dot)
+
+        def _ctx(event, fp=full_p, fn=fname, r=row, p=folder_for_ctx):
+            m = SpotifyPopupMenu(self)
+            m.add_command(f"เปลี่ยนชื่อไฟล์ ({fn})", command=lambda: self.start_inline_rename_file(fp, r))
+            m.add_command(f"ลบไฟล์ ({fn})", command=lambda: self.delete_file_direct(fp))
+            m.add_separator()
+            m.add_command("เปิดโฟลเดอร์จริงใน Windows Explorer", command=lambda: os.startfile(p))
+            m.show(event.x_root, event.y_root)
+
+        is_act = lambda fp=full_p: bool(self.current_file_path) and fp == os.path.abspath(self.current_file_path)
+        self._bind_row(parts, lambda fp=full_p: self.load_file_path(fp), _ctx, is_act)
+        self.file_buttons[full_p] = (row, pill, name, err_dot, parts)
+
+    def _render_subdir(self, parent, depth, dir_path):
+        """Real folder on disk below a project: collapsible, files natural-sorted."""
+        abs_d = os.path.abspath(dir_path)
+        is_open = abs_d in self.expanded_folders
+        row, name, parts = self._tree_row(parent, depth, "▾" if is_open else "▸",
+                                          lambda r: self._folder_icon(r, is_open),
+                                          os.path.basename(abs_d), TXT_BRIGHT)
+
+        def _ctx(event, p=abs_d, fn=os.path.basename(abs_d)):
+            m = SpotifyPopupMenu(self)
+            m.add_command("สร้างไฟล์ใหม่ในโฟลเดอร์นี้", command=lambda: self.start_inline_new_file(target_dir=p))
+            m.add_command("เปิดโฟลเดอร์ใน Windows Explorer", command=lambda: os.startfile(p))
+            m.add_separator()
+            m.add_command(f"ลบโฟลเดอร์ ({fn})", command=lambda: self.delete_folder_direct(p))
+            m.show(event.x_root, event.y_root)
+
+        def _toggle(p=abs_d):
+            if p in self.expanded_folders:
+                self.expanded_folders.discard(p)
+            else:
+                self.expanded_folders.add(p)
+            self.refresh_project_explorer()
+
+        self._bind_row(parts, _toggle, _ctx)
+        box = tk.Frame(parent, bg=self.TREE_ROW_BG)
+        self.folder_frames[abs_d] = box
+        if is_open:
+            box.pack(fill=tk.X)
+            for sub in self._list_subdirs(abs_d):
+                self._render_subdir(box, depth + 1, sub)
+            for fn in sorted(self._list_files_in_dir(abs_d), key=self._natural_key):
+                self._render_file_row(box, depth + 1, os.path.abspath(os.path.join(abs_d, fn)), abs_d)
+
     def refresh_project_explorer(self):
         self._clear_inline_entry()
         for w in self.file_list_frame.winfo_children():
             w.destroy()
         self.file_buttons.clear()
         self.folder_frames.clear()
+        open_keys = self._tree_expanded()
 
-        folders = self._list_workspace_folders()
-        for folder_path in folders:
+        for folder_path in self._list_workspace_folders():
             abs_f = os.path.abspath(folder_path)
-            fname_dir = os.path.basename(abs_f) or abs_f
             is_expanded = abs_f in self.expanded_folders
             is_active_proj = (abs_f == os.path.abspath(self.project_dir))
 
-            hdr_bg = "#1C1C1C" if is_active_proj else "#161616"
-            f_hdr = tk.Frame(
-                self.file_list_frame, bg=hdr_bg, padx=8, pady=4,
-                highlightthickness=1, highlightbackground="#252525" if is_active_proj else "#161616"
-            )
-            f_hdr.pack(fill=tk.X, padx=6, pady=(4, 1))
+            # --- project (workspace) folder
+            title = truncate_to_pixel_width(os.path.basename(abs_f) or abs_f, (FONT_UI, 9, "bold"), max_px=190)
+            proj_col = ACCENT_GREEN if is_active_proj else TXT_BRIGHT
+            row, name, parts = self._tree_row(self.file_list_frame, 0, "▾" if is_expanded else "▸",
+                                              lambda r, o=is_expanded, c=proj_col: self._folder_icon(r, o, c),
+                                              title, proj_col, bold=True)
 
-            arrow = "▾" if is_expanded else "▸"
-            f_disp = truncate_to_pixel_width(fname_dir, (FONT_UI, 9, "bold"), max_px=220)
-            f_btn = tk.Button(
-                f_hdr, text=f"{arrow}  {f_disp}", anchor="w",
-                bg=hdr_bg,
-                fg=ACCENT_GREEN if is_active_proj else TXT_BRIGHT,
-                activebackground=BG_HOVER, activeforeground=ACCENT_GREEN,
-                bd=0, highlightthickness=0, cursor="hand2",
-                font=(FONT_UI, 9, "bold"),
-                command=lambda p=abs_f: self.toggle_folder_expand(p)
-            )
-            f_btn.pack(side=tk.LEFT, fill=tk.X, expand=True)
-            add_hover_border(f_hdr, hdr_bg, "#242424", "#252525" if is_active_proj else "#161616", BORDER_HOVER, sync_children=True)
-
-            def _show_folder_ctx(event, p=abs_f, fn=fname_dir):
+            def _show_folder_ctx(event, p=abs_f, fn=os.path.basename(abs_f)):
                 m = SpotifyPopupMenu(self)
                 m.add_command("สร้างไฟล์ใหม่ในโฟลเดอร์นี้", command=lambda: self.start_inline_new_file(target_dir=p))
                 m.add_command("เปิดโฟลเดอร์ใน Windows Explorer", command=lambda: os.startfile(p))
@@ -215,78 +391,31 @@ class SidebarPanelsMixin:
                 m.add_command(f"ลบโฟลเดอร์ ({fn})", command=lambda: self.delete_folder_direct(p))
                 m.show(event.x_root, event.y_root)
 
-            f_btn.bind("<Button-3>", _show_folder_ctx)
+            self._bind_row(parts, lambda p=abs_f: self.toggle_folder_expand(p), _show_folder_ctx)
 
-            files_box = tk.Frame(self.file_list_frame, bg=BG_SIDEBAR)
+            files_box = tk.Frame(self.file_list_frame, bg=self.TREE_ROW_BG)
             self.folder_frames[abs_f] = files_box
-            if is_expanded:
-                files_box.pack(fill=tk.X)
+            if not is_expanded:
+                continue
+            files_box.pack(fill=tk.X)
 
-                for fname in self._list_files_in_dir(abs_f):
-                    full_p = os.path.abspath(os.path.join(abs_f, fname))
-                    ext = os.path.splitext(fname)[1].lower()
-                    badge, badge_col = BADGE_STYLES.get(ext, ("TEXT", TXT_MUTED))
+            # --- real sub-folders first
+            for sub in self._list_subdirs(abs_f):
+                self._render_subdir(files_box, 1, sub)
 
-                    display_name = truncate_to_pixel_width(fname, (FONT_UI, 9, "bold"), max_px=190)
-
-                    missing_ext = self._is_file_missing_extension(full_p) is not None
-                    has_err = (full_p in self.file_errors) and not missing_ext
-
-                    row = tk.Frame(
-                        files_box, bg=BG_SIDEBAR, padx=6, pady=1,
-                        highlightthickness=1, highlightbackground=BG_SIDEBAR
-                    )
-                    row.pack(fill=tk.X, padx=(14, 6), pady=1)
-
-                    lbl_ic = tk.Label(row, text=badge, bg=BG_ELEVATED, fg=badge_col,
-                                      font=(FONT_CODE, 7, "bold"), width=4, pady=3)
-                    lbl_ic.pack(side=tk.LEFT, padx=(2, 6))
-
-                    dot_txt = "●" if (has_err or missing_ext) else ""
-                    dot_col = ACCENT_YELLOW if missing_ext else ACCENT_RED
-                    err_dot = tk.Label(
-                        row, text=dot_txt,
-                        bg=BG_SIDEBAR, fg=dot_col, font=(FONT_UI, 9, "bold"), width=2
-                    )
-                    err_dot.pack(side=tk.RIGHT, padx=(2, 2))
-
-                    txt_col = ACCENT_YELLOW if missing_ext else (ACCENT_RED if has_err else TXT_PRIMARY)
-                    b = tk.Button(
-                        row, text=display_name, anchor="w",
-                        bg=BG_SIDEBAR, fg=txt_col,
-                        activebackground=BG_HOVER, activeforeground=TXT_BRIGHT,
-                        bd=0, highlightthickness=0, padx=4, pady=3, cursor="hand2",
-                        font=(FONT_UI, 9, "bold"),
-                        command=lambda fp=full_p: self.load_file_path(fp)
-                    )
-                    b.pack(side=tk.LEFT, fill=tk.X, expand=True)
-
-                    def _row_enter(e, r=row, bt=b, dt=err_dot, fp=full_p):
-                        r.config(bg="#222222", highlightbackground=BORDER_HOVER)
-                        bt.config(bg="#222222")
-                        dt.config(bg="#222222")
-
-                    def _row_leave(e, r=row, bt=b, dt=err_dot, fp=full_p):
-                        is_act = (fp == os.path.abspath(self.current_file_path)) if self.current_file_path else False
-                        bg_c = "#232323" if is_act else BG_SIDEBAR
-                        r.config(bg=bg_c, highlightbackground="#383838" if is_act else BG_SIDEBAR)
-                        bt.config(bg=bg_c)
-                        dt.config(bg=bg_c)
-
-                    for w_el in (row, b, lbl_ic, err_dot):
-                        w_el.bind("<Enter>", _row_enter)
-                        w_el.bind("<Leave>", _row_leave)
-
-                    def _show_file_ctx(event, fp=full_p, fn=fname, r=row, p=abs_f):
-                        m = SpotifyPopupMenu(self)
-                        m.add_command(f"เปลี่ยนชื่อไฟล์ ({fn})", command=lambda: self.start_inline_rename_file(fp, r))
-                        m.add_command(f"ลบไฟล์ ({fn})", command=lambda: self.delete_file_direct(fp))
-                        m.add_separator()
-                        m.add_command("เปิดโฟลเดอร์จริงใน Windows Explorer", command=lambda: os.startfile(p))
-                        m.show(event.x_root, event.y_root)
-
-                    b.bind("<Button-3>", _show_file_ctx)
-                    self.file_buttons[full_p] = (row, lbl_ic, b, err_dot)
+            # --- then the project's own files, grouped into virtual folders
+            for gname, members in self._tree_group_files(self._list_files_in_dir(abs_f)):
+                key = f"{abs_f}|{gname}"
+                g_open = key in open_keys
+                g_row, g_name, g_parts = self._tree_row(files_box, 1, "▾" if g_open else "▸",
+                                                        lambda r, o=g_open: self._folder_icon(r, o, TXT_MUTED),
+                                                        gname, TXT_PRIMARY, count=len(members))
+                self._bind_row(g_parts, lambda k=key: self._toggle_tree_key(k))
+                if g_open:
+                    g_box = tk.Frame(files_box, bg=self.TREE_ROW_BG)
+                    g_box.pack(fill=tk.X)
+                    for fn in members:
+                        self._render_file_row(g_box, 2, os.path.abspath(os.path.join(abs_f, fn)), abs_f)
 
         self._highlight_active_file_in_explorer()
         self.file_list_frame.update_idletasks()
@@ -294,23 +423,22 @@ class SidebarPanelsMixin:
 
     def _highlight_active_file_in_explorer(self):
         cur_abs = os.path.abspath(self.current_file_path) if self.current_file_path else ""
-        for full_p, (row, lbl_ic, btn, err_dot) in self.file_buttons.items():
+        for full_p, (row, pill, name, err_dot, parts) in self.file_buttons.items():
             active = (full_p == cur_abs)
             missing_ext = self._is_file_missing_extension(full_p) is not None
             has_err = (full_p in self.file_errors) and not missing_ext
-            bg = "#232323" if active else BG_SIDEBAR
-            row.config(bg=bg, highlightbackground="#383838" if active else BG_SIDEBAR)
+            self._set_row_bg(parts, self.TREE_ACTIVE_BG if active else self.TREE_ROW_BG)
             err_dot.config(
-                bg=bg,
                 text="●" if (has_err or missing_ext) else "",
                 fg=ACCENT_YELLOW if missing_ext else ACCENT_RED
             )
             if missing_ext:
-                btn.config(bg=bg, fg=ACCENT_YELLOW)
+                name.config(fg=ACCENT_YELLOW)
             elif has_err:
-                btn.config(bg=bg, fg=ACCENT_RED)
+                name.config(fg=ACCENT_RED)
             else:
-                btn.config(bg=bg, fg=ACCENT_GREEN if active else TXT_PRIMARY)
+                name.config(fg=ACCENT_GREEN if active else TXT_PRIMARY,
+                            font=(FONT_UI, 9, "bold" if active else "normal"))
 
     # ==========================================================================
     # INLINE FILE & FOLDER CREATION / RENAME / DELETE
@@ -432,7 +560,7 @@ class SidebarPanelsMixin:
         self._clear_inline_entry()
         old_name = os.path.basename(old_full_path)
         folder_dir = os.path.dirname(old_full_path)
-        parent_box = self.folder_frames.get(os.path.abspath(folder_dir), self.file_list_frame)
+        parent_box = row_widget.master
 
         row = tk.Frame(parent_box, bg="#1F1F1F", highlightbackground=ACCENT_GREEN, highlightthickness=1, padx=6, pady=3)
         row.pack(fill=tk.X, padx=(14, 6), pady=2, before=row_widget)
@@ -743,7 +871,7 @@ class SidebarPanelsMixin:
                 if ext_info["sample_file"]:
                     b_sample = SpotifyPillButton(
                         btn_row, text="+ ลองไฟล์ตัวอย่าง", bg_parent="#181818",
-                        fill_col=ACCENT_GREEN, fg_col=TXT_ON_WHITE, hover_fill="#D8FF52",
+                        fill_col=ACCENT_GREEN, fg_col=TXT_ON_WHITE, hover_fill="#1FDF64",
                         font_spec=(FONT_UI, 8, "bold"), pad_x=10, height=26,
                         icon_font_name=self.icon_font_name,
                         command=lambda info=ext_info: self.create_extension_sample_file(info)
@@ -752,7 +880,7 @@ class SidebarPanelsMixin:
             else:
                 b_inst = SpotifyPillButton(
                     btn_row, text="ดาวน์โหลด & ติดตั้ง (Install)", bg_parent="#181818",
-                    fill_col=ACCENT_GREEN, fg_col=TXT_ON_WHITE, hover_fill="#D8FF52",
+                    fill_col=ACCENT_GREEN, fg_col=TXT_ON_WHITE, hover_fill="#1FDF64",
                     font_spec=(FONT_UI, 8, "bold"), pad_x=12, height=26,
                     icon_glyph="\uE896", icon_font_name=self.icon_font_name,
                     command=lambda eid=ext_id: self.toggle_install_extension(eid)

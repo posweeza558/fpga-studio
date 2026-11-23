@@ -360,7 +360,7 @@ class UARTTerminalWindow(tk.Toplevel):
 
         btn_send = tk.Button(
             send_bar, text="ส่ง (Send)", bg=ACCENT_GREEN, fg=TXT_ON_WHITE,
-            activebackground="#D8FF52", activeforeground=TXT_ON_WHITE,
+            activebackground="#1FDF64", activeforeground=TXT_ON_WHITE,
             bd=0, padx=12, pady=2, cursor="hand2", font=(FONT_UI, 8, "bold"),
             command=self.send_text
         )

@@ -48,7 +48,7 @@ class BoardPanelsMixin:
 
     def _build_simulator_panel(self):
         # 1. Header Bar
-        hdr = tk.Frame(self.sim_panel, bg="#1B1B1F", height=38, padx=12)
+        hdr = tk.Frame(self.sim_panel, bg="#181818", height=38, padx=12)
         hdr.pack(fill=tk.X)
         hdr.pack_propagate(False)
 
@@ -56,7 +56,7 @@ class BoardPanelsMixin:
         self._sim_title_short = "Nexys A7"
         self.sim_board_lbl = tk.Label(
             hdr, text=self._sim_title_long,
-            bg="#1B1B1F", fg=TXT_BRIGHT, font=(FONT_UI, 9, "bold"), cursor="hand2"
+            bg="#181818", fg=TXT_BRIGHT, font=(FONT_UI, 9, "bold"), cursor="hand2"
         )
         self.sim_board_lbl.pack(side=tk.LEFT)
         self.sim_board_lbl.bind("<Button-3>", lambda e: self.show_active_cpu_context_menu(e) if hasattr(self, "show_active_cpu_context_menu") else None)
@@ -194,25 +194,25 @@ class BoardPanelsMixin:
         # ======================================================================
         # CARD 1: 7-SEGMENT DISPLAY (TOP) & 16-BIT SWITCHES/LEDS (AUTHENTIC HARDWARE WIDTH)
         # ======================================================================
-        card_main_io = tk.Frame(body, bg="#121214", width=590, padx=8, pady=4, highlightthickness=1, highlightbackground="#26262C")
+        card_main_io = tk.Frame(body, bg="#161616", width=590, padx=8, pady=4, highlightthickness=1, highlightbackground="#282828")
         card_main_io.pack(side=tk.LEFT, fill=tk.Y, padx=(0, 6))
         card_main_io.pack_propagate(False)
         self.card_main_io = card_main_io
 
         self.card_main_hdr = tk.Label(
             card_main_io, text="7-SEGMENT & 16-BIT SWITCHES/LEDS",
-            bg="#121214", fg=TXT_MUTED, font=(FONT_UI, 8, "bold")
+            bg="#161616", fg=TXT_MUTED, font=(FONT_UI, 8, "bold")
         )
         self.card_main_hdr.pack(anchor="center", pady=(4, 4))
 
         # 8-Digit 7-Segment Display (Top - Expanded font, comfortably dropped down)
-        seg_frame = tk.Frame(card_main_io, bg="#121214")
+        seg_frame = tk.Frame(card_main_io, bg="#161616")
         seg_frame.pack(pady=(2, 6))
 
         self.seg_digits = []
         for i in range(8):
             if i == 4:
-                tk.Frame(seg_frame, bg="#121214", width=16).pack(side=tk.LEFT)
+                tk.Frame(seg_frame, bg="#161616", width=16).pack(side=tk.LEFT)
             d = tk.Label(
                 seg_frame, text="0", bg="#100505", fg="#FF2222",
                 font=(FONT_CODE, 14, "bold"), width=2, padx=3, pady=2,
@@ -222,16 +222,16 @@ class BoardPanelsMixin:
             self.seg_digits.append(d)
 
         # 16-bit Slide Switches & LEDs (Underneath 7-segment - Perfectly Spaced across 590px)
-        sw_strip = tk.Frame(card_main_io, bg="#121214")
+        sw_strip = tk.Frame(card_main_io, bg="#161616")
         sw_strip.pack(fill=tk.X, expand=True, pady=(2, 2))
 
         self.led_widgets = {}
         self.sw_buttons = {}
         for bit in range(15, -1, -1):
-            col = tk.Frame(sw_strip, bg="#121214")
+            col = tk.Frame(sw_strip, bg="#161616")
             col.pack(side=tk.LEFT, expand=True, fill=tk.X, padx=1)
 
-            bulb = tk.Label(col, text="●", bg="#121214", fg="#26262C", font=(FONT_UI, 10))
+            bulb = tk.Label(col, text="●", bg="#161616", fg="#282828", font=(FONT_UI, 10))
             bulb.pack()
             self.led_widgets[bit] = bulb
 
@@ -246,43 +246,43 @@ class BoardPanelsMixin:
             add_hover_border(btn, BG_ELEVATED, BG_HOVER, BG_ELEVATED, BORDER_HOVER)
             self.sw_buttons[bit] = btn
 
-            tk.Label(col, text=f"{bit}", bg="#121214", fg=TXT_DIM, font=(FONT_CODE, 7)).pack()
+            tk.Label(col, text=f"{bit}", bg="#161616", fg=TXT_DIM, font=(FONT_CODE, 7)).pack()
 
         # ======================================================================
         # CARD 2: RGB LEDS & BUTTONS (AUTHENTIC HARDWARE WIDTH)
         # ======================================================================
-        card_btn = tk.Frame(body, bg="#121214", width=220, padx=6, pady=4, highlightthickness=1, highlightbackground="#26262C")
+        card_btn = tk.Frame(body, bg="#161616", width=220, padx=6, pady=4, highlightthickness=1, highlightbackground="#282828")
         card_btn.pack(side=tk.LEFT, fill=tk.Y, padx=(0, 6))
         card_btn.pack_propagate(False)
         self.card_btn = card_btn
 
         self.card_btn_hdr = tk.Label(
             card_btn, text="BUTTONS & RGB",
-            bg="#121214", fg=TXT_MUTED, font=(FONT_UI, 8, "bold")
+            bg="#161616", fg=TXT_MUTED, font=(FONT_UI, 8, "bold")
         )
         self.card_btn_hdr.pack(anchor="center", pady=(4, 4))
 
         # Dual RGB LEDs centered at the top (dropped down from title)
-        rgb_strip = tk.Frame(card_btn, bg="#121214")
+        rgb_strip = tk.Frame(card_btn, bg="#161616")
         rgb_strip.pack(fill=tk.X, pady=(2, 4))
 
-        rgb_center = tk.Frame(rgb_strip, bg="#121214")
+        rgb_center = tk.Frame(rgb_strip, bg="#161616")
         rgb_center.pack(anchor="center")
-        tk.Label(rgb_center, text="RGB:", bg="#121214", fg=TXT_DIM, font=(FONT_CODE, 7, "bold")).pack(side=tk.LEFT, padx=(0, 4))
+        tk.Label(rgb_center, text="RGB:", bg="#161616", fg=TXT_DIM, font=(FONT_CODE, 7, "bold")).pack(side=tk.LEFT, padx=(0, 4))
         self.rgb_widgets = []
         for rgb_name in ("LD16", "LD17"):
-            w = tk.Label(rgb_center, text=f"● {rgb_name}", bg="#121214", fg="#333333", font=(FONT_UI, 7, "bold"))
+            w = tk.Label(rgb_center, text=f"● {rgb_name}", bg="#161616", fg="#333333", font=(FONT_UI, 7, "bold"))
             w.pack(side=tk.LEFT, padx=3)
             self.rgb_widgets.append(w)
 
         # Buttons Center Area (Takes space and centers D-pad + Red buttons)
-        btn_area = tk.Frame(card_btn, bg="#121214")
+        btn_area = tk.Frame(card_btn, bg="#161616")
         btn_area.pack(expand=True, fill=tk.BOTH, pady=1)
 
-        btn_center_box = tk.Frame(btn_area, bg="#121214")
+        btn_center_box = tk.Frame(btn_area, bg="#161616")
         btn_center_box.place(relx=0.5, rely=0.5, anchor="center")
 
-        dpad = tk.Frame(btn_center_box, bg="#121214")
+        dpad = tk.Frame(btn_center_box, bg="#161616")
         dpad.pack(side=tk.LEFT, padx=(0, 6))
 
         self.btn_widgets = {}
@@ -331,7 +331,7 @@ class BoardPanelsMixin:
         _make_push_btn(dpad, "▼", 4).grid(row=2, column=1, padx=1, pady=1)  # BTND
 
         # Two Red Buttons: CPU RESET & PROG B (Hardware FPGA Reconfig)
-        red_box = tk.Frame(btn_center_box, bg="#121214")
+        red_box = tk.Frame(btn_center_box, bg="#161616")
         red_box.pack(side=tk.LEFT)
 
         b_rst = _make_push_btn(red_box, "RESET", 5, is_red=True)
@@ -353,26 +353,26 @@ class BoardPanelsMixin:
         # ======================================================================
         # CARD 3: PERIPHERALS & LIVE SERIAL TERMINAL (EXPANDS ACROSS SCREEN)
         # ======================================================================
-        card_io = tk.Frame(body, bg="#121214", padx=10, pady=4, highlightthickness=1, highlightbackground="#26262C")
+        card_io = tk.Frame(body, bg="#161616", padx=10, pady=4, highlightthickness=1, highlightbackground="#282828")
         card_io.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.card_io = card_io
 
         self.card_io_hdr = tk.Label(
             card_io, text="PERIPHERALS (VGA & UART SERIAL)",
-            bg="#121214", fg=TXT_MUTED, font=(FONT_UI, 8, "bold")
+            bg="#161616", fg=TXT_MUTED, font=(FONT_UI, 8, "bold")
         )
         self.card_io_hdr.pack(anchor="w", pady=(4, 4))
 
         # Compact Rows Container for Monitors
-        rows_frame = tk.Frame(card_io, bg="#121214")
+        rows_frame = tk.Frame(card_io, bg="#161616")
         rows_frame.pack(fill=tk.X, pady=(0, 2))
 
         # VGA Section (Streamlined without awkward empty gaps)
-        vga_box = tk.Frame(rows_frame, bg="#121214")
+        vga_box = tk.Frame(rows_frame, bg="#161616")
         vga_box.pack(fill=tk.X, pady=1)
 
         tk.Label(
-            vga_box, text="🖥️ VGA Port (640×480 @ 60Hz)", bg="#121214",
+            vga_box, text="🖥️ VGA Port (640×480 @ 60Hz)", bg="#161616",
             fg=TXT_BRIGHT, font=(FONT_UI, 8, "bold")
         ).pack(side=tk.LEFT)
 
@@ -387,11 +387,11 @@ class BoardPanelsMixin:
         add_hover_border(btn_open_vga, BG_PILL_INACT, BG_HOVER, BG_PILL_INACT, BORDER_HOVER)
 
         # UART Serial Section
-        uart_box = tk.Frame(rows_frame, bg="#121214")
+        uart_box = tk.Frame(rows_frame, bg="#161616")
         uart_box.pack(fill=tk.X, pady=1)
 
         tk.Label(
-            uart_box, text="💬 USB-UART (115200 8-N-1)", bg="#121214",
+            uart_box, text="💬 USB-UART (115200 8-N-1)", bg="#161616",
             fg=TXT_BRIGHT, font=(FONT_UI, 8, "bold")
         ).pack(side=tk.LEFT)
 
@@ -457,7 +457,7 @@ class BoardPanelsMixin:
         self.uart_window.focus_force()
 
     def _build_overview_panel(self):
-        hdr = tk.Frame(self.overview_panel, bg="#1B1B1F", height=40, padx=16)
+        hdr = tk.Frame(self.overview_panel, bg="#181818", height=40, padx=16)
         hdr.pack(fill=tk.X)
         hdr.pack_propagate(False)
 
@@ -470,7 +470,7 @@ class BoardPanelsMixin:
         btn_reset_regs.pack(side=tk.RIGHT)          # packed first: never squeezed out
         attach_tooltip(btn_reset_regs, "รีเซ็ตรีจิสเตอร์ทั้งหมด")
 
-        tk.Label(hdr, text="CPU & Registers", bg="#1B1B1F", fg=TXT_BRIGHT,
+        tk.Label(hdr, text="CPU & Registers", bg="#181818", fg=TXT_BRIGHT,
                  font=(FONT_UI, 10, "bold"), anchor="w").pack(side=tk.LEFT, fill=tk.X, expand=True)
 
         pipe_sec = tk.Frame(self.overview_panel, bg=BG_PANEL, padx=12, pady=6)
@@ -606,15 +606,15 @@ class BoardPanelsMixin:
         # For OpenMIPS, RISC-V RV32I, and Custom CPUs with use_sim=True:
         # Peripherals are connected: Clean dark borders, no green highlight, no badges
         if hasattr(self, "card_main_io") and hasattr(self, "card_main_hdr"):
-            self.card_main_io.config(highlightbackground="#26262C", highlightthickness=1)
+            self.card_main_io.config(highlightbackground="#282828", highlightthickness=1)
             self.card_main_hdr.config(text="7-SEGMENT & 16-BIT SWITCHES/LEDS", fg=TXT_MUTED)
 
         if hasattr(self, "card_btn") and hasattr(self, "card_btn_hdr"):
-            self.card_btn.config(highlightbackground="#26262C", highlightthickness=1)
+            self.card_btn.config(highlightbackground="#282828", highlightthickness=1)
             self.card_btn_hdr.config(text="BUTTONS & RGB", fg=TXT_MUTED)
 
         if hasattr(self, "card_io") and hasattr(self, "card_io_hdr"):
-            self.card_io.config(highlightbackground="#26262C", highlightthickness=1)
+            self.card_io.config(highlightbackground="#282828", highlightthickness=1)
             self.card_io_hdr.config(text="PERIPHERALS (VGA & UART SERIAL)", fg=TXT_MUTED)
 
     def _refresh_board_widgets(self):
@@ -633,7 +633,7 @@ class BoardPanelsMixin:
             )
         for bit, bulb in self.led_widgets.items():
             is_on = ((led_val >> bit) & 1) == 1
-            bulb.config(fg="#1ED760" if is_on else "#26262C")
+            bulb.config(fg="#1ED760" if is_on else "#282828")
 
         # 7-Segment (Matches Real Hardware Nexys A7: 8-digit Hexadecimal / Nibble decoding)
         s = f"{seg_val & 0xFFFFFFFF:08X}"
@@ -843,7 +843,7 @@ class BoardPanelsMixin:
         if hasattr(self, "btn_run_toolbar"):
             # set_style() does not touch hover_fill, so keep it in step with
             # fill_col -- otherwise hovering the amber Pause button redraws green.
-            self.btn_run_toolbar.hover_fill = "#FFB224" if running else "#D8FF52"
+            self.btn_run_toolbar.hover_fill = "#FFB224" if running else "#1FDF64"
             self.btn_run_toolbar.set_style(
                 text="⏸  Pause" if running else "▶  Run",
                 fill_col=color,
