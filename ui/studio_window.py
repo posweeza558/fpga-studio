@@ -1198,10 +1198,11 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
         self._resp_after_id = self.after(40, self._apply_responsive_layout)
 
     def _apply_responsive_layout(self):
-        """Size side panels from the window width and auto-collapse them in
-        order (CPU overview first, then the sidebar) instead of letting them
-        overlap or squeeze the editor to nothing. The View-menu / rail state
-        is untouched, so widening the window brings hidden panels back."""
+        """Size side panels from the window width instead of letting them
+        overlap or squeeze the editor to nothing. The CPU overview is never
+        dropped: when space runs out the Explorer sidebar yields first, then
+        the overview narrows to its compact width. The View-menu / rail state
+        is untouched, so widening the window brings the sidebar back."""
         self._resp_after_id = None
         W = self.main_body.winfo_width()
         H = self.main_body.winfo_height()
@@ -1218,8 +1219,13 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
         want_sb = self.left_sidebar_mode is not None
         want_ov = self.show_overview_var.get()
         free = W - rail
-        show_ov = want_ov and free - (sb_w + 6 if want_sb else 0) - (ov_w + 6) >= self.MIN_EDITOR_W
+        OV_MIN_W = 300          # compact overview: both register columns still fit
+        show_ov = want_ov       # the overview always stays once it is turned on
         show_sb = want_sb and free - (ov_w + 6 if show_ov else 0) - (sb_w + 6) >= self.MIN_EDITOR_W
+        if show_ov:
+            # whatever the editor cannot spare comes out of the overview width
+            room = free - (sb_w + 6 if show_sb else 0) - self.MIN_EDITOR_W - 6
+            ov_w = clamp(room, OV_MIN_W, ov_w)
 
         self.sidebar_container.config(width=sb_w)
         self.overview_panel.config(width=ov_w)

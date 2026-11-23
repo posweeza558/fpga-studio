@@ -508,7 +508,7 @@ class BoardPanelsMixin:
 
         tk.Frame(self.overview_panel, bg=BORDER_COLOR, height=1).pack(fill=tk.X, padx=12, pady=4)
 
-        reg_sec = tk.Frame(self.overview_panel, bg=BG_PANEL, padx=10, pady=2)
+        reg_sec = tk.Frame(self.overview_panel, bg=BG_PANEL, padx=6, pady=2)
         reg_sec.pack(fill=tk.BOTH, expand=True)
         self.reg_sec_title = tk.Label(reg_sec, text="ค่าในเรจิสเตอร์ 32 ช่อง ($0–$31)", bg=BG_PANEL, fg=TXT_BRIGHT,
                                       font=(FONT_UI, 9, "bold"), anchor="w")
@@ -529,7 +529,7 @@ class BoardPanelsMixin:
 
             # Left cell (r0 - r15)
             c_left = tk.Frame(grid_box, bg=BG_PANEL)
-            c_left.grid(row=row_idx, column=0, sticky="ew", padx=(0, 6), pady=1)
+            c_left.grid(row=row_idx, column=0, sticky="ew", padx=(0, 4), pady=1)
 
             nl = tk.Label(c_left, text=f"${r_left}", bg=BG_PANEL, fg=TXT_MUTED, font=(FONT_CODE, 8), anchor="w")
             nl.pack(side=tk.LEFT)
@@ -540,7 +540,7 @@ class BoardPanelsMixin:
 
             # Right cell (r16 - r31)
             c_right = tk.Frame(grid_box, bg=BG_PANEL)
-            c_right.grid(row=row_idx, column=1, sticky="ew", padx=(6, 0), pady=1)
+            c_right.grid(row=row_idx, column=1, sticky="ew", padx=(4, 0), pady=1)
 
             nr = tk.Label(c_right, text=f"${r_right}", bg=BG_PANEL, fg=TXT_MUTED, font=(FONT_CODE, 8), anchor="w")
             nr.pack(side=tk.LEFT)
