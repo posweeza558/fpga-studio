@@ -98,7 +98,7 @@ class SpotifyPillButton(tk.Canvas):
 
     def __init__(self, parent, text="", command=None, close_command=None,
                  bg_parent=None, fill_col=BG_PILL_INACT, fg_col=TXT_BRIGHT,
-                 hover_fill="#303030", font_spec=None, pad_x=14, height=30,
+                 hover_fill="#2A2A30", font_spec=None, pad_x=14, height=30,
                  icon_glyph=None, dot_color=None, icon_font_name=FONT_ICON):
         if bg_parent is None:
             try:

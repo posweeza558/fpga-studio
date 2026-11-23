@@ -27,6 +27,8 @@ from config.theme import (
     TXT_PRIMARY,
     TXT_MUTED,
     TXT_ON_WHITE,
+    TXT_ON_PILL,
+    ACCENT_HOVER,
     FONT_UI,
     FONT_CODE,
     FONT_ICON,
@@ -212,7 +214,7 @@ class RTLVerifyDialog(BaseFramelessWizardDialog):
             text=f"⚡ รายการ Hazards & Forwarding ({len(pipe['hazard_events'])})",
             bg_parent=BG_BLACK,
             fill_col=BG_PILL_ACT if self.active_tab == "hazards" else BG_PILL_INACT,
-            fg_col=TXT_ON_WHITE if self.active_tab == "hazards" else TXT_BRIGHT,
+            fg_col=TXT_ON_PILL if self.active_tab == "hazards" else TXT_MUTED,
             font_spec=(FONT_UI, 9, "bold"),
             pad_x=14,
             height=30,
@@ -225,7 +227,7 @@ class RTLVerifyDialog(BaseFramelessWizardDialog):
             text=f"⏱️ ไทม์ไลน์ 5-Stage Waterfall ({len(pipe['timeline'])} Cycles)",
             bg_parent=BG_BLACK,
             fill_col=BG_PILL_ACT if self.active_tab == "timeline" else BG_PILL_INACT,
-            fg_col=TXT_ON_WHITE if self.active_tab == "timeline" else TXT_BRIGHT,
+            fg_col=TXT_ON_PILL if self.active_tab == "timeline" else TXT_MUTED,
             font_spec=(FONT_UI, 9, "bold"),
             pad_x=14,
             height=30,
@@ -293,11 +295,11 @@ class RTLVerifyDialog(BaseFramelessWizardDialog):
         self.active_tab = tab_name
         self.btn_tab_haz.set_style(
             fill_col=BG_PILL_ACT if tab_name == "hazards" else BG_PILL_INACT,
-            fg_col=TXT_ON_WHITE if tab_name == "hazards" else TXT_BRIGHT,
+            fg_col=TXT_ON_PILL if tab_name == "hazards" else TXT_MUTED,
         )
         self.btn_tab_time.set_style(
             fill_col=BG_PILL_ACT if tab_name == "timeline" else BG_PILL_INACT,
-            fg_col=TXT_ON_WHITE if tab_name == "timeline" else TXT_BRIGHT,
+            fg_col=TXT_ON_PILL if tab_name == "timeline" else TXT_MUTED,
         )
         self._populate_active_table()
 

@@ -1,54 +1,57 @@
 # -*- coding: utf-8 -*-
 """
-Spotify Desktop Dark Theme Palette & Typography Configuration
+Lime Night IDE Theme Palette & Typography Configuration
 """
 
 # ==============================================================================
-# SPOTIFY DESKTOP DARK PALETTE
+# "LIME NIGHT" PALETTE  (graphite IDE surfaces + single lime accent)
+# Names are kept from the previous theme so every module keeps importing them.
 # ==============================================================================
-BG_BLACK      = "#000000"   # Pure Pitch Black outer shell & card gaps
-BG_DARK       = "#121212"   # Alias for Spotify standard dark background
-BG_TITLEBAR   = "#000000"   # Pure Black top bar
-BG_ACTIVITY   = "#121212"   # Left icon rail card surface
-BG_SIDEBAR    = "#121212"   # Left sidebar card surface (Explorer / Search / Extensions)
-BG_EDITOR     = "#121212"   # Main Code Editor & Machine Code card surface
-BG_TAB_BAR    = "#121212"   # Card header / pill bar
-BG_ELEVATED   = "#1F1F1F"   # Spotify search pill / elevated card
-BG_CARD       = "#1F1F1F"   # Alias for elevated card container
-BG_PILL_INACT = "#232323"   # Spotify inactive filter pill
-BG_PILL_ACT   = "#FFFFFF"   # Spotify active filter pill (white pill, black bold text)
-BG_PANEL      = "#121212"   # Collapsible Simulator / Overview card
-BG_HOVER      = "#2A2A2A"   # Hover state surface
-BG_SELECTION  = "#1E3A2F"   # Spotify dark green selection highlight
-BG_POPUP      = "#242424"   # Spotify frameless dark menu surface
+BG_BLACK      = "#0E0E10"   # Outer window shell & gaps between cards
+BG_DARK       = "#161618"   # Generic dark surface alias
+BG_TITLEBAR   = "#0E0E10"   # Menu / title bar
+BG_ACTIVITY   = "#161618"   # Left icon rail card
+BG_SIDEBAR    = "#161618"   # Explorer / Search card
+BG_EDITOR     = "#121214"   # Code editor & machine-code card (darkest work surface)
+BG_TAB_BAR    = "#161618"   # Card header / tab strip
+BG_ELEVATED   = "#202024"   # Search pill, inputs, elevated rows
+BG_CARD       = "#202024"   # Alias for elevated card container
+BG_PILL_INACT = "#1E1E22"   # Inactive pill / secondary button
+BG_PILL_ACT   = "#2C2C33"   # Active tab pill (graphite, white text)
+BG_PANEL      = "#161618"   # Bottom board panel / right overview card
+BG_HOVER      = "#2A2A30"   # Hover state surface
+BG_SELECTION  = "#2E3A12"   # Lime-tinted text selection
+BG_POPUP      = "#1E1E22"   # Popup menu surface
 
-BORDER_COLOR  = "#282828"   # Subtle inner divider
-BORDER_HOVER  = "#484848"   # Subtle steady hover selection border
-ACCENT_GREEN  = "#1ED760"   # Official Spotify Bright Green
-ACCENT_YELLOW = "#FFD43B"   # Warning / Missing Extension yellow dot
+BORDER_COLOR  = "#26262C"   # Subtle inner divider
+BORDER_HOVER  = "#44444C"   # Hover outline
+ACCENT_GREEN  = "#C8F031"   # Primary accent (lime) -- kept name for compatibility
+ACCENT_HOVER  = "#D8FF52"   # Hover fill for lime buttons
+ACCENT_YELLOW = "#FFD43B"   # Warning / missing extension dot
 ACCENT_WARN   = "#FFD43B"   # Alias for warning yellow
-ACCENT_AMBER  = "#F59E0B"   # Pause / Running amber
-ACCENT_RED    = "#FF5555"   # Error indicator red
-ACCENT_CYAN   = "#38BDF8"   # Open-source toolchain sky blue
-ACCENT_PURPLE = "#A78BFA"   # Cloud synthesis purple
+ACCENT_AMBER  = "#F59E0B"   # Pause / running amber
+ACCENT_RED    = "#FF5A5F"   # Error indicator red
+ACCENT_CYAN   = "#5FB4FF"   # Open-source toolchain blue
+ACCENT_PURPLE = "#B392FF"   # Cloud synthesis purple
 
-TXT_BRIGHT    = "#FFFFFF"   # Pure White
-TXT_PRIMARY   = "#EAEAEA"   # Crisp light text
-TXT_MUTED     = "#B3B3B3"   # Official Spotify Secondary Gray
-TXT_DIM       = "#727272"   # Dimmed line numbers / hints
-TXT_ON_WHITE  = "#000000"   # Black text on white active pill
+TXT_BRIGHT    = "#F4F4F5"   # Primary white
+TXT_PRIMARY   = "#E4E4E7"   # Body text
+TXT_MUTED     = "#9A9AA3"   # Secondary gray (menus, labels)
+TXT_DIM       = "#5C5C66"   # Line numbers / hints
+TXT_ON_WHITE  = "#0E0E10"   # Dark text on the lime accent
+TXT_ON_PILL   = "#F4F4F5"   # Text on the active (graphite) tab pill
 
 # ==============================================================================
-# SYNTAX HIGHLIGHTING PALETTE (TUNED FOR #121212 BACKGROUND)
+# SYNTAX HIGHLIGHTING PALETTE (blue keywords, lime identifiers, as in the concept)
 # ==============================================================================
-SYN_KEYWORD   = "#FF7B72"   # Coral pink
-SYN_TYPE      = "#79C0FF"   # Sky blue
-SYN_MACRO     = "#D2A8FF"   # Soft purple
-SYN_FUNC      = "#1ED760"   # Spotify Green
-SYN_MMIO      = "#FFA657"   # Vibrant orange
-SYN_STRING    = "#A5D6FF"   # Light cyan string
-SYN_NUMBER    = "#7EE787"   # Mint green numbers
-SYN_COMMENT   = "#8B949E"   # Readable comment gray
+SYN_KEYWORD   = "#6CB6FF"   # Keywords (int, while, return) -- blue
+SYN_TYPE      = "#E3F26B"   # Types -- pale lime
+SYN_MACRO     = "#C39BFF"   # #define / preprocessor -- violet
+SYN_FUNC      = "#D4F04A"   # Function names -- lime
+SYN_MMIO      = "#FFB86B"   # MMIO registers -- orange
+SYN_STRING    = "#F2E28C"   # Strings -- soft yellow
+SYN_NUMBER    = "#9ADFFF"   # Numbers -- light cyan
+SYN_COMMENT   = "#6E6E78"   # Comments -- quiet gray
 
 # ==============================================================================
 # TYPOGRAPHY (MICROSOFT CLEARTYPE HINTED THAI + ENGLISH FONTS)

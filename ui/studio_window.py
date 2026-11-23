@@ -34,6 +34,8 @@ from config.theme import (
     TXT_MUTED,
     TXT_DIM,
     TXT_ON_WHITE,
+    TXT_ON_PILL,
+    ACCENT_HOVER,
     SYN_KEYWORD,
     SYN_TYPE,
     SYN_MACRO,
@@ -83,7 +85,7 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
         super().__init__()
         self.title("FPGA Studio")
         self.geometry("1540x920+60+40")
-        self.minsize(1100, 650)
+        self.minsize(900, 600)
         self.configure(bg=BG_BLACK)
         self.root = self
 
@@ -317,85 +319,61 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
         btn_min.bind("<Enter>", lambda e: btn_min.config(bg=BG_HOVER, fg=TXT_BRIGHT))
         btn_min.bind("<Leave>", lambda e: btn_min.config(bg=BG_BLACK, fg=TXT_MUTED))
 
-        # 1B. SIMULATION QUICK-ACTION TOOLBAR
-        # Mirrors the Run menu's Step / Reset commands as always-visible buttons.
-        # Both call the exact same handlers the menu does; the menu items remain.
-        self.sim_toolbar = tk.Frame(self, bg=BG_BLACK, height=38)
-        self.sim_toolbar.pack(side=tk.TOP, fill=tk.X, padx=8, pady=(2, 0))
-        self.sim_toolbar.pack_propagate(False)
+        # 1B. RUN CLUSTER (top-right, next to the window controls)
+        # The single on-screen home for Run / Step / Reset of the simulator.
+        # Real-board actions (Upload, Step Board, Flash...) live in the Board
+        # menu and in the board panel header -- no second toolbar row.
+        self.topbar = topbar
+        self.win_ctrl = win_ctrl
+        self.run_cluster = tk.Frame(topbar, bg=BG_BLACK)
+        self.run_cluster.pack(side=tk.RIGHT, padx=(0, 10))
 
         self.btn_run_toolbar = SpotifyPillButton(
-            self.sim_toolbar,
+            self.run_cluster,
             text="▶  Run",
             command=self.run_and_show_sim,
             bg_parent=BG_BLACK,
             fill_col=ACCENT_GREEN,
             fg_col=TXT_ON_WHITE,
-            hover_fill="#1FDF64",
-            height=28,
+            hover_fill=ACCENT_HOVER,
+            font_spec=(FONT_UI, 9, "bold"),
+            pad_x=14,
+            height=30,
         )
-        self.btn_run_toolbar.pack(side=tk.LEFT, padx=(6, 6), pady=4)
+        self.btn_run_toolbar.pack(side=tk.LEFT, padx=(0, 6))
         attach_tooltip(self.btn_run_toolbar, lambda: (
             "หยุดชั่วคราว (Pause)" if getattr(self, "sim_running", False)
             else "เริ่มรันจำลอง (Run)") + "  •  F5")
 
         self.btn_step_toolbar = SpotifyPillButton(
-            self.sim_toolbar,
-            text="⏭  Step Instruction",
+            self.run_cluster,
+            text="⏭  Step",
             command=self.step_and_show_sim,
             bg_parent=BG_BLACK,
             fill_col=BG_PILL_INACT,
             fg_col=TXT_BRIGHT,
-            height=28,
+            font_spec=(FONT_UI, 9, "bold"),
+            pad_x=12,
+            height=30,
         )
-        self.btn_step_toolbar.pack(side=tk.LEFT, padx=(0, 6), pady=4)
+        self.btn_step_toolbar.pack(side=tk.LEFT, padx=(0, 6))
         attach_tooltip(self.btn_step_toolbar, "รันทีละคำสั่ง (Step)  •  F10")
 
         self.btn_reset_toolbar = SpotifyPillButton(
-            self.sim_toolbar,
-            text="🔄  Reset Simulation",
+            self.run_cluster,
+            text="↻",
             command=self.reset_sim,
             bg_parent=BG_BLACK,
             fill_col=BG_PILL_INACT,
             fg_col=TXT_BRIGHT,
-            height=28,
+            font_spec=(FONT_UI, 10, "bold"),
+            pad_x=11,
+            height=30,
         )
-        self.btn_reset_toolbar.pack(side=tk.LEFT, padx=(0, 6), pady=4)
+        self.btn_reset_toolbar.pack(side=tk.LEFT)
         attach_tooltip(self.btn_reset_toolbar, "รีเซ็ตการจำลอง (Reset)  •  Ctrl+Shift+R")
 
-        # divider: everything to the left drives the on-screen simulator,
-        # everything to the right drives the real Nexys A7 board
-        tk.Frame(self.sim_toolbar, bg=BORDER_COLOR, width=1).pack(
-            side=tk.LEFT, fill=tk.Y, padx=(6, 10), pady=9)
-
-        self.btn_hw_upload_toolbar = SpotifyPillButton(
-            self.sim_toolbar,
-            text="🚀  Upload to Board",
-            command=self.upload_to_board,
-            bg_parent=BG_BLACK,
-            fill_col="#1E3A8A",
-            fg_col="#BFDBFE",
-            hover_fill="#2563EB",
-            height=28,
-        )
-        self.btn_hw_upload_toolbar.pack(side=tk.LEFT, padx=(0, 6), pady=4)
-        attach_tooltip(self.btn_hw_upload_toolbar,
-                       "อัปโหลดโค้ดลงบอร์ดจริง (USB UART)"
-                       + "  •  คอมไพล์ให้อัตโนมัติ")
-
-        self.btn_hw_step_toolbar = SpotifyPillButton(
-            self.sim_toolbar,
-            text="⚡  Step Board",
-            command=self.step_hardware_board,
-            bg_parent=BG_BLACK,
-            fill_col="#065F46",
-            fg_col="#A7F3D0",
-            hover_fill="#047857",
-            height=28,
-        )
-        self.btn_hw_step_toolbar.pack(side=tk.LEFT, padx=(0, 6), pady=4)
-        attach_tooltip(self.btn_hw_step_toolbar,
-                       "ก้าวทีละคำสั่งบนบอร์ดจริง (Step real board)  •  F11")
+        topbar.bind("<Configure>", lambda e: self._relayout_top_search(), add="+")
 
         # 2. BOTTOM STATUS BAR
         self.status_bar = tk.Frame(self, bg=BG_BLACK, height=28)
@@ -422,6 +400,9 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
         # 3. MAIN WORKBENCH CONTAINER
         self.main_body = tk.Frame(self, bg=BG_BLACK)
         self.main_body.pack(side=tk.TOP, fill=tk.BOTH, expand=True, padx=8, pady=(2, 4))
+        self._resp_after_id = None
+        self._split_sig = None
+        self.main_body.bind("<Configure>", lambda e: self._schedule_responsive_layout(), add="+")
 
         # 3A. LEFTMOST ICON RAIL
         act_bar = tk.Frame(self.main_body, bg=BG_ACTIVITY, width=58)
@@ -456,9 +437,9 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
 
             btn = tk.Button(
                 cell, text=glyph,
-                bg=BG_ACTIVITY, fg=TXT_BRIGHT if is_active else TXT_MUTED,
+                bg=BG_HOVER if is_active else BG_ACTIVITY, fg=TXT_BRIGHT if is_active else TXT_MUTED,
                 activebackground=BG_HOVER, activeforeground=TXT_BRIGHT,
-                bd=0, highlightthickness=1, highlightbackground=BG_ACTIVITY,
+                bd=0, highlightthickness=1, highlightbackground=BG_HOVER if is_active else BG_ACTIVITY,
                 relief="flat", takefocus=0,
                 font=(self.icon_font_name, 15), cursor="hand2", command=cmd
             )
@@ -467,13 +448,14 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
             def _r_enter(e, b=btn, k=key):
                 if b.cget("state") == "disabled":
                     return
-                b.config(bg="#202020", highlightbackground=BORDER_HOVER, fg=TXT_BRIGHT)
+                b.config(bg=BG_HOVER, highlightbackground=BORDER_HOVER, fg=TXT_BRIGHT)
 
             def _r_leave(e, b=btn, k=key):
                 if b.cget("state") == "disabled":
                     return
                 act = self._is_rail_key_active(k)
-                b.config(bg=BG_ACTIVITY, highlightbackground=BG_ACTIVITY, fg=TXT_BRIGHT if act else TXT_MUTED)
+                fill = BG_HOVER if act else BG_ACTIVITY
+                b.config(bg=fill, highlightbackground=fill, fg=TXT_BRIGHT if act else TXT_MUTED)
 
             btn.bind("<Enter>", _r_enter)
             btn.bind("<Leave>", _r_leave)
@@ -496,7 +478,7 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
         add_card_rounded_corners(self.sidebar_container, BG_SIDEBAR, BG_BLACK, radius=10)
 
         # 3C. COLLAPSIBLE RIGHT OVERVIEW PANEL
-        self.overview_panel = tk.Frame(self.main_body, bg=BG_PANEL, width=295)
+        self.overview_panel = tk.Frame(self.main_body, bg=BG_PANEL, width=300)
         self.overview_panel.pack_propagate(False)
         self._build_overview_panel()
         add_card_rounded_corners(self.overview_panel, BG_PANEL, BG_BLACK, radius=10)
@@ -515,20 +497,20 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
 
         # ---- LEFT EDITOR CARD (MULTI-TAB CODE EDITOR) ----
         self.left_group = tk.Frame(self.editor_split, bg=BG_EDITOR)
-        self.editor_split.add(self.left_group, width=650)
+        self.editor_split.add(self.left_group, width=650, minsize=300)
 
-        self.l_tabbar = tk.Frame(self.left_group, bg=BG_TAB_BAR, height=50, padx=14, pady=10)
+        self.l_tabbar = tk.Frame(self.left_group, bg=BG_TAB_BAR, height=46, padx=12, pady=8)
         self.l_tabbar.pack(fill=tk.X)
         self.l_tabbar.pack_propagate(False)
 
         self.tabs_strip = tk.Frame(self.l_tabbar, bg=BG_TAB_BAR)
         self.tabs_strip.pack(side=tk.LEFT, fill=tk.X, expand=True)
 
-        l_bread = tk.Frame(self.left_group, bg=BG_EDITOR, padx=16, pady=4)
+        l_bread = tk.Frame(self.left_group, bg=BG_EDITOR, padx=16, pady=2)
         l_bread.pack(fill=tk.X)
         self.breadcrumb_lbl = tk.Label(
             l_bread, text="โค้ดต้นฉบับ",
-            bg=BG_EDITOR, fg=TXT_BRIGHT, font=(FONT_UI, 13, "bold")
+            bg=BG_EDITOR, fg=TXT_MUTED, font=(FONT_UI, 9)
         )
         self.breadcrumb_lbl.pack(side=tk.LEFT)
 
@@ -576,13 +558,13 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
         # ---- RIGHT EDITOR CARD (32-BIT MACHINE CODE — CLOSED AT STARTUP) ----
         self.right_group = tk.Frame(self.editor_split, bg=BG_EDITOR)
 
-        self.r_tabbar = tk.Frame(self.right_group, bg=BG_TAB_BAR, height=50, padx=14, pady=10)
+        self.r_tabbar = tk.Frame(self.right_group, bg=BG_TAB_BAR, height=46, padx=12, pady=8)
         self.r_tabbar.pack(fill=tk.X)
         self.r_tabbar.pack_propagate(False)
 
         self.tab_btn_op = SpotifyPillButton(
-            self.r_tabbar, text="32-bit Machine Code", bg_parent=BG_TAB_BAR,
-            fill_col=BG_PILL_ACT, fg_col=TXT_ON_WHITE,
+            self.r_tabbar, text="Machine Code", bg_parent=BG_TAB_BAR,
+            fill_col=BG_PILL_ACT, fg_col=TXT_ON_PILL,
             font_spec=(FONT_UI, 9, "bold"), pad_x=14, height=30,
             icon_font_name=self.icon_font_name,
             command=lambda: self.switch_right_view("opcode")
@@ -590,7 +572,7 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
         self.tab_btn_op.pack(side=tk.LEFT, padx=(0, 6))
 
         self.tab_btn_vhdl = SpotifyPillButton(
-            self.r_tabbar, text="VHDL (.vhd)", bg_parent=BG_TAB_BAR,
+            self.r_tabbar, text="VHDL", bg_parent=BG_TAB_BAR,
             fill_col=BG_PILL_INACT, fg_col=TXT_BRIGHT,
             font_spec=(FONT_UI, 9, "bold"), pad_x=14, height=30,
             icon_font_name=self.icon_font_name,
@@ -599,7 +581,7 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
         self.tab_btn_vhdl.pack(side=tk.LEFT, padx=(0, 6))
 
         self.tab_btn_verilog = SpotifyPillButton(
-            self.r_tabbar, text="Verilog (.v)", bg_parent=BG_TAB_BAR,
+            self.r_tabbar, text="Verilog", bg_parent=BG_TAB_BAR,
             fill_col=BG_PILL_INACT, fg_col=TXT_BRIGHT,
             font_spec=(FONT_UI, 9, "bold"), pad_x=14, height=30,
             icon_font_name=self.icon_font_name,
@@ -608,7 +590,7 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
         self.tab_btn_verilog.pack(side=tk.LEFT, padx=(0, 6))
 
         self.tab_btn_coe = SpotifyPillButton(
-            self.r_tabbar, text="Vivado (.coe)", bg_parent=BG_TAB_BAR,
+            self.r_tabbar, text=".coe", bg_parent=BG_TAB_BAR,
             fill_col=BG_PILL_INACT, fg_col=TXT_BRIGHT,
             font_spec=(FONT_UI, 9, "bold"), pad_x=14, height=30,
             icon_font_name=self.icon_font_name,
@@ -617,19 +599,20 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
         self.tab_btn_coe.pack(side=tk.LEFT, padx=(0, 6))
 
         self.btn_copy_all_pill = SpotifyPillButton(
-            self.r_tabbar, text="คัดลอกทั้งหมด", bg_parent=BG_TAB_BAR,
-            fill_col=ACCENT_GREEN, fg_col=TXT_ON_WHITE, hover_fill="#1FDF64",
+            self.r_tabbar, text="คัดลอก", bg_parent=BG_TAB_BAR,
+            fill_col=ACCENT_GREEN, fg_col=TXT_ON_WHITE, hover_fill="#D8FF52",
             font_spec=(FONT_UI, 9, "bold"), pad_x=14, height=30,
             icon_font_name=self.icon_font_name,
             command=self.copy_right_panel
         )
-        self.btn_copy_all_pill.pack(side=tk.RIGHT)
+        self.btn_copy_all_pill.pack(side=tk.RIGHT, before=self.tab_btn_op)
+        attach_tooltip(self.btn_copy_all_pill, "คัดลอกเนื้อหาแท็บนี้ทั้งหมด")
 
-        r_bread = tk.Frame(self.right_group, bg=BG_EDITOR, padx=16, pady=4)
+        r_bread = tk.Frame(self.right_group, bg=BG_EDITOR, padx=16, pady=2)
         r_bread.pack(fill=tk.X)
         self.right_bread_lbl = tk.Label(
             r_bread, text="ตารางคำสั่ง 32-bit Machine Code",
-            bg=BG_EDITOR, fg=TXT_BRIGHT, font=(FONT_UI, 13, "bold")
+            bg=BG_EDITOR, fg=TXT_MUTED, font=(FONT_UI, 9)
         )
         self.right_bread_lbl.pack(side=tk.LEFT)
 
@@ -676,10 +659,15 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
     # TOP ROUNDED SPOTIFY SEARCH CAPSULE
     # ==========================================================================
     def _build_top_search_capsule(self, topbar):
+        # Width is not fixed: _relayout_top_search() fits the capsule into the
+        # free gap between the menus and the run cluster on every resize, and
+        # hides it when the gap is too small (Ctrl+Shift+F still works).
+        self._capsule_w = 460
+        self._capsule_h = 36
         self.search_capsule = tk.Canvas(
-            topbar, width=460, height=36, bg=BG_BLACK, bd=0, highlightthickness=0, cursor="hand2"
+            topbar, width=self._capsule_w, height=self._capsule_h,
+            bg=BG_BLACK, bd=0, highlightthickness=0, cursor="hand2"
         )
-        self.search_capsule.place(relx=0.5, rely=0.5, anchor="center")
 
         self.top_search_var = tk.StringVar()
         self.top_search_entry = tk.Entry(
@@ -687,25 +675,29 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
             bg=BG_ELEVATED, fg=TXT_BRIGHT, insertbackground=ACCENT_GREEN,
             bd=0, relief="flat", font=(FONT_UI, 9)
         )
-        self._top_search_placeholder = "ค้นหาโค้ดในโปรเจกต์ หรือคำสั่ง 32-bit..."
+        self._top_search_placeholder = "ค้นหาโค้ด / ไฟล์ / คำสั่ง 32-bit..."
         self.top_search_entry.insert(0, self._top_search_placeholder)
         self.top_search_entry.config(fg=TXT_MUTED)
 
         def _draw_capsule(hover=False, focused=False):
-            self.search_capsule.delete("bg_pill")
-            fill = "#282828" if (hover or focused) else BG_ELEVATED
-            outline = ACCENT_GREEN if focused else ("#4A4A4A" if hover else fill)
-            photo = get_antialiased_pill_photo(460, 36, BG_BLACK, fill, outline)
-            self.search_capsule._bg_photo = photo
-            self.search_capsule.create_image(0, 0, image=photo, anchor="nw", tags="bg_pill")
-            self.search_capsule.tag_lower("bg_pill")
+            w, h = self._capsule_w, self._capsule_h
+            c = self.search_capsule
+            c.delete("all")
+            fill = BG_HOVER if (hover or focused) else BG_ELEVATED
+            outline = ACCENT_GREEN if focused else (BORDER_HOVER if hover else fill)
+            photo = get_antialiased_pill_photo(w, h, BG_BLACK, fill, outline)
+            c._bg_photo = photo
+            c.create_image(0, 0, image=photo, anchor="nw")
+            c.create_text(22, h // 2, text="", fill=TXT_MUTED, font=(self.icon_font_name, 11))
+            c.create_window(42, h // 2, window=self.top_search_entry, anchor="w",
+                            width=max(40, w - 42 - 46), height=20)
+            c.create_line(w - 40, 9, w - 40, h - 9, fill=BORDER_HOVER, width=1)
+            ic_folder = c.create_text(w - 21, h // 2, text="", fill=TXT_MUTED,
+                                      font=(self.icon_font_name, 11))
+            c.tag_bind(ic_folder, "<Button-1>", lambda e: self.open_folder_dialog())
             self.top_search_entry.config(bg=fill)
 
-        self.search_capsule.create_text(24, 18, text="\uE721", fill=TXT_MUTED, font=(self.icon_font_name, 11))
-        self.search_capsule.create_window(228, 18, window=self.top_search_entry, width=355, height=20)
-        self.search_capsule.create_line(418, 9, 418, 27, fill="#383838", width=1)
-        ic_folder = self.search_capsule.create_text(438, 18, text="\uE8B7", fill=TXT_MUTED, font=(self.icon_font_name, 11))
-        self.search_capsule.tag_bind(ic_folder, "<Button-1>", lambda e: self.open_folder_dialog())
+        self._draw_top_capsule = _draw_capsule
         _draw_capsule(False, False)
 
         def _on_focus_in(e):
@@ -736,6 +728,30 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
         self.search_capsule.bind("<Enter>", lambda e: _draw_capsule(hover=True, focused=(self.focus_get() == self.top_search_entry)))
         self.search_capsule.bind("<Leave>", lambda e: _draw_capsule(hover=False, focused=(self.focus_get() == self.top_search_entry)))
         self.search_capsule.bind("<Button-1>", lambda e: self.top_search_entry.focus_set())
+
+    def _relayout_top_search(self):
+        """Fit the search capsule between the last menu and the run cluster."""
+        topbar = getattr(self, "topbar", None)
+        if topbar is None or not hasattr(self, "run_cluster"):
+            return
+        total = topbar.winfo_width()
+        if total <= 1:
+            return
+        menus = getattr(self, "_top_menubuttons", [])
+        left = max((m.winfo_x() + m.winfo_width() for m in menus), default=0) + 16
+        right = self.run_cluster.winfo_x() - 16
+        gap = right - left
+        if gap < 200:
+            self.search_capsule.place_forget()
+            return
+        w = min(460, gap)
+        # Prefer true centring in the bar; slide sideways if that would collide.
+        x = max(left, min((total - w) // 2, right - w))
+        if w != self._capsule_w:
+            self._capsule_w = w
+            self.search_capsule.config(width=w)
+            self._draw_top_capsule(False, self.focus_get() == self.top_search_entry)
+        self.search_capsule.place(x=x, rely=0.5, anchor="w")
 
     # ==========================================================================
     # MULTI-TAB BAR MANAGEMENT
@@ -769,7 +785,7 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
 
             dot_col = ACCENT_YELLOW if missing_ext else (ACCENT_RED if has_err else None)
             fill_col = BG_PILL_ACT if is_act else BG_PILL_INACT
-            fg_col = TXT_ON_WHITE if is_act else TXT_BRIGHT
+            fg_col = TXT_ON_PILL if is_act else TXT_MUTED
 
             pill = SpotifyPillButton(
                 self.tabs_strip,
@@ -872,6 +888,8 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
     # TOP MENUS
     # ==========================================================================
     def _create_top_menus(self, topbar):
+        self._top_menubuttons = []
+
         def make_menubutton(label_text, builder_fn):
             btn = tk.Button(
                 topbar, text=label_text,
@@ -883,7 +901,8 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
                 font=(FONT_UI, 9, "bold")
             )
             btn._is_top_menubutton = True
-            btn.pack(side=tk.LEFT, padx=2, pady=8)
+            btn.pack(side=tk.LEFT, padx=1, pady=8)
+            self._top_menubuttons.append(btn)
 
             def _enter(e):
                 btn.config(fg=TXT_BRIGHT, bg=BG_ELEVATED, highlightbackground=BORDER_HOVER)
@@ -937,9 +956,6 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
             else:
                 port_menu.add_command("⚠️ ไม่พบพอร์ต USB-UART ที่เชื่อมต่ออยู่", "", None, enabled=False)
             m.add_cascade("🔌  เลือกพอร์ต COM", port_menu)
-
-            m.add_separator()
-            m.add_command("🔬  ตรวจสอบ RTL & Testbench (Co-Simulation)...", "Ctrl+Shift+P", self.open_rtl_verify_dialog)
             return m
 
         def build_file_menu():
@@ -947,21 +963,24 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
             m.add_command("สร้างไฟล์ใหม่ (New File)", "Ctrl+N", self.start_inline_new_file)
             m.add_command("สร้างโฟลเดอร์ใหม่ (New Folder)", "", self.start_inline_new_project)
             m.add_command("เปิดโฟลเดอร์โปรเจกต์ (Open Folder...)", "", self.open_folder_dialog)
+            m.add_command("เปิดโฟลเดอร์ใน Windows Explorer", "", lambda: os.startfile(self.project_dir))
+            m.add_separator()
             m.add_command("บันทึกไฟล์ปัจจุบัน (Save)", "Ctrl+S", self.save_current_file)
             m.add_command("ปิดแท็บไฟล์ปัจจุบัน (Close Tab)", "Ctrl+W", lambda: self.close_tab(self.current_file_path))
             m.add_separator()
+
+            # every export lives here, once (was split across File, Run and the Explorer sidebar)
+            export_menu = SpotifyPopupMenu(self, tag="FileExport")
+            export_menu.add_command("📦 โปรเจกต์ Vivado SoC ครบชุด (.v + .xdc + .tcl)...", "", lambda: self.export_file("vivado_soc"))
+            export_menu.add_separator()
+            export_menu.add_command("instruction_memory.vhd (VHDL)...", "", lambda: self.export_file("vhdl"))
+            export_menu.add_command("instruction_memory.v (Verilog)...", "", lambda: self.export_file("verilog"))
+            export_menu.add_command("program.coe (Vivado BRAM)...", "", lambda: self.export_file("coe"))
+            export_menu.add_command("machine_code_32bit.txt...", "", lambda: self.export_file("bin"))
+            m.add_cascade("ส่งออก (Export)", export_menu)
+            m.add_separator()
             m.add_command("⚡ ติดตั้ง/นำเข้า CPU (Setup Wizard)...", "", self.import_custom_cpu_dialog)
             m.add_command("🔨 ติดตั้ง/นำเข้าคอมไพเลอร์ (Setup Wizard)...", "", self.import_custom_compiler_dialog)
-            m.add_separator()
-            m.add_command("เปิดโฟลเดอร์จริงใน Windows Explorer", "", lambda: os.startfile(self.project_dir))
-            m.add_separator()
-            m.add_command("📦 ส่งออกโปรเจกต์ Vivado SoC ครบชุด (.v + .xdc + .tcl)...", "", lambda: self.export_file("vivado_soc"))
-            m.add_command("🔬 วิเคราะห์ 5-Stage Pipeline & ทดสอบ RTL Testbench...", "Ctrl+Shift+P", self.open_rtl_verify_dialog)
-            m.add_separator()
-            m.add_command("ส่งออกเป็น instruction_memory.vhd...", "", lambda: self.export_file("vhdl"))
-            m.add_command("ส่งออกเป็น instruction_memory.v (Verilog)...", "", lambda: self.export_file("verilog"))
-            m.add_command("ส่งออกเป็น program.coe...", "", lambda: self.export_file("coe"))
-            m.add_command("ส่งออกเป็น machine_code_32bit.txt...", "", lambda: self.export_file("bin"))
             m.add_separator()
             m.add_command("ออกจากโปรแกรม (Exit)", "", self.destroy)
             return m
@@ -976,9 +995,6 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
             m.add_command("ตัด (Cut)", "Ctrl+X", lambda: self._cut_from(self.code_text))
             m.add_command("คัดลอก (Copy)", "Ctrl+C", lambda: self._copy_from(self.code_text))
             m.add_command("วาง (Paste)", "Ctrl+V", lambda: self._paste_into(self.code_text))
-            m.add_separator()
-            m.add_command("ค้นหาในโปรเจกต์ (Search)", "Ctrl+Shift+F", lambda: self.switch_left_sidebar("search", toggle=False))
-            m.add_command("คัดลอกตาราง Machine Code ทั้งหมด", "", self.copy_right_panel)
             return m
 
         def build_view_menu():
@@ -1012,8 +1028,6 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
                         self.arch_var, cid, self._on_cpu_changed,
                         on_right_click=lambda e, c=cpu: self.show_custom_cpu_context_menu(c, e)
                     )
-            m.add_separator()
-            m.add_command("⚡ แฟลช CPU ปัจจุบันลงบอร์ด FPGA...", "F7", self.open_fpga_programmer_dialog)
             return m
 
         def build_compiler_menu():
@@ -1036,22 +1050,24 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
             return m
 
         def build_run_menu():
+            """On-screen simulator only. Real-board actions are in the Board menu."""
             m = SpotifyPopupMenu(self, tag="Run")
             m.add_command("▶  เริ่มรัน / หยุดจำลอง", "F5", self.run_and_show_sim)
+            m.add_command("⏭  รันทีละคำสั่ง (Step)", "F10", self.step_and_show_sim)
+            m.add_command("↻  รีเซ็ตการจำลอง (Reset)", "Ctrl+Shift+R", self.reset_sim)
             m.add_separator()
-            m.add_radiobutton("⏱️  ความเร็ว: 🐢 1 Hz (ช้ามาก 1 วิ/คำสั่ง)", self.sim_speed_var, "1Hz", self._on_sim_speed_changed)
-            m.add_radiobutton("⏱️  ความเร็ว: 🚶 5 Hz (ช้า 200ms / กำลังดี)", self.sim_speed_var, "5Hz", self._on_sim_speed_changed)
-            m.add_radiobutton("⏱️  ความเร็ว: 🏃 20 Hz (ปานกลาง 50ms)", self.sim_speed_var, "20Hz", self._on_sim_speed_changed)
-            m.add_radiobutton("⏱️  ความเร็ว: ⚡ 100 Hz (เร็ว 10ms)", self.sim_speed_var, "100Hz", self._on_sim_speed_changed)
-            m.add_radiobutton("⏱️  ความเร็ว: 🚀 Max Speed (เต็มสปีด / ทันที)", self.sim_speed_var, "max", self._on_sim_speed_changed)
+            speed_menu = SpotifyPopupMenu(self, tag="RunMenuSpeed")
+            for label, val in [
+                ("🐢 1 Hz (1 วิ/คำสั่ง)", "1Hz"),
+                ("🚶 5 Hz (200 ms)", "5Hz"),
+                ("🏃 20 Hz (50 ms)", "20Hz"),
+                ("⚡ 100 Hz (10 ms)", "100Hz"),
+                ("🚀 Max Speed (เต็มสปีด)", "max"),
+            ]:
+                speed_menu.add_radiobutton(label, self.sim_speed_var, val, self._on_sim_speed_changed)
+            m.add_cascade("⏱️  ความเร็วการจำลอง", speed_menu)
             m.add_separator()
-            m.add_command("⏭  รันทีละคำสั่ง (Step Single Instruction)", "F10", self.step_and_show_sim)
-            m.add_command("🔄  รีเซ็ตการจำลอง (Reset Simulation)", "Ctrl+Shift+R", self.reset_sim)
-            m.add_separator()
-            m.add_command("🔬  วิเคราะห์ 5-Stage Pipeline & ทดสอบ RTL Testbench...", "Ctrl+Shift+P", self.open_rtl_verify_dialog)
-            m.add_command("⚡  แฟลชฮาร์ดแวร์ CPU ลงบอร์ด FPGA (In-App JTAG)", "F7", self.open_fpga_programmer_dialog)
-            m.add_command("📦  ส่งออกโปรเจกต์ Vivado SoC (Nexys A7-100T)...", "", lambda: self.export_file("vivado_soc"))
-            m.add_command("🚀  อัปโหลดโค้ดลงบอร์ดจริง Nexys A7 (USB UART)", "", self.upload_to_board)
+            m.add_command("🔬  วิเคราะห์ Pipeline & ทดสอบ RTL Testbench...", "Ctrl+Shift+P", self.open_rtl_verify_dialog)
             return m
 
         make_menubutton("File", build_file_menu)
@@ -1083,8 +1099,9 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
                 ind.config(bg=BG_ACTIVITY)
                 btn.config(fg="#383838")
                 return
+            fill = BG_HOVER if active else BG_ACTIVITY
             ind.config(bg=ACCENT_GREEN if active else BG_ACTIVITY)
-            btn.config(fg=TXT_BRIGHT if active else TXT_MUTED)
+            btn.config(fg=TXT_BRIGHT if active else TXT_MUTED, bg=fill, highlightbackground=fill)
 
     def _update_simulator_rail_button(self):
         if not hasattr(self, "rail_buttons") or "simulator" not in self.rail_buttons:
@@ -1113,6 +1130,7 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
 
         self._update_rail_indicator("explorer",   self.left_sidebar_mode == "explorer")
         self._update_rail_indicator("search",     self.left_sidebar_mode == "search")
+        self._schedule_responsive_layout()
 
     def toggle_machine_panel(self):
         self.show_machine_panel_var.set(not self.show_machine_panel_var.get())
@@ -1124,11 +1142,13 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
         right_str = str(self.right_group)
         if active:
             if right_str not in pane_names:
-                self.editor_split.add(self.right_group, width=660)
+                self.editor_split.add(self.right_group, width=660, minsize=260)
+                self._split_sig = None
         else:
             if right_str in pane_names:
                 self.editor_split.forget(self.right_group)
         self._update_rail_indicator("chip", active)
+        self._schedule_responsive_layout()
 
     def toggle_simulator(self):
         self.show_simulator_var.set(not self.show_simulator_var.get())
@@ -1144,6 +1164,7 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
         else:
             self.sim_panel.pack_forget()
         self._update_simulator_rail_button()
+        self._schedule_responsive_layout()
 
     def toggle_overview(self):
         self.show_overview_var.set(not self.show_overview_var.get())
@@ -1159,43 +1180,111 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
         else:
             self.overview_panel.pack_forget()
         self._update_rail_indicator("overview", active)
+        self._schedule_responsive_layout()
 
-    def run_and_show_sim(self):
-        # 1. Automatically open and show 32-bit Machine Code (Opcode Table)
+    # ==========================================================================
+    # RESPONSIVE LAYOUT (runs on every resize / panel toggle)
+    # ==========================================================================
+    MIN_EDITOR_W = 520      # editor + board cards never get narrower than this
+
+    def _schedule_responsive_layout(self):
+        if not hasattr(self, "main_body"):
+            return
+        if getattr(self, "_resp_after_id", None):
+            try:
+                self.after_cancel(self._resp_after_id)
+            except Exception:
+                pass
+        self._resp_after_id = self.after(40, self._apply_responsive_layout)
+
+    def _apply_responsive_layout(self):
+        """Size side panels from the window width and auto-collapse them in
+        order (CPU overview first, then the sidebar) instead of letting them
+        overlap or squeeze the editor to nothing. The View-menu / rail state
+        is untouched, so widening the window brings hidden panels back."""
+        self._resp_after_id = None
+        W = self.main_body.winfo_width()
+        H = self.main_body.winfo_height()
+        if W <= 1 or H <= 1:
+            return
+
+        def clamp(v, lo, hi):
+            return max(lo, min(hi, v))
+
+        rail = 64
+        sb_w = clamp(int(W * 0.19), 210, 285)
+        ov_w = clamp(int(W * 0.21), 305, 330)
+
+        want_sb = self.left_sidebar_mode is not None
+        want_ov = self.show_overview_var.get()
+        free = W - rail
+        show_ov = want_ov and free - (sb_w + 6 if want_sb else 0) - (ov_w + 6) >= self.MIN_EDITOR_W
+        show_sb = want_sb and free - (ov_w + 6 if show_ov else 0) - (sb_w + 6) >= self.MIN_EDITOR_W
+
+        self.sidebar_container.config(width=sb_w)
+        self.overview_panel.config(width=ov_w)
+        if show_sb and not self.sidebar_container.winfo_ismapped():
+            self.sidebar_container.pack(side=tk.LEFT, fill=tk.Y, padx=(0, 6), before=self.center_area)
+        elif not show_sb and self.sidebar_container.winfo_ismapped():
+            self.sidebar_container.pack_forget()
+        if show_ov and not self.overview_panel.winfo_ismapped():
+            self.overview_panel.pack(side=tk.RIGHT, fill=tk.Y, padx=(6, 0), before=self.center_area)
+        elif not show_ov and self.overview_panel.winfo_ismapped():
+            self.overview_panel.pack_forget()
+
+        # Bottom board panel: proportional height so the editor keeps room
+        self.sim_panel.config(height=clamp(int(H * 0.36), 205, 250))
+
+        # Editor + Machine Code: side by side when wide, stacked when narrow
+        center_w = free - (sb_w + 6 if show_sb else 0) - (ov_w + 6 if show_ov else 0)
+        if self.show_machine_panel_var.get():
+            orient = tk.HORIZONTAL if center_w >= 2 * self.MIN_EDITOR_W - 40 else tk.VERTICAL
+            sig = (orient, center_w // 40)
+            if sig != getattr(self, "_split_sig", None):
+                self._split_sig = sig
+                self.editor_split.configure(orient=orient)
+                if orient == tk.HORIZONTAL:
+                    self.editor_split.paneconfigure(self.left_group, minsize=300)
+                    self.editor_split.paneconfigure(self.right_group, minsize=260)
+                    self.after_idle(lambda: self._place_split_sash(0.55))
+                else:
+                    self.editor_split.paneconfigure(self.left_group, minsize=140)
+                    self.editor_split.paneconfigure(self.right_group, minsize=120)
+                    self.after_idle(lambda: self._place_split_sash(0.6))
+
+        if hasattr(self, "_relayout_top_search"):
+            self._relayout_top_search()
+
+    def _place_split_sash(self, frac):
+        try:
+            if len(self.editor_split.panes()) < 2:
+                return
+            if str(self.editor_split.cget("orient")) == "horizontal":
+                self.editor_split.sash_place(0, int(self.editor_split.winfo_width() * frac), 1)
+            else:
+                self.editor_split.sash_place(0, 1, int(self.editor_split.winfo_height() * frac))
+        except Exception:
+            pass
+
+    def _reveal_sim_panels(self):
+        """Open the Machine Code, CPU/Registers and Board panels (if closed)."""
         if not self.show_machine_panel_var.get():
             self.show_machine_panel_var.set(True)
             self._apply_machine_panel_visibility()
         self.switch_right_view("opcode")
-
-        # 2. Automatically open and show CPU Status & Registers Panel
         if not self.show_overview_var.get():
             self.show_overview_var.set(True)
             self._apply_overview_visibility()
-
-        # 3. Ensure simulator panel is visible
         if not self.show_simulator_var.get():
             self.show_simulator_var.set(True)
             self._apply_simulator_visibility()
 
+    def run_and_show_sim(self):
+        self._reveal_sim_panels()
         self.toggle_sim()
 
     def step_and_show_sim(self):
-        # 1. Automatically open and show 32-bit Machine Code (Opcode Table)
-        if not self.show_machine_panel_var.get():
-            self.show_machine_panel_var.set(True)
-            self._apply_machine_panel_visibility()
-        self.switch_right_view("opcode")
-
-        # 2. Automatically open and show CPU Status & Registers Panel
-        if not self.show_overview_var.get():
-            self.show_overview_var.set(True)
-            self._apply_overview_visibility()
-
-        # 3. Ensure simulator panel is visible
-        if not self.show_simulator_var.get():
-            self.show_simulator_var.set(True)
-            self._apply_simulator_visibility()
-
+        self._reveal_sim_panels()
         self.step_sim()
 
     # ==========================================================================
@@ -1510,7 +1599,7 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
         else:
             self.open_tabs = [fpath_abs]
 
-        self.breadcrumb_lbl.config(text=f"โค้ดต้นฉบับ  •  {self.current_file}")
+        self.breadcrumb_lbl.config(text=f"{os.path.basename(self.project_dir)}  ›  {self.current_file}")
         self._sync_compiler_to_file_language(fpath_abs)
 
         with open(fpath_abs, "r", encoding="utf-8", errors="replace") as f:
@@ -1617,7 +1706,7 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
             is_act = (mode == m)
             b.set_style(
                 fill_col=BG_PILL_ACT if is_act else BG_PILL_INACT,
-                fg_col=TXT_ON_WHITE if is_act else TXT_BRIGHT
+                fg_col=TXT_ON_PILL if is_act else TXT_MUTED
             )
 
         if mode == "opcode":

@@ -40,7 +40,7 @@ from config.catalog import (
     ISA_REFERENCE,
 )
 from ui.graphics import truncate_to_pixel_width, add_hover_border
-from ui.widgets import SpotifyPillButton, SpotifyPopupMenu, SpotifyAutoScrollbar
+from ui.widgets import SpotifyPillButton, SpotifyPopupMenu, SpotifyAutoScrollbar, attach_tooltip
 
 
 class SidebarPanelsMixin:
@@ -100,26 +100,25 @@ class SidebarPanelsMixin:
     def _build_explorer_view(self):
         hdr = tk.Frame(self.view_explorer, bg=BG_SIDEBAR, padx=14, pady=12)
         hdr.pack(fill=tk.X)
-        tk.Label(hdr, text="EXPLORER", bg=BG_SIDEBAR, fg=TXT_BRIGHT,
-                 font=(FONT_UI, 10, "bold")).pack(side=tk.LEFT)
+        tk.Label(hdr, text="Explorer", bg=BG_SIDEBAR, fg=TXT_MUTED,
+                 font=(FONT_UI, 11, "bold")).pack(side=tk.LEFT)
 
-        act_row = tk.Frame(self.view_explorer, bg=BG_SIDEBAR, padx=10, pady=2)
-        act_row.pack(fill=tk.X)
-
-        for btn_txt, btn_cmd in [
-            ("+ ไฟล์ใหม่",     self.start_inline_new_file),
-            ("+ โฟลเดอร์ใหม่", self.start_inline_new_project),
-            ("เปิดโฟลเดอร์",    self.open_folder_dialog),
-        ]:
+        # Compact icon actions (they no longer clip when the sidebar narrows)
+        icon_font = getattr(self, "icon_font_name", "Segoe MDL2 Assets")
+        for glyph, tip, btn_cmd in reversed([
+            ("", "ไฟล์ใหม่ (Ctrl+N)",  self.start_inline_new_file),
+            ("", "โฟลเดอร์ใหม่",       self.start_inline_new_project),
+            ("", "เปิดโฟลเดอร์...",    self.open_folder_dialog),
+        ]):
             b = tk.Button(
-                act_row, text=btn_txt, bd=0,
-                highlightthickness=1, highlightbackground=BG_PILL_INACT,
-                padx=6, pady=4,
-                bg=BG_PILL_INACT, fg=TXT_BRIGHT, activebackground=BG_HOVER, activeforeground=ACCENT_GREEN,
-                cursor="hand2", font=(FONT_UI, 8, "bold"), command=btn_cmd
+                hdr, text=glyph, bd=0, highlightthickness=0, width=3, pady=2,
+                bg=BG_SIDEBAR, fg=TXT_MUTED, activebackground=BG_HOVER, activeforeground=ACCENT_GREEN,
+                cursor="hand2", font=(icon_font, 10), command=btn_cmd
             )
-            b.pack(side=tk.LEFT, padx=2, expand=True, fill=tk.X)
-            add_hover_border(b, BG_PILL_INACT, BG_HOVER, BG_PILL_INACT, BORDER_HOVER)
+            b.pack(side=tk.RIGHT, padx=1)
+            b.bind("<Enter>", lambda e, w=b: w.config(bg=BG_HOVER, fg=TXT_BRIGHT))
+            b.bind("<Leave>", lambda e, w=b: w.config(bg=BG_SIDEBAR, fg=TXT_MUTED))
+            attach_tooltip(b, tip)
 
         tree_area = tk.Frame(self.view_explorer, bg=BG_SIDEBAR)
         tree_area.pack(fill=tk.BOTH, expand=True, pady=(6, 2))
@@ -156,28 +155,8 @@ class SidebarPanelsMixin:
         self.file_buttons = {}
         self.folder_frames = {}
 
-        tk.Frame(self.view_explorer, bg=BORDER_COLOR, height=1).pack(fill=tk.X, padx=14, pady=6)
-
-        exp_hdr = tk.Frame(self.view_explorer, bg=BG_SIDEBAR, padx=14, pady=2)
-        exp_hdr.pack(fill=tk.X)
-        tk.Label(exp_hdr, text="ส่งออกไฟล์ลงบอร์ด VIVADO", bg=BG_SIDEBAR, fg=TXT_MUTED,
-                 font=(FONT_UI, 9, "bold")).pack(side=tk.LEFT)
-
-        for exp_txt, exp_kind in [
-            ("บันทึก instruction_memory.vhd", "vhdl"),
-            ("บันทึก program.coe",            "coe"),
-            ("บันทึก machine_code_32bit.txt", "bin"),
-        ]:
-            eb = tk.Button(
-                self.view_explorer, text=exp_txt, anchor="w",
-                bg=BG_SIDEBAR, fg=TXT_MUTED, activebackground=BG_HOVER, activeforeground=TXT_BRIGHT,
-                bd=0, highlightthickness=1, highlightbackground=BG_SIDEBAR,
-                padx=12, pady=4, cursor="hand2",
-                font=(FONT_UI, 8, "bold"),
-                command=lambda k=exp_kind: self.export_file(k)
-            )
-            eb.pack(fill=tk.X, padx=8, pady=1)
-            add_hover_border(eb, BG_SIDEBAR, "#1D1D1D", BG_SIDEBAR, BORDER_HOVER)
+        # (Vivado/VHDL/COE export buttons used to be repeated here; they now
+        #  live once under File > ส่งออก (Export).)
 
     def _clear_inline_entry(self):
         if self._inline_entry_row and self._inline_entry_row.winfo_exists():
@@ -764,7 +743,7 @@ class SidebarPanelsMixin:
                 if ext_info["sample_file"]:
                     b_sample = SpotifyPillButton(
                         btn_row, text="+ ลองไฟล์ตัวอย่าง", bg_parent="#181818",
-                        fill_col=ACCENT_GREEN, fg_col=TXT_ON_WHITE, hover_fill="#1FDF64",
+                        fill_col=ACCENT_GREEN, fg_col=TXT_ON_WHITE, hover_fill="#D8FF52",
                         font_spec=(FONT_UI, 8, "bold"), pad_x=10, height=26,
                         icon_font_name=self.icon_font_name,
                         command=lambda info=ext_info: self.create_extension_sample_file(info)
@@ -773,7 +752,7 @@ class SidebarPanelsMixin:
             else:
                 b_inst = SpotifyPillButton(
                     btn_row, text="ดาวน์โหลด & ติดตั้ง (Install)", bg_parent="#181818",
-                    fill_col=ACCENT_GREEN, fg_col=TXT_ON_WHITE, hover_fill="#1FDF64",
+                    fill_col=ACCENT_GREEN, fg_col=TXT_ON_WHITE, hover_fill="#D8FF52",
                     font_spec=(FONT_UI, 8, "bold"), pad_x=12, height=26,
                     icon_glyph="\uE896", icon_font_name=self.icon_font_name,
                     command=lambda eid=ext_id: self.toggle_install_extension(eid)
