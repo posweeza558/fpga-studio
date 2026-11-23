@@ -37,6 +37,7 @@ from config.theme import (
     FONT_ICON,
 )
 from ui.widgets import SpotifyPillButton
+from ui import dialog_kit as kit
 def _center_window(win, width, height, parent=None):
     win.update_idletasks()
     if parent:
@@ -103,10 +104,13 @@ class BaseFramelessWizardDialog(tk.Toplevel):
         # Left Icon & Title
         left_box = tk.Frame(tbar, bg=BG_TITLEBAR)
         left_box.pack(side="left", padx=(12, 0), fill="y")
-        lbl_icon = tk.Label(left_box, text="⚡", font=(FONT_ICON, 11), bg=BG_TITLEBAR, fg=ACCENT_GREEN)
-        lbl_icon.pack(side="left", padx=(0, 8))
-        lbl_title = tk.Label(left_box, text=title_text, font=(FONT_UI, 9, "bold"),
-                             bg=BG_TITLEBAR, fg=TXT_PRIMARY)
+        # A small square mark instead of an emoji; the app name is not repeated
+        # in every dialog title ("FPGA Studio — X" -> "X").
+        lbl_icon = tk.Frame(left_box, bg=ACCENT_GREEN, width=8, height=8)
+        lbl_icon.pack(side="left", padx=(0, 10))
+        title_text = title_text.split(" — ", 1)[-1]
+        lbl_title = tk.Label(left_box, text=title_text, font=(FONT_UI, 9),
+                             bg=BG_TITLEBAR, fg=TXT_MUTED)
         lbl_title.pack(side="left")
         # Right Close Button ("✕")
         btn_close = tk.Label(tbar, text="✕", font=(FONT_UI, 10), bg=BG_TITLEBAR,
@@ -169,7 +173,7 @@ class CPUInstallWizardDialog(BaseFramelessWizardDialog):
         # Pre-scan directory
         self._analyze_source()
         # Initialize frameless modal window
-        super().__init__(parent, "FPGA Studio — ตัวช่วยติดตั้งและจัดการ CPU (CPU Setup Wizard)", 700, 560)
+        super().__init__(parent, "ติดตั้ง CPU", 700, 560)
         # Build Setup View directly (skip initial file picker as file was already selected)
         self._build_setup_view()
     def _analyze_source(self):
@@ -240,49 +244,31 @@ class CPUInstallWizardDialog(BaseFramelessWizardDialog):
         """Builds the main choice screen (Express vs Custom)."""
         for w in self.container.winfo_children():
             w.destroy()
-        # Top banner
-        header = tk.Frame(self.container, bg=BG_ACTIVITY, height=68)
-        header.pack(fill="x", padx=0, pady=0)
-        header.pack_propagate(False)
-        h_inner = tk.Frame(header, bg=BG_ACTIVITY)
-        h_inner.pack(fill="both", expand=True, padx=20, pady=10)
-        icon_lbl = tk.Label(h_inner, text="⚡", font=(FONT_ICON, 18), bg=BG_ACTIVITY, fg=ACCENT_GREEN)
-        icon_lbl.pack(side="left", padx=(0, 12))
-        title_box = tk.Frame(h_inner, bg=BG_ACTIVITY)
-        title_box.pack(side="left", fill="y")
-        lbl_t = tk.Label(title_box, text="ตัวช่วยติดตั้งสถาปัตยกรรม CPU (CPU Setup Wizard)",
-                         font=(FONT_UI, 12, "bold"), bg=BG_ACTIVITY, fg=TXT_BRIGHT)
-        lbl_t.pack(anchor="w")
-        lbl_sub = tk.Label(title_box, text="ระบบผสานรวม Core ฮาร์ดแวร์เข้าสู่ระบบจำลองและคอมไพเลอร์ของ FPGA Studio",
-                           font=(FONT_UI, 8), bg=BG_ACTIVITY, fg=TXT_MUTED)
-        lbl_sub.pack(anchor="w")
         # Target inspection card
         card_frame = tk.Frame(self.container, bg=BG_ELEVATED, bd=0)
-        card_frame.pack(fill="x", padx=20, pady=(10, 8))
+        card_frame.pack(fill="x", padx=20, pady=(16, 8))
         ci_inner = tk.Frame(card_frame, bg=BG_ELEVATED)
         ci_inner.pack(fill="x", padx=14, pady=8)
         top_row = tk.Frame(ci_inner, bg=BG_ELEVATED)
         top_row.pack(fill="x")
         tk.Label(top_row, text=f"ไฟล์เป้าหมาย:  {self.target_fname}", font=(FONT_UI, 9, "bold"),
                  bg=BG_ELEVATED, fg=TXT_BRIGHT).pack(side="left")
-        btn_change = SpotifyPillButton(top_row, text="เปลี่ยนไฟล์...", command=self._browse_new_file,
-                                       bg_parent=BG_ELEVATED, fill_col=BG_POPUP, fg_col=TXT_MUTED,
-                                       height=22, pad_x=10)
+        btn_change = kit.button(top_row, "เปลี่ยนไฟล์...", self._browse_new_file, kind="link")
         btn_change.pack(side="right")
         tk.Label(ci_inner, text=f"ที่อยู่:  {self.source_dir}", font=(FONT_CODE, 8),
                  bg=BG_ELEVATED, fg=TXT_MUTED).pack(anchor="w", pady=(2, 2))
         
-        stat_txt = f"สถาปัตยกรรมที่ตรวจพบ: {self.detected_arch}  •  พบไฟล์โมดูลย่อย {len(self.sister_files)} ไฟล์"
-        tk.Label(ci_inner, text=stat_txt, font=(FONT_UI, 8),
-                 bg=BG_ELEVATED, fg=ACCENT_GREEN).pack(anchor="w")
+        stat_txt = f"{self.detected_arch} · โมดูลย่อย {len(self.sister_files)} ไฟล์"
+        tk.Label(ci_inner, text=stat_txt, font=(FONT_UI, 9),
+                 bg=BG_ELEVATED, fg=TXT_PRIMARY).pack(anchor="w")
         hw_summary = getattr(self, "hw_caps", {}).get("summary_th", "")
         if hw_summary:
             is_alu = getattr(self, "hw_caps", {}).get("is_standalone_alu", False)
-            tk.Label(ci_inner, text=f"การวิเคราะห์พอร์ตฮาร์ดแวร์จริง: {hw_summary}", font=(FONT_UI, 8, "bold"),
-                     bg=BG_ELEVATED, fg="#FFAA00" if is_alu else ACCENT_GREEN).pack(anchor="w", pady=(1, 0))
+            tk.Label(ci_inner, text=hw_summary, font=(FONT_UI, 9), wraplength=620, justify="left",
+                     bg=BG_ELEVATED, fg=ACCENT_AMBER if is_alu else TXT_MUTED).pack(anchor="w", pady=(2, 0))
         # Mode Selection Header
-        tk.Label(self.container, text="เลือกรูปแบบการติดตั้ง (Installation Options):",
-                 font=(FONT_UI, 10, "bold"), bg=BG_BLACK, fg=TXT_BRIGHT).pack(anchor="w", padx=22, pady=(4, 6))
+        tk.Label(self.container, text="รูปแบบการติดตั้ง",
+                 font=(FONT_UI, 9, "bold"), bg=BG_BLACK, fg=TXT_MUTED).pack(anchor="w", padx=22, pady=(4, 6))
         # Radio cards container
         opts_frame = tk.Frame(self.container, bg=BG_BLACK)
         opts_frame.pack(fill="both", expand=True, padx=20, pady=0)
@@ -291,7 +277,7 @@ class CPUInstallWizardDialog(BaseFramelessWizardDialog):
         self.card_express.pack(fill="x", pady=(0, 6))
         ce_inner = tk.Frame(self.card_express, bg=BG_SIDEBAR, cursor="hand2")
         ce_inner.pack(fill="x", padx=14, pady=8)
-        rb_exp = tk.Radiobutton(ce_inner, text="🟢  การติดตั้งแบบด่วน (Express - แนะนำ)",
+        rb_exp = tk.Radiobutton(ce_inner, text="ติดตั้งแบบด่วน (แนะนำ)",
                                 variable=self.install_mode, value="express",
                                 font=(FONT_UI, 10, "bold"), bg=BG_SIDEBAR, fg=TXT_BRIGHT,
                                 selectcolor=BG_POPUP, activebackground=BG_SIDEBAR,
@@ -300,18 +286,18 @@ class CPUInstallWizardDialog(BaseFramelessWizardDialog):
         rb_exp.pack(anchor="w")
         if getattr(self, "hw_caps", {}).get("is_standalone_alu"):
             exp_desc = (
-                "• ⚠️ ตรวจพบ: Pure ALU Core (ไม่มี Memory Bus / ไม่มีขาต่อ I/O ภายนอก)\n"
-                "• ทำเครื่องหมาย Peripherals บนบอร์ดเป็น [UNMAPPED] อัตโนมัติ เพื่อความถูกต้องตามฮาร์ดแวร์\n"
-                "• คัดลอกและจัดรวมชุดไฟล์โมดูลเข้าเป็นแพ็กเกจอัตโนมัติ\n"
-                "• คำนวณคำสั่ง ALU และแสดงผลลัพธ์ผ่านเรจิสเตอร์ทั้ง 32 ตัวบนจอภาพทันที 100%"
+                "• ไฟล์นี้เป็น ALU เดี่ยว (ไม่มี memory bus หรือขา I/O ภายนอก)\n"
+                "• อุปกรณ์บนบอร์ดจำลองจะแสดงเป็น UNMAPPED\n"
+                "• คัดลอกโมดูลย่อยมารวมเป็นแพ็กเกจ\n"
+                "• ผลการคำนวณแสดงในเรจิสเตอร์ 32 ตัว"
             )
         else:
             exp_desc = (
-                "• ตรวจพบ Memory Bus Interface: เชื่อมต่อกับ Digilent Nexys A7 MMIO SoC อัตโนมัติ\n"
-                "• รองรับ MMIO สำหรับ LEDs, 16 Switches, 7-Segment, Push Buttons, UART, VGA\n"
-                "• คัดลอกและจัดรวมชุดไฟล์โมดูลย่อยทั้งหมด (.v, .sv, .vhd) เข้าเป็นแพ็กเกจอัตโนมัติ\n"
-                "• ค้นหาและแก้ไข Absolute Path แปลกปลอมเป็น Relative Path อัตโนมัติ\n"
-                "• ตรวจจับ Top Module และพร้อมรันจำลองบนบอร์ดได้ทันที 100%"
+                "• พบ memory bus: ต่อกับ MMIO ของ Nexys A7 ให้\n"
+                "• ใช้ LED, สวิตช์, 7-Segment, ปุ่มกด, UART และ VGA ได้\n"
+                "• คัดลอกโมดูลย่อย (.v, .sv, .vhd) มารวมเป็นแพ็กเกจ\n"
+                "• แก้ include แบบ absolute path เป็น relative path\n"
+                "• หา top module และรันบนบอร์ดจำลองได้ทันที"
             )
         lbl_exp_desc = tk.Label(ce_inner, text=exp_desc, font=(FONT_UI, 8), bg=BG_SIDEBAR, fg=TXT_MUTED,
                  justify="left", cursor="hand2")
@@ -326,14 +312,14 @@ class CPUInstallWizardDialog(BaseFramelessWizardDialog):
         self.card_custom.pack(fill="x", pady=(0, 4))
         cc_inner = tk.Frame(self.card_custom, bg=BG_SIDEBAR, cursor="hand2")
         cc_inner.pack(fill="x", padx=14, pady=8)
-        rb_cust = tk.Radiobutton(cc_inner, text="⚙️  การติดตั้งแบบกำหนดเอง (Custom / Manual)",
+        rb_cust = tk.Radiobutton(cc_inner, text="กำหนดเอง",
                                  variable=self.install_mode, value="custom",
                                  font=(FONT_UI, 10, "bold"), bg=BG_SIDEBAR, fg=TXT_BRIGHT,
                                  selectcolor=BG_POPUP, activebackground=BG_SIDEBAR,
                                  activeforeground=TXT_BRIGHT, command=self._on_mode_toggled,
                                  cursor="hand2")
         rb_cust.pack(anchor="w")
-        cust_desc = "• นำเข้าไฟล์ตามต้นฉบับ 100% โดยไม่แตะต้องหรือดัดแปลงเนื้อหาโค้ดใดๆ ทั้งสิ้น"
+        cust_desc = "• นำเข้าไฟล์ตามเดิม ไม่แก้ไขโค้ด"
         lbl_cust_desc = tk.Label(cc_inner, text=cust_desc, font=(FONT_UI, 8), bg=BG_SIDEBAR, fg=TXT_MUTED,
                                  justify="left", cursor="hand2")
         lbl_cust_desc.pack(anchor="w", padx=(24, 0), pady=(2, 3))
@@ -360,41 +346,32 @@ class CPUInstallWizardDialog(BaseFramelessWizardDialog):
                              fg=TXT_BRIGHT, insertbackground=TXT_BRIGHT, relief="flat", bd=3, width=28)
         entry_top.pack(side="left")
         # Section title for automated checkboxes
-        tk.Label(self.cust_opts_box, text="เลือกคำสั่งและระบบทำงานอัตโนมัติ (Automated Options):",
-                 font=(FONT_UI, 8, "bold"), bg=BG_ELEVATED, fg=ACCENT_GREEN).pack(anchor="w", pady=(5, 2))
+        tk.Label(self.cust_opts_box, text="ตัวเลือก",
+                 font=(FONT_UI, 8, "bold"), bg=BG_ELEVATED, fg=TXT_MUTED).pack(anchor="w", pady=(5, 2))
         # Checkboxes (Manual defaults: untouched original files)
-        tk.Checkbutton(self.cust_opts_box, text="ติ๊กเพื่อให้ระบบแก้ไข Absolute Include Paths ให้อัตโนมัติ (Sanitize paths)",
+        tk.Checkbutton(self.cust_opts_box, text="แก้ include แบบ absolute path เป็น relative path",
                        variable=self.auto_fix_includes, font=(FONT_UI, 8), bg=BG_ELEVATED,
                        fg=TXT_BRIGHT, selectcolor=BG_POPUP, activebackground=BG_ELEVATED).pack(anchor="w", pady=1)
-        tk.Checkbutton(self.cust_opts_box, text="ติ๊กเพื่อให้ระบบคัดลอกไฟล์โมดูลย่อยทั้งหมดมาด้วย (Bundle sister modules)",
+        tk.Checkbutton(self.cust_opts_box, text="คัดลอกโมดูลย่อยทั้งหมดมาด้วย",
                        variable=self.bundle_modules, font=(FONT_UI, 8), bg=BG_ELEVATED,
                        fg=TXT_BRIGHT, selectcolor=BG_POPUP, activebackground=BG_ELEVATED).pack(anchor="w", pady=1)
         tk.Checkbutton(self.cust_opts_box, text="สลับไปใช้สถาปัตยกรรม CPU นี้ทันทีหลังติดตั้งเสร็จ",
                        variable=self.set_active_cpu, font=(FONT_UI, 8), bg=BG_ELEVATED,
                        fg=TXT_BRIGHT, selectcolor=BG_POPUP, activebackground=BG_ELEVATED).pack(anchor="w", pady=1)
-        tk.Checkbutton(self.cust_opts_box, text="🎮 เชื่อมต่อกับ Nexys A7 Board Simulator (เปิดใช้งาน MMIO สำหรับ LEDs, Switches, 7-Seg, UART, VGA)",
-                       variable=self.use_sim, font=(FONT_UI, 8, "bold"), bg=BG_ELEVATED,
-                       fg=ACCENT_GREEN, selectcolor=BG_POPUP, activebackground=BG_ELEVATED).pack(anchor="w", pady=2)
+        tk.Checkbutton(self.cust_opts_box, text="ต่อกับบอร์ดจำลอง Nexys A7 (MMIO ของ LED, สวิตช์, 7-Segment, UART, VGA)",
+                       variable=self.use_sim, font=(FONT_UI, 8), bg=BG_ELEVATED,
+                       fg=TXT_BRIGHT, selectcolor=BG_POPUP, activebackground=BG_ELEVATED).pack(anchor="w", pady=2)
 
         # Pin Planner Button
         btn_pin_box = tk.Frame(self.cust_opts_box, bg=BG_ELEVATED)
         btn_pin_box.pack(fill="x", pady=(4, 2))
-        SpotifyPillButton(btn_pin_box, text="📐 กำหนดขาพอร์ตและบัส (Pin and Bus Assignment...)",
-                          command=self._open_pin_planner,
-                          bg_parent=BG_ELEVATED, fill_col=BG_POPUP, fg_col=TXT_BRIGHT,
-                          height=28, pad_x=14).pack(side="left")
+        kit.button(btn_pin_box, "กำหนดขาพอร์ตและบัส...", self._open_pin_planner).pack(side="left")
         self._on_mode_toggled()
         # Bottom bar (buttons use the bar colour as bg_parent so their corners blend in)
         bbar = tk.Frame(self.container, bg=BG_BLACK, height=48)
         bbar.pack(fill="x", side="bottom", padx=20, pady=10)
-        btn_cancel = SpotifyPillButton(bbar, text="ยกเลิก (Cancel)", command=self.destroy,
-                                       bg_parent=BG_BLACK, fill_col=BG_POPUP, fg_col=TXT_MUTED,
-                                       height=32, pad_x=16)
-        btn_cancel.pack(side="left")
-        btn_install = SpotifyPillButton(bbar, text="🚀  เริ่มการติดตั้ง (Install)", command=self._start_installation,
-                                        bg_parent=BG_BLACK, fill_col=ACCENT_GREEN, fg_col="#000000",
-                                        height=32, pad_x=22)
-        btn_install.pack(side="right")
+        kit.button(bbar, "ติดตั้ง", self._start_installation, kind="primary").pack(side="left")
+        kit.button(bbar, "ยกเลิก", self.destroy, kind="link").pack(side="right")
     def _open_pin_planner(self):
         from ui.pin_assignment_dialog import PinAssignmentDialog
         def _on_pins_saved(data):
@@ -428,18 +405,17 @@ class CPUInstallWizardDialog(BaseFramelessWizardDialog):
         """Switches to the progress loading screen and performs the installation."""
         for w in self.container.winfo_children():
             w.destroy()
-        header = tk.Frame(self.container, bg=BG_ACTIVITY, height=68)
+        header = tk.Frame(self.container, bg=BG_BLACK, height=68)
         header.pack(fill="x")
         header.pack_propagate(False)
-        h_inner = tk.Frame(header, bg=BG_ACTIVITY)
+        h_inner = tk.Frame(header, bg=BG_BLACK)
         h_inner.pack(fill="both", expand=True, padx=20, pady=10)
-        tk.Label(h_inner, text="⚙️", font=(FONT_ICON, 18), bg=BG_ACTIVITY, fg=ACCENT_AMBER).pack(side="left", padx=(0, 12))
-        tb = tk.Frame(h_inner, bg=BG_ACTIVITY)
+        tb = tk.Frame(h_inner, bg=BG_BLACK)
         tb.pack(side="left", fill="y")
         tk.Label(tb, text="กำลังดำเนินการติดตั้งและเตรียมความพร้อมของ CPU...",
-                 font=(FONT_UI, 11, "bold"), bg=BG_ACTIVITY, fg=TXT_BRIGHT).pack(anchor="w")
+                 font=(FONT_UI, 11, "bold"), bg=BG_BLACK, fg=TXT_BRIGHT).pack(anchor="w")
         self.prog_status_lbl = tk.Label(tb, text="เตรียมการสแกนและจัดหมวดหมู่โมดูล...",
-                                        font=(FONT_UI, 8), bg=BG_ACTIVITY, fg=TXT_MUTED)
+                                        font=(FONT_UI, 8), bg=BG_BLACK, fg=TXT_MUTED)
         self.prog_status_lbl.pack(anchor="w")
         prog_box = tk.Frame(self.container, bg=BG_BLACK)
         prog_box.pack(fill="x", padx=24, pady=(20, 10))
@@ -467,13 +443,13 @@ class CPUInstallWizardDialog(BaseFramelessWizardDialog):
         dest_pkg_dir = os.path.join(self.project_dir, "custom_cpus", self.cpu_name)
         os.makedirs(dest_pkg_dir, exist_ok=True)
         if step == 1:
-            self._set_progress(20, "🔍 ขั้นตอนที่ 1/4: สแกนโมดูลฮาร์ดแวร์และโครงสร้างไฟล์...")
+            self._set_progress(20, "ขั้นตอนที่ 1/4: สแกนโมดูลฮาร์ดแวร์และโครงสร้างไฟล์...")
             self._append_log(f"[1/4] ตรวจสอบไฟล์เป้าหมาย: {self.target_fname}")
             self._append_log(f"      • ไดเรกทอรีต้นทาง: {self.source_dir}")
             self._append_log(f"      • ตรวจพบไฟล์โมดูลย่อยทั้งหมด: {len(self.sister_files)} ไฟล์")
             self.after(350, lambda: self._execute_step(2))
         elif step == 2:
-            self._set_progress(45, "📦 ขั้นตอนที่ 2/4: คัดลอกและรวมชุดโมดูล (Bundle Sister Modules)...")
+            self._set_progress(45, "ขั้นตอนที่ 2/4: คัดลอกและรวมชุดโมดูล (Bundle Sister Modules)...")
             self._append_log(f"[2/4] คัดลอกไฟล์ไปยังแพ็กเกจ: custom_cpus/{self.cpu_name}/")
             copied_count = 0
             if self.bundle_modules.get():
@@ -501,7 +477,7 @@ class CPUInstallWizardDialog(BaseFramelessWizardDialog):
                 self._append_log(f"      • นำเข้าเฉพาะไฟล์เป้าหมาย {self.target_fname} โดยตรง (ตามโหมด Manual ต้นฉบับ)")
             self.after(400, lambda: self._execute_step(3))
         elif step == 3:
-            self._set_progress(75, "🛠️ ขั้นตอนที่ 3/4: ตรวจสอบและแก้ปัญหา Include Paths (Auto-Fix)...")
+            self._set_progress(75, "ขั้นตอนที่ 3/4: ตรวจสอบและแก้ปัญหา Include Paths (Auto-Fix)...")
             fixed_count = 0
             include_pattern = re.compile(r'`include\s+["\']([^"\']+)["\']')
             if self.auto_fix_includes.get():
@@ -548,7 +524,7 @@ class CPUInstallWizardDialog(BaseFramelessWizardDialog):
             self.fixed_includes_count = fixed_count
             self.after(350, lambda: self._execute_step(4))
         elif step == 4:
-            self._set_progress(100, "⚙️ ขั้นตอนที่ 4/4: ลงทะเบียนสถาปัตยกรรมเข้าสู่ระบบ FPGA Studio...")
+            self._set_progress(100, "ขั้นตอนที่ 4/4: ลงทะเบียนสถาปัตยกรรมเข้าสู่ระบบ FPGA Studio...")
             self._append_log("[4/4] สร้างดัชนีโมดูลและลงทะเบียนเข้าสู่โปรเจกต์...")
             target_dest_file = os.path.join(dest_pkg_dir, self.target_fname)
             self.final_target_path = target_dest_file
@@ -572,18 +548,17 @@ class CPUInstallWizardDialog(BaseFramelessWizardDialog):
         """Displays completion card with summary and finish button."""
         for w in self.container.winfo_children():
             w.destroy()
-        header = tk.Frame(self.container, bg=BG_ACTIVITY, height=68)
+        header = tk.Frame(self.container, bg=BG_BLACK, height=68)
         header.pack(fill="x")
         header.pack_propagate(False)
-        h_inner = tk.Frame(header, bg=BG_ACTIVITY)
+        h_inner = tk.Frame(header, bg=BG_BLACK)
         h_inner.pack(fill="both", expand=True, padx=20, pady=10)
-        tk.Label(h_inner, text="✓", font=(FONT_ICON, 20, "bold"), bg=BG_ACTIVITY, fg=ACCENT_GREEN).pack(side="left", padx=(0, 12))
-        tb = tk.Frame(h_inner, bg=BG_ACTIVITY)
+        tb = tk.Frame(h_inner, bg=BG_BLACK)
         tb.pack(side="left", fill="y")
         tk.Label(tb, text="ติดตั้งและนำเข้าสถาปัตยกรรม CPU สำเร็จ!",
-                 font=(FONT_UI, 12, "bold"), bg=BG_ACTIVITY, fg=TXT_BRIGHT).pack(anchor="w")
+                 font=(FONT_UI, 12, "bold"), bg=BG_BLACK, fg=TXT_BRIGHT).pack(anchor="w")
         tk.Label(tb, text="ฮาร์ดแวร์ถูกจัดเตรียมและเชื่อมโยงเข้ากับระบบ FPGA Studio เรียบร้อยแล้ว",
-                 font=(FONT_UI, 8), bg=BG_ACTIVITY, fg=ACCENT_GREEN).pack(anchor="w")
+                 font=(FONT_UI, 8), bg=BG_BLACK, fg=ACCENT_GREEN).pack(anchor="w")
         card = tk.Frame(self.container, bg=BG_SIDEBAR, bd=0)
         card.pack(fill="both", expand=True, padx=24, pady=16)
         ci = tk.Frame(card, bg=BG_SIDEBAR)
@@ -648,7 +623,7 @@ class CompilerInstallWizardDialog(BaseFramelessWizardDialog):
         self.test_executable = tk.BooleanVar(value=True)
         self.set_active_comp = tk.BooleanVar(value=True)
         self._analyze_compiler()
-        super().__init__(parent, "FPGA Studio — ตัวช่วยติดตั้งคอมไพเลอร์ (Compiler Setup Wizard)", 700, 560)
+        super().__init__(parent, "ติดตั้งคอมไพเลอร์", 700, 560)
         self._build_setup_view()
     def _analyze_compiler(self):
         if not self.target_file_path:
@@ -685,36 +660,33 @@ class CompilerInstallWizardDialog(BaseFramelessWizardDialog):
     def _build_setup_view(self):
         for w in self.container.winfo_children():
             w.destroy()
-        header = tk.Frame(self.container, bg=BG_ACTIVITY, height=68)
+        header = tk.Frame(self.container, bg=BG_BLACK, height=68)
         header.pack(fill="x")
         header.pack_propagate(False)
-        h_inner = tk.Frame(header, bg=BG_ACTIVITY)
+        h_inner = tk.Frame(header, bg=BG_BLACK)
         h_inner.pack(fill="both", expand=True, padx=20, pady=10)
-        tk.Label(h_inner, text="🔨", font=(FONT_ICON, 18), bg=BG_ACTIVITY, fg=ACCENT_GREEN).pack(side="left", padx=(0, 12))
-        tb = tk.Frame(h_inner, bg=BG_ACTIVITY)
+        tb = tk.Frame(h_inner, bg=BG_BLACK)
         tb.pack(side="left", fill="y")
         tk.Label(tb, text="ตัวช่วยติดตั้งคอมไพเลอร์ (Compiler Setup Wizard)",
-                 font=(FONT_UI, 12, "bold"), bg=BG_ACTIVITY, fg=TXT_BRIGHT).pack(anchor="w")
+                 font=(FONT_UI, 12, "bold"), bg=BG_BLACK, fg=TXT_BRIGHT).pack(anchor="w")
         tk.Label(tb, text="กำหนดค่าและทดสอบการเชื่อมต่อ Toolchain สำหรับแปลง C / Assembly สู่ Machine Code",
-                 font=(FONT_UI, 8), bg=BG_ACTIVITY, fg=TXT_MUTED).pack(anchor="w")
+                 font=(FONT_UI, 8), bg=BG_BLACK, fg=TXT_MUTED).pack(anchor="w")
         card_frame = tk.Frame(self.container, bg=BG_ELEVATED, bd=0)
-        card_frame.pack(fill="x", padx=20, pady=(10, 8))
+        card_frame.pack(fill="x", padx=20, pady=(16, 8))
         ci = tk.Frame(card_frame, bg=BG_ELEVATED)
         ci.pack(fill="x", padx=14, pady=8)
         top_row = tk.Frame(ci, bg=BG_ELEVATED)
         top_row.pack(fill="x")
         tk.Label(top_row, text=f"ไฟล์คอมไพเลอร์:  {self.target_fname}", font=(FONT_UI, 9, "bold"),
                  bg=BG_ELEVATED, fg=TXT_BRIGHT).pack(side="left")
-        btn_change = SpotifyPillButton(top_row, text="เปลี่ยนไฟล์...", command=self._browse_new_file,
-                                       bg_parent=BG_ELEVATED, fill_col=BG_POPUP, fg_col=TXT_MUTED,
-                                       height=22, pad_x=10)
+        btn_change = kit.button(top_row, "เปลี่ยนไฟล์...", self._browse_new_file, kind="link")
         btn_change.pack(side="right")
         tk.Label(ci, text=f"ที่อยู่:  {self.target_file_path}", font=(FONT_CODE, 8),
                  bg=BG_ELEVATED, fg=TXT_MUTED).pack(anchor="w", pady=(2, 2))
         tk.Label(ci, text=f"สถาปัตยกรรมที่วิเคราะห์เบื้องต้น:  {self.detected_arch}", font=(FONT_UI, 8),
                  bg=BG_ELEVATED, fg=ACCENT_GREEN).pack(anchor="w")
-        tk.Label(self.container, text="เลือกรูปแบบการติดตั้ง (Installation Options):",
-                 font=(FONT_UI, 10, "bold"), bg=BG_BLACK, fg=TXT_BRIGHT).pack(anchor="w", padx=22, pady=(4, 6))
+        tk.Label(self.container, text="รูปแบบการติดตั้ง",
+                 font=(FONT_UI, 9, "bold"), bg=BG_BLACK, fg=TXT_MUTED).pack(anchor="w", padx=22, pady=(4, 6))
         opts_frame = tk.Frame(self.container, bg=BG_BLACK)
         opts_frame.pack(fill="both", expand=True, padx=20)
         # Card 1: Express
@@ -722,7 +694,7 @@ class CompilerInstallWizardDialog(BaseFramelessWizardDialog):
         self.card_express.pack(fill="x", pady=(0, 6))
         ce_inner = tk.Frame(self.card_express, bg=BG_SIDEBAR, cursor="hand2")
         ce_inner.pack(fill="x", padx=14, pady=8)
-        rb_exp = tk.Radiobutton(ce_inner, text="🟢  การติดตั้งแบบด่วน (Express - แนะนำ)",
+        rb_exp = tk.Radiobutton(ce_inner, text="ติดตั้งแบบด่วน (แนะนำ)",
                                 variable=self.install_mode, value="express",
                                 font=(FONT_UI, 10, "bold"), bg=BG_SIDEBAR, fg=TXT_BRIGHT,
                                 selectcolor=BG_POPUP, activebackground=BG_SIDEBAR,
@@ -747,7 +719,7 @@ class CompilerInstallWizardDialog(BaseFramelessWizardDialog):
         self.card_custom.pack(fill="x", pady=(0, 4))
         cc_inner = tk.Frame(self.card_custom, bg=BG_SIDEBAR, cursor="hand2")
         cc_inner.pack(fill="x", padx=14, pady=8)
-        rb_cust = tk.Radiobutton(cc_inner, text="⚙️  การติดตั้งแบบกำหนดเอง (Custom / Manual)",
+        rb_cust = tk.Radiobutton(cc_inner, text="กำหนดเอง",
                                  variable=self.install_mode, value="custom",
                                  font=(FONT_UI, 10, "bold"), bg=BG_SIDEBAR, fg=TXT_BRIGHT,
                                  selectcolor=BG_POPUP, activebackground=BG_SIDEBAR,
@@ -781,8 +753,8 @@ class CompilerInstallWizardDialog(BaseFramelessWizardDialog):
                               fg=TXT_BRIGHT, insertbackground=TXT_BRIGHT, relief="flat", bd=3, width=32)
         args_entry.pack(side="left")
         # Checkboxes title
-        tk.Label(self.cust_opts_box, text="เลือกคำสั่งและระบบทำงานอัตโนมัติ (Automated Options):",
-                 font=(FONT_UI, 8, "bold"), bg=BG_ELEVATED, fg=ACCENT_GREEN).pack(anchor="w", pady=(5, 2))
+        tk.Label(self.cust_opts_box, text="ตัวเลือก",
+                 font=(FONT_UI, 8, "bold"), bg=BG_ELEVATED, fg=TXT_MUTED).pack(anchor="w", pady=(5, 2))
         # Checkboxes
         tk.Checkbutton(self.cust_opts_box, text="ติ๊กเพื่อให้ระบบทดสอบรันโปรแกรมก่อนติดตั้ง (Smoke Test ด้วยคำสั่ง --version)",
                        variable=self.test_executable, font=(FONT_UI, 8), bg=BG_ELEVATED,
@@ -797,7 +769,7 @@ class CompilerInstallWizardDialog(BaseFramelessWizardDialog):
                                        bg_parent=BG_BLACK, fill_col=BG_POPUP, fg_col=TXT_MUTED,
                                        height=32, pad_x=16)
         btn_cancel.pack(side="left")
-        btn_install = SpotifyPillButton(bbar, text="🚀  เริ่มการติดตั้งและลงทะเบียน (Install)", command=self._start_installation,
+        btn_install = SpotifyPillButton(bbar, text="เริ่มการติดตั้งและลงทะเบียน (Install)", command=self._start_installation,
                                         bg_parent=BG_BLACK, fill_col=ACCENT_GREEN, fg_col="#000000",
                                         height=32, pad_x=22)
         btn_install.pack(side="right")
@@ -818,18 +790,17 @@ class CompilerInstallWizardDialog(BaseFramelessWizardDialog):
     def _start_installation(self):
         for w in self.container.winfo_children():
             w.destroy()
-        header = tk.Frame(self.container, bg=BG_ACTIVITY, height=68)
+        header = tk.Frame(self.container, bg=BG_BLACK, height=68)
         header.pack(fill="x")
         header.pack_propagate(False)
-        h_inner = tk.Frame(header, bg=BG_ACTIVITY)
+        h_inner = tk.Frame(header, bg=BG_BLACK)
         h_inner.pack(fill="both", expand=True, padx=20, pady=10)
-        tk.Label(h_inner, text="⚙️", font=(FONT_ICON, 18), bg=BG_ACTIVITY, fg=ACCENT_AMBER).pack(side="left", padx=(0, 12))
-        tb = tk.Frame(h_inner, bg=BG_ACTIVITY)
+        tb = tk.Frame(h_inner, bg=BG_BLACK)
         tb.pack(side="left", fill="y")
         tk.Label(tb, text="กำลังดำเนินการทดสอบและลงทะเบียนคอมไพเลอร์...",
-                 font=(FONT_UI, 11, "bold"), bg=BG_ACTIVITY, fg=TXT_BRIGHT).pack(anchor="w")
+                 font=(FONT_UI, 11, "bold"), bg=BG_BLACK, fg=TXT_BRIGHT).pack(anchor="w")
         self.prog_status_lbl = tk.Label(tb, text="เตรียมการทดสอบเรียกคำสั่ง...",
-                 font=(FONT_UI, 8), bg=BG_ACTIVITY, fg=TXT_MUTED)
+                 font=(FONT_UI, 8), bg=BG_BLACK, fg=TXT_MUTED)
         self.prog_status_lbl.pack(anchor="w")
         prog_box = tk.Frame(self.container, bg=BG_BLACK)
         prog_box.pack(fill="x", padx=24, pady=(20, 10))
@@ -855,7 +826,7 @@ class CompilerInstallWizardDialog(BaseFramelessWizardDialog):
         self.update_idletasks()
     def _execute_step(self, step):
         if step == 1:
-            self._set_progress(25, "🔍 ขั้นตอนที่ 1/3: ตรวจสอบความถูกต้องของไฟล์...")
+            self._set_progress(25, "ขั้นตอนที่ 1/3: ตรวจสอบความถูกต้องของไฟล์...")
             self._append_log(f"[1/3] ตรวจสอบไฟล์: {self.target_fname}")
             size_kb = os.path.getsize(self.target_file_path) / 1024.0
             self._append_log(f"      • ขนาดไฟล์: {size_kb:.1f} KB")
@@ -863,7 +834,7 @@ class CompilerInstallWizardDialog(BaseFramelessWizardDialog):
             self.after(350, lambda: self._execute_step(2))
         elif step == 2:
             if self.test_executable.get():
-                self._set_progress(60, "⚡ ขั้นตอนที่ 2/3: ทดสอบเรียกทำงาน (Smoke Test Execution)...")
+                self._set_progress(60, "ขั้นตอนที่ 2/3: ทดสอบเรียกทำงาน (Smoke Test Execution)...")
                 self._append_log("[2/3] รันคำสั่งตรวจสอบเวอร์ชัน (--version)...")
                 version_output = ""
                 try:
@@ -889,13 +860,13 @@ class CompilerInstallWizardDialog(BaseFramelessWizardDialog):
                 self._append_log("      ✓ คอมไพเลอร์ตอบสนองการทำงานเรียบร้อย")
                 self.version_info = version_output
             else:
-                self._set_progress(60, "⚡ ขั้นตอนที่ 2/3: ตรวจสอบการนำเข้าโดยตรง (Clean Import)...")
+                self._set_progress(60, "ขั้นตอนที่ 2/3: ตรวจสอบการนำเข้าโดยตรง (Clean Import)...")
                 self._append_log("[2/3] ข้ามขั้นตอนการทดสอบเรียกทำงาน (Smoke Test)")
-                self._append_log("      • นำเข้าโปรแกรม/สคริปต์ตามต้นฉบับ 100% ไม่รันหรือแตะต้องไฟล์ล่วงหน้า")
+                self._append_log("      • นำเข้าโปรแกรม/สคริปต์ตามเดิม ไม่รันหรือแก้ไขไฟล์ล่วงหน้า")
                 self.version_info = "นำเข้าโดยตรง (ข้ามการทดสอบ Smoke Test)"
             self.after(400, lambda: self._execute_step(3))
         elif step == 3:
-            self._set_progress(100, "⚙️ ขั้นตอนที่ 3/3: ลงทะเบียน Toolchain เข้าสู่ระบบ...")
+            self._set_progress(100, "ขั้นตอนที่ 3/3: ลงทะเบียน Toolchain เข้าสู่ระบบ...")
             self._append_log("[3/3] บันทึกการกำหนดค่าเข้าสู่ FPGA Studio...")
             self._append_log(f"      • ชื่อคอมไพเลอร์: {self.compiler_name_var.get() or self.target_fname}")
             self._append_log(f"      • สถาปัตยกรรม: {self.detected_arch}")
@@ -905,18 +876,17 @@ class CompilerInstallWizardDialog(BaseFramelessWizardDialog):
     def _show_completion_view(self):
         for w in self.container.winfo_children():
             w.destroy()
-        header = tk.Frame(self.container, bg=BG_ACTIVITY, height=68)
+        header = tk.Frame(self.container, bg=BG_BLACK, height=68)
         header.pack(fill="x")
         header.pack_propagate(False)
-        h_inner = tk.Frame(header, bg=BG_ACTIVITY)
+        h_inner = tk.Frame(header, bg=BG_BLACK)
         h_inner.pack(fill="both", expand=True, padx=20, pady=10)
-        tk.Label(h_inner, text="✓", font=(FONT_ICON, 20, "bold"), bg=BG_ACTIVITY, fg=ACCENT_GREEN).pack(side="left", padx=(0, 12))
-        tb = tk.Frame(h_inner, bg=BG_ACTIVITY)
+        tb = tk.Frame(h_inner, bg=BG_BLACK)
         tb.pack(side="left", fill="y")
         tk.Label(tb, text="ติดตั้งและลงทะเบียนคอมไพเลอร์สำเร็จ!",
-                 font=(FONT_UI, 12, "bold"), bg=BG_ACTIVITY, fg=TXT_BRIGHT).pack(anchor="w")
+                 font=(FONT_UI, 12, "bold"), bg=BG_BLACK, fg=TXT_BRIGHT).pack(anchor="w")
         tk.Label(tb, text="Toolchain นำเข้าและเชื่อมโยงเข้ากับระบบ FPGA Studio เรียบร้อยแล้ว",
-                 font=(FONT_UI, 8), bg=BG_ACTIVITY, fg=ACCENT_GREEN).pack(anchor="w")
+                 font=(FONT_UI, 8), bg=BG_BLACK, fg=ACCENT_GREEN).pack(anchor="w")
         card = tk.Frame(self.container, bg=BG_SIDEBAR, bd=0)
         card.pack(fill="both", expand=True, padx=24, pady=16)
         ci = tk.Frame(card, bg=BG_SIDEBAR)

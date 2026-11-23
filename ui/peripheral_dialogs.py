@@ -32,6 +32,7 @@ from config.theme import (
     FONT_CODE,
 )
 from ui.widgets import SpotifyAutoScrollbar
+from ui import dialog_kit as kit
 
 
 def apply_main_window_style(win):
@@ -128,8 +129,8 @@ class VGADisplayWindow(tk.Toplevel):
         tb.pack_propagate(False)
 
         title_lbl = tk.Label(
-            tb, text="🖥️  จอภาพ VGA เสมือน (DIGILENT NEXYS A7  •  ARTIX-7)",
-            bg="#181818", fg=TXT_BRIGHT, font=(FONT_UI, 9, "bold")
+            tb, text="จอ VGA",
+            bg="#181818", fg=TXT_MUTED, font=(FONT_UI, 9)
         )
         title_lbl.pack(side=tk.LEFT)
 
@@ -144,38 +145,17 @@ class VGADisplayWindow(tk.Toplevel):
         btn_close.bind("<Leave>", lambda e: btn_close.config(bg="#181818", fg=TXT_MUTED))
 
         res_lbl = tk.Label(
-            tb, text="640 × 480 @ 60Hz (12-bit RGB 4:4:4)",
-            bg="#181818", fg=ACCENT_GREEN, font=(FONT_CODE, 8, "bold"), padx=10
+            tb, text="640×480, 60 Hz · framebuffer 0xFF000000",
+            bg="#181818", fg=TXT_DIM, font=(FONT_UI, 8), padx=10
         )
         res_lbl.pack(side=tk.RIGHT)
 
         attach_window_drag(self, [tb, title_lbl, res_lbl])
 
-        # 2. Bottom Hardware Sync Status Bar (Packed at bottom before canvas)
-        sb = tk.Frame(self, bg="#121212", height=32, padx=12)
-        sb.pack(side=tk.BOTTOM, fill=tk.X)
-        sb.pack_propagate(False)
-
-        tk.Label(
-            sb, text="● SIGNAL: CONNECTED", bg="#121212", fg=ACCENT_GREEN,
-            font=(FONT_UI, 8, "bold")
-        ).pack(side=tk.LEFT, padx=(0, 10))
-
-        self.sync_lbl = tk.Label(
-            sb,
-            text="HSync: 31.5 kHz   •   VSync: 60.0 Hz   •   Clock: 25.175 MHz",
-            bg="#121212", fg=TXT_MUTED, font=(FONT_CODE, 8)
-        )
-        self.sync_lbl.pack(side=tk.LEFT)
-
-        tk.Label(
-            sb,
-            text="VRAM Framebuffer: 0xFF000000",
-            bg="#121212", fg=TXT_DIM, font=(FONT_CODE, 8)
-        ).pack(side=tk.RIGHT)
+        self.sync_lbl = res_lbl
 
         # 3. VGA Screen Canvas (Directly packed in window - No nested bezel/border frames!)
-        self.canvas = tk.Canvas(self, bg="#0A0E0C", bd=0, highlightthickness=0)
+        self.canvas = tk.Canvas(self, bg="#000000", bd=0, highlightthickness=0)
         self.canvas.pack(fill=tk.BOTH, expand=True)
 
         # Redraw on every resize so the picture always fills the window
@@ -188,7 +168,7 @@ class VGADisplayWindow(tk.Toplevel):
 
         # If CPU/FPGA has written pixel data to VRAM framebuffer, render it directly!
         if self.sim_engine.vga_buffer:
-            self.canvas.create_rectangle(0, 0, w, h, fill="#0A0E0C", outline="")
+            self.canvas.create_rectangle(0, 0, w, h, fill="#000000", outline="")
             cw = w / 80.0
             ch = h / 60.0
             for addr, color_val in list(self.sim_engine.vga_buffer.items())[:4800]:
@@ -203,73 +183,13 @@ class VGADisplayWindow(tk.Toplevel):
                     hex_col = f"#{color_val & 0xFFFFFF:06X}"
                     self.canvas.create_rectangle(px0, py0, px1, py1, fill=hex_col, outline="")
         else:
-            # Idle screen: broadcast-style test pattern that fills the whole viewport
-            # 1. Base dark grid background
-            self.canvas.create_rectangle(0, 0, w, h, fill="#0A0E0C", outline="")
-            for gx in range(0, w, 40):
-                self.canvas.create_line(gx, 0, gx, h, fill="#121815", width=1)
-            for gy in range(0, h, 40):
-                self.canvas.create_line(0, gy, w, gy, fill="#121815", width=1)
-
-            # 2. SMPTE 8-colour bars across the top, edge to edge
-            bar_h = 68
-            bars = [
-                ("#EAEAEA", "WHITE"),
-                ("#DADA00", "YELLOW"),
-                ("#00DADA", "CYAN"),
-                ("#00DA00", "GREEN"),
-                ("#DA00DA", "MAGENTA"),
-                ("#DA0000", "RED"),
-                ("#0000DA", "BLUE"),
-                ("#141414", "BLACK"),
-            ]
-            bar_w = w / len(bars)
-            for i, (col, b_name) in enumerate(bars):
-                bx0 = int(i * bar_w)
-                bx1 = int((i + 1) * bar_w) if i < len(bars) - 1 else w
-                self.canvas.create_rectangle(bx0, 0, bx1, bar_h, fill=col, outline="")
-
-            # 3. Grayscale ramp across the bottom, edge to edge
-            ramp_h = 34
-            steps = 16
-            ramp_w = w / steps
-            for s in range(steps):
-                gray = int(s * (255 / (steps - 1)))
-                g_col = f"#{gray:02X}{gray:02X}{gray:02X}"
-                rx0 = int(s * ramp_w)
-                rx1 = int((s + 1) * ramp_w) if s < steps - 1 else w
-                self.canvas.create_rectangle(rx0, h - ramp_h, rx1, h, fill=g_col, outline="")
-
-            # 4. Centre OSD card that fills the middle area
-            card_margin_x = 18
-            cy0 = bar_h + 12
-            cy1 = h - ramp_h - 12
-            self.canvas.create_rectangle(
-                card_margin_x, cy0, w - card_margin_x, cy1,
-                fill="#0E1410", outline="#1ED760", width=1
-            )
-
-            # Center Card Content
-            self.canvas.create_text(
-                w // 2, cy0 + 26,
-                text="DIGILENT NEXYS A7  •  VGA VIDEO MONITOR (ACTIVE)",
-                fill=ACCENT_GREEN, font=(FONT_UI, 11, "bold")
-            )
-            self.canvas.create_text(
-                w // 2, cy0 + 58,
-                text="พร้อมรับสัญญาณภาพ 640 × 480 @ 60Hz",
-                fill=TXT_BRIGHT, font=(FONT_UI, 14, "bold")
-            )
-            self.canvas.create_text(
-                w // 2, cy0 + 96,
-                text="พอร์ต VGA ต่ออยู่กับบอร์ดแล้ว — เมื่อรันโค้ดและมีการเขียนข้อมูลภาพลง VRAM\n(แอดเดรส 0xFF000000) ภาพกราฟิกจะปรากฏบนหน้านี้โดยตรงทันทีแบบ Real-Time",
-                fill=TXT_MUTED, font=(FONT_UI, 9), justify="center"
-            )
-            self.canvas.create_text(
-                w // 2, cy1 - 20,
-                text="Pixel Clock: 25.175 MHz  |  Horiz: 31.47 kHz  |  Vert: 60.0 Hz  |  Color: 12-bit RGB 4:4:4",
-                fill=TXT_DIM, font=(FONT_CODE, 8)
-            )
+            # Empty state: a black screen (what a real monitor shows) plus what to do
+            self.canvas.create_rectangle(0, 0, w, h, fill="#000000", outline="")
+            self.canvas.create_text(w // 2, h // 2 - 12, text="ยังไม่มีภาพ",
+                                    fill=TXT_MUTED, font=(FONT_UI, 11))
+            self.canvas.create_text(w // 2, h // 2 + 14,
+                                    text="เขียนพิกเซลที่แอดเดรส 0xFF000000 แล้วภาพจะแสดงที่นี่",
+                                    fill=TXT_DIM, font=(FONT_UI, 9))
 
 
 class UARTTerminalWindow(tk.Toplevel):
@@ -302,8 +222,8 @@ class UARTTerminalWindow(tk.Toplevel):
         tb.pack_propagate(False)
 
         title_lbl = tk.Label(
-            tb, text="💬  USB-UART Serial Terminal (NEXYS A7  •  FT2232HQ)",
-            bg="#181818", fg=TXT_BRIGHT, font=(FONT_UI, 9, "bold")
+            tb, text="Serial monitor (USB-UART)",
+            bg="#181818", fg=TXT_MUTED, font=(FONT_UI, 9)
         )
         title_lbl.pack(side=tk.LEFT)
 
@@ -318,87 +238,54 @@ class UARTTerminalWindow(tk.Toplevel):
         btn_close.bind("<Leave>", lambda e: btn_close.config(bg="#181818", fg=TXT_MUTED))
 
         baud_lbl = tk.Label(
-            tb, text="115200 8-N-1 (COM Port)",
-            bg="#181818", fg=ACCENT_GREEN, font=(FONT_CODE, 8, "bold"), padx=10
+            tb, text="115200 8-N-1 · 0xF0000010",
+            bg="#181818", fg=TXT_DIM, font=(FONT_UI, 8), padx=10
         )
         baud_lbl.pack(side=tk.RIGHT)
 
         attach_window_drag(self, [tb, title_lbl, baud_lbl])
-
-        # 2. Bottom Status Bar (Packed at bottom before text area)
-        sb = tk.Frame(self, bg="#121212", height=32, padx=12)
-        sb.pack(side=tk.BOTTOM, fill=tk.X)
-        sb.pack_propagate(False)
-
-        tk.Label(
-            sb, text="● UART PORT: ACTIVE (Port 0xF0000010)",
-            bg="#121212", fg=ACCENT_GREEN, font=(FONT_UI, 8, "bold")
-        ).pack(side=tk.LEFT)
-
-        tk.Label(
-            sb, text="Baud: 115200bps   •   Data: 8-bit   •   Parity: None   •   Stop: 1",
-            bg="#121212", fg=TXT_MUTED, font=(FONT_CODE, 8)
-        ).pack(side=tk.RIGHT)
 
         # 3. Transmission / Input Bar (Packed above status bar)
         send_bar = tk.Frame(self, bg=BG_PANEL, padx=12, pady=8)
         send_bar.pack(fill=tk.X, side=tk.BOTTOM)
 
         tk.Label(
-            send_bar, text="TX ส่งข้อมูลเข้า CPU:", bg=BG_PANEL, fg=TXT_MUTED,
-            font=(FONT_UI, 8, "bold")
+            send_bar, text="ส่งเข้า CPU", bg=BG_PANEL, fg=TXT_MUTED, font=(FONT_UI, 9)
         ).pack(side=tk.LEFT, padx=(0, 8))
 
         self.input_var = tk.StringVar()
         self.input_entry = tk.Entry(
             send_bar, textvariable=self.input_var, bg=BG_ELEVATED, fg=TXT_BRIGHT,
-            insertbackground=ACCENT_GREEN, bd=0, highlightthickness=1,
-            highlightbackground="#383838", font=(FONT_CODE, 9)
+            insertbackground=TXT_BRIGHT, bd=0, highlightthickness=1,
+            highlightbackground=BORDER_COLOR, highlightcolor=BORDER_HOVER, font=(FONT_CODE, 9)
         )
         self.input_entry.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(0, 8), ipady=3)
         self.input_entry.bind("<Return>", lambda e: self.send_text())
 
-        btn_send = tk.Button(
-            send_bar, text="ส่ง (Send)", bg=ACCENT_GREEN, fg=TXT_ON_WHITE,
-            activebackground="#1FDF64", activeforeground=TXT_ON_WHITE,
-            bd=0, padx=12, pady=2, cursor="hand2", font=(FONT_UI, 8, "bold"),
-            command=self.send_text
-        )
-        btn_send.pack(side=tk.RIGHT)
-
-        btn_clear = tk.Button(
-            send_bar, text="ล้างหน้าจอ", bg=BG_PILL_INACT, fg=TXT_BRIGHT,
-            activebackground=BG_HOVER, activeforeground=TXT_BRIGHT,
-            bd=0, highlightthickness=1, highlightbackground="#333333",
-            padx=10, pady=2, cursor="hand2", font=(FONT_UI, 8, "bold"),
-            command=self.clear_log
-        )
-        btn_clear.pack(side=tk.RIGHT, padx=6)
+        kit.button(send_bar, "ส่ง", self.send_text, kind="primary", pady=4).pack(side=tk.RIGHT)
+        kit.button(send_bar, "ล้าง", self.clear_log, kind="link").pack(side=tk.RIGHT, padx=(0, 6))
 
         # 4. Terminal Screen (Scrollable Text Area directly in window)
-        term_frame = tk.Frame(self, bg="#0A0E0A")
+        term_frame = tk.Frame(self, bg="#121212")
         term_frame.pack(fill=tk.BOTH, expand=True)
 
-        self.scroll = SpotifyAutoScrollbar(term_frame, bg_track="#0A0E0A")
+        self.scroll = SpotifyAutoScrollbar(term_frame, bg_track="#121212")
         self.text_area = tk.Text(
-            term_frame, bg="#0A0E0A", fg=ACCENT_GREEN, insertbackground=ACCENT_GREEN,
-            selectbackground="#1B4D27", font=(FONT_CODE, 10), wrap=tk.WORD,
-            bd=0, highlightthickness=0, yscrollcommand=self.scroll.set, padx=8, pady=8
+            term_frame, bg="#121212", fg=TXT_PRIMARY, insertbackground=TXT_BRIGHT,
+            selectbackground=BG_HOVER, font=(FONT_CODE, 10), wrap=tk.WORD,
+            bd=0, highlightthickness=0, yscrollcommand=self.scroll.set, padx=12, pady=10
         )
         self.scroll.command = self.text_area.yview
         self.scroll.pack(side=tk.RIGHT, fill=tk.Y)
         self.text_area.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        self.text_area.tag_configure("hint", foreground=TXT_DIM, font=(FONT_UI, 9))
+        self.text_area.tag_configure("rx", foreground=TXT_MUTED)
 
     def _refresh_content(self):
         self.text_area.delete("1.0", tk.END)
         buf = self.sim_engine.uart_buffer
         if not buf:
-            self.text_area.insert(
-                tk.END,
-                "=== Nexys A7 USB-UART Serial Terminal Ready (115200 8-N-1) ===\n"
-                "กำลังรอรับข้อมูลจาก CPU ที่แอดเดรส 0xF0000010...\n"
-                "-----------------------------------------------------------------\n"
-            )
+            self._show_empty_hint()
         else:
             self.text_area.insert(tk.END, buf)
         self.text_area.see(tk.END)
@@ -416,11 +303,15 @@ class UARTTerminalWindow(tk.Toplevel):
 
     def send_raw(self, text):
         self.sim_engine.send_uart_input(text)
-        self.append_text(f"[RX-IN] {text}")
+        self.text_area.insert(tk.END, f"> {text}", ("rx",))
+        self.text_area.see(tk.END)
         if self.on_send_callback:
             self.on_send_callback()
 
     def clear_log(self):
         self.sim_engine.uart_buffer = ""
         self.text_area.delete("1.0", tk.END)
-        self.text_area.insert(tk.END, "=== เคลียร์หน้าจอแล้ว ===\n")
+        self._show_empty_hint()
+
+    def _show_empty_hint(self):
+        self.text_area.insert(tk.END, "ยังไม่มีข้อมูล โปรแกรมที่เขียนไปที่ 0xF0000010 จะแสดงที่นี่\n", ("hint",))

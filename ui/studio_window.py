@@ -236,6 +236,8 @@ class VSCodeFPGAStudio(tk.Tk, FramelessWindowMixin, SidebarPanelsMixin, BoardPan
     def _setup_ttk_styles(self):
         style = ttk.Style(self)
         style.theme_use("clam")
+        from ui.dialog_kit import apply_dark_ttk
+        apply_dark_ttk(self)            # dark comboboxes in every dialog
 
         style.layout("Treeview", [("Treeview.treearea", {"sticky": "nswe"})])
         style.configure(

@@ -15,12 +15,14 @@ from config.theme import (
     ACCENT_CYAN,
     ACCENT_GREEN,
     ACCENT_WARN,
+    BG_BLACK,
     BG_CARD,
     BG_DARK,
     BG_EDITOR,
     BG_ELEVATED,
     BG_PILL_INACT,
     BORDER_COLOR,
+    BORDER_HOVER,
     FONT_CODE,
     FONT_UI,
     TXT_BRIGHT,
@@ -37,6 +39,7 @@ from core.cloud_synthesis import (
     trigger_cloud_synthesis_workflow,
 )
 from ui.installer_wizard import BaseFramelessWizardDialog
+from ui import dialog_kit as kit
 from ui.widgets import SpotifyAutoScrollbar, SpotifyPillButton
 
 ACCENT_PURPLE = "#A78BFA"
@@ -65,143 +68,80 @@ class CloudSynthesisDialog(BaseFramelessWizardDialog):
 
         super().__init__(
             parent,
-            "FPGA Studio — สังเคราะห์ Bitstream ผ่าน Cloud (GitHub Actions ฟรี)",
+            "สังเคราะห์ Bitstream บน GitHub Actions",
             820,
             620,
         )
 
         self._build_ui()
 
+    DISPATCH_IDLE = "เริ่มสังเคราะห์บน GitHub Actions"
+    DISPATCH_BUSY = "กำลังสังเคราะห์บน Cloud..."
+
     def _build_ui(self):
-        body = tk.Frame(self.container, bg=BG_DARK)
-        body.pack(fill=tk.BOTH, expand=True, padx=20, pady=12)
+        body = tk.Frame(self.container, bg=BG_BLACK)
+        body.pack(fill=tk.BOTH, expand=True, padx=20, pady=16)
 
-        # Header description
-        lbl_info = tk.Label(
-            body,
-            text=(
-                "☁️ Cloud Synthesis — สังเคราะห์และแปลงฮาร์ดแวร์ CPU เป็น Bitstream (.bit) บน Cloud ฟรี 100%\n"
-                "✓ ไม่ต้องติดตั้ง Vivado (50-80GB) ในเครื่องคอมพิวเตอร์ของคุณ\n"
-                "✓ ใช้ระบบ Linux Container (openXC7) ของ GitHub Actions ในการทำ Place & Route อัตโนมัติ"
-            ),
-            bg=BG_DARK,
-            fg=TXT_PRIMARY,
-            font=(FONT_UI, 9),
-            justify="left",
-            anchor="w",
-        )
-        lbl_info.pack(fill=tk.X, pady=(0, 10))
+        form = tk.Frame(body, bg=BG_BLACK)
+        form.pack(fill=tk.X)
+        form.columnconfigure(1, weight=1)
 
-        # Card 1: Cloud Dispatch Configuration
-        card_cfg = tk.Frame(body, bg=BG_CARD, bd=1, relief="solid", highlightthickness=1, highlightbackground=BORDER_COLOR)
-        card_cfg.pack(fill=tk.X, pady=(0, 10), ipady=6, padx=2)
+        def label(row, text):
+            tk.Label(form, text=text, bg=BG_BLACK, fg=TXT_MUTED, font=(FONT_UI, 9),
+                     anchor="w").grid(row=row, column=0, sticky="w", padx=(0, 16), pady=5)
 
-        # Row 1: Target CPU & Board
-        r1 = tk.Frame(card_cfg, bg=BG_CARD)
-        r1.pack(fill=tk.X, padx=14, pady=4)
-        tk.Label(r1, text="สถาปัตยกรรม CPU:", bg=BG_CARD, fg=TXT_DIM, font=(FONT_UI, 9, "bold"), width=16, anchor="w").pack(side=tk.LEFT)
-        tk.Label(r1, text=f"{self.cpu_name} ({self.cpu_arch.upper()})", bg=BG_CARD, fg=ACCENT_CYAN, font=(FONT_CODE, 9, "bold")).pack(side=tk.LEFT, padx=6)
+        def entry(row, var, **kw):
+            e = tk.Entry(form, textvariable=var, bg=BG_EDITOR, fg=TXT_BRIGHT, insertbackground=TXT_BRIGHT,
+                         bd=0, highlightthickness=1, highlightbackground=BORDER_COLOR,
+                         highlightcolor=BORDER_HOVER, font=(FONT_CODE, 9), **kw)
+            e.grid(row=row, column=1, sticky="ew", pady=5, ipady=4)
+            return e
 
-        tk.Label(r1, text="เป้าหมายบอร์ด:", bg=BG_CARD, fg=TXT_DIM, font=(FONT_UI, 9, "bold"), width=14, anchor="w").pack(side=tk.LEFT, padx=(20, 0))
-        tk.Label(r1, text=f"{self.board_name} (Artix-7 100T)", bg=BG_CARD, fg=TXT_BRIGHT, font=(FONT_CODE, 9)).pack(side=tk.LEFT, padx=6)
+        label(0, "เป้าหมาย")
+        tk.Label(form, text=f"{self.cpu_name} ({self.cpu_arch.upper()}) บน {self.board_name}",
+                 bg=BG_BLACK, fg=TXT_BRIGHT, font=(FONT_UI, 9), anchor="w").grid(
+                     row=0, column=1, columnspan=2, sticky="w", pady=5)
 
-        # Row 2: GitHub Repository Slug
-        r2 = tk.Frame(card_cfg, bg=BG_CARD)
-        r2.pack(fill=tk.X, padx=14, pady=4)
-        tk.Label(r2, text="คลัง GitHub (Repo):", bg=BG_CARD, fg=TXT_DIM, font=(FONT_UI, 9, "bold"), width=16, anchor="w").pack(side=tk.LEFT)
-        def_repo = "posweeza558/fpga-studio-cloud"
-        self.repo_var = tk.StringVar(value=def_repo)
-        e_repo = tk.Entry(r2, textvariable=self.repo_var, bg=BG_EDITOR, fg=TXT_BRIGHT, bd=0, highlightthickness=1, highlightbackground=BORDER_COLOR, font=(FONT_CODE, 9))
-        e_repo.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=6, ipady=3)
+        label(1, "GitHub repo")
+        self.repo_var = tk.StringVar(value="posweeza558/fpga-studio-cloud")
+        entry(1, self.repo_var)
 
-        # Row 3: GitHub Token (PAT)
-        r3 = tk.Frame(card_cfg, bg=BG_CARD)
-        r3.pack(fill=tk.X, padx=14, pady=4)
-        tk.Label(r3, text="GitHub Token (PAT):", bg=BG_CARD, fg=TXT_DIM, font=(FONT_UI, 9, "bold"), width=16, anchor="w").pack(side=tk.LEFT)
-        
-        # Auto-detect token dynamically from local git config
+        label(2, "GitHub token")
+        # Auto-detect a token embedded in the local git remote URL
         detected_token = ""
         try:
             import subprocess, re
-            r_out = subprocess.check_output(["git", "config", "remote.origin.url"], text=True, stderr=subprocess.DEVNULL).strip()
+            r_out = subprocess.check_output(["git", "config", "remote.origin.url"], text=True,
+                                            stderr=subprocess.DEVNULL).strip()
             m = re.search(r"(ghp_[A-Za-z0-9]+)", r_out)
             if m:
                 detected_token = m.group(1)
         except Exception:
             pass
-
         self.token_var = tk.StringVar(value=detected_token)
-        e_token = tk.Entry(r3, textvariable=self.token_var, show="*", bg=BG_EDITOR, fg=TXT_BRIGHT, bd=0, highlightthickness=1, highlightbackground=BORDER_COLOR, font=(FONT_CODE, 9))
-        e_token.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=6, ipady=3)
+        entry(2, self.token_var, show="*")
+        kit.button(form, "ตรวจสอบ repo", self._test_repo_connection).grid(row=2, column=2, sticky="e", padx=(8, 0))
 
-        btn_test_repo = tk.Button(
-            r3,
-            text="ตรวจสอบคลัง",
-            bg=BG_PILL_INACT,
-            fg=ACCENT_CYAN,
-            bd=0,
-            highlightthickness=1,
-            highlightbackground=ACCENT_CYAN,
-            padx=8,
-            pady=2,
-            cursor="hand2",
-            font=(FONT_UI, 8, "bold"),
-            command=self._test_repo_connection,
-        )
-        btn_test_repo.pack(side=tk.RIGHT)
+        tk.Label(body, text="GitHub Actions จะรัน openXC7 (Yosys, nextpnr) ใน container แล้วส่งไฟล์ .bit กลับมา",
+                 bg=BG_BLACK, fg=TXT_MUTED, font=(FONT_UI, 9), anchor="w").pack(fill=tk.X, pady=(8, 0))
 
-        # Card 2: Action Buttons
-        act_frame = tk.Frame(body, bg=BG_DARK)
-        act_frame.pack(fill=tk.X, pady=(0, 8))
+        footer = tk.Frame(body, bg=BG_BLACK)
+        footer.pack(side=tk.BOTTOM, fill=tk.X, pady=(14, 0))
+        self.btn_dispatch = kit.button(footer, self.DISPATCH_IDLE, self._start_cloud_synthesis_thread, kind="primary")
+        self.btn_dispatch.pack(side=tk.LEFT)
+        kit.button(footer, "ส่งออก .zip เพื่อ push เอง", self._export_bundle_zip, pady=7).pack(side=tk.LEFT, padx=(8, 0))
+        kit.button(footer, "ปิด", self.destroy, kind="link").pack(side=tk.RIGHT)
 
-        self.btn_dispatch = tk.Button(
-            act_frame,
-            text="🚀 เริ่มสังเคราะห์บน Cloud (GitHub Dispatch)",
-            bg=BG_PILL_INACT,
-            fg=ACCENT_PURPLE,
-            bd=0,
-            highlightthickness=1,
-            highlightbackground=ACCENT_PURPLE,
-            padx=12,
-            pady=4,
-            cursor="hand2",
-            font=(FONT_UI, 9, "bold"),
-            command=self._start_cloud_synthesis_thread,
-        )
-        self.btn_dispatch.pack(side=tk.LEFT, padx=(0, 8))
-
-        btn_bundle = tk.Button(
-            act_frame,
-            text="📦 รวมไฟล์แพ็กเกจ .ZIP เพื่อ Push เอง",
-            bg=BG_PILL_INACT,
-            fg=ACCENT_GREEN,
-            bd=0,
-            highlightthickness=1,
-            highlightbackground=ACCENT_GREEN,
-            padx=12,
-            pady=4,
-            cursor="hand2",
-            font=(FONT_UI, 9, "bold"),
-            command=self._export_bundle_zip,
-        )
-        btn_bundle.pack(side=tk.LEFT, padx=(0, 8))
-
-        # Status & Log Console
-        lbl_console = tk.Label(body, text="บันทึกการทำงานและสถานะ Cloud (Log Console):", bg=BG_DARK, fg=TXT_DIM, font=(FONT_UI, 9, "bold"), anchor="w")
-        lbl_console.pack(fill=tk.X, pady=(4, 2))
-
-        con_frame = tk.Frame(body, bg=BG_EDITOR, bd=1, relief="solid", highlightthickness=1, highlightbackground=BORDER_COLOR)
+        kit.section_label(body, "บันทึก").pack(fill=tk.X, pady=(16, 6))
+        con_frame = tk.Frame(body, bg=BG_EDITOR, highlightthickness=1, highlightbackground=BORDER_COLOR)
         con_frame.pack(fill=tk.BOTH, expand=True)
-
-        self.txt_log = tk.Text(con_frame, bg=BG_EDITOR, fg=TXT_BRIGHT, font=(FONT_CODE, 8), wrap="char", bd=0, padx=8, pady=6)
+        self.txt_log = tk.Text(con_frame, bg=BG_EDITOR, fg=TXT_PRIMARY, font=(FONT_CODE, 9), wrap="char",
+                               bd=0, padx=10, pady=8, insertbackground=TXT_BRIGHT)
         sb = SpotifyAutoScrollbar(con_frame, command=self.txt_log.yview)
         self.txt_log.configure(yscrollcommand=sb.set)
         sb.pack(side=tk.RIGHT, fill=tk.Y)
         self.txt_log.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-
-        self._log("☁️ ระบบ Cloud Synthesis พร้อมใช้งาน")
-        self._log(f"   เป้าหมาย: CPU '{self.cpu_name}' | บอร์ด '{self.board_name}'")
-        self._log("   แนะนำ: ระบุ GitHub Repo และ Token เพื่อสั่งการสังเคราะห์ Place & Route อัตโนมัติ")
+        self._log("ใส่ GitHub repo และ token แล้วกด 'เริ่มสังเคราะห์บน GitHub Actions'")
 
     def _log(self, text: str):
         def _append():
@@ -220,13 +160,13 @@ class CloudSynthesisDialog(BaseFramelessWizardDialog):
             messagebox.showwarning("รูปแบบคลังไม่ถูกต้อง", "กรุณาระบุคลังในรูปแบบ 'owner/repository'", parent=self)
             return
 
-        self._log(f"\n🔍 กำลังตรวจสอบการเชื่อมต่อไปยังคลัง: {repo}...")
+        self._log(f"\nกำลังตรวจสอบการเชื่อมต่อไปยังคลัง: {repo}...")
         ok, msg = check_github_repo_workflow(repo, token)
         if ok:
-            self._log(f"✅ {msg}")
+            self._log(f"✓ {msg}")
             messagebox.showinfo("เชื่อมต่อสำเร็จ", msg, parent=self)
         else:
-            self._log(f"❌ {msg}")
+            self._log(f"✗ {msg}")
             messagebox.showerror("เชื่อมต่อไม่สำเร็จ", msg, parent=self)
 
     def _export_bundle_zip(self):
@@ -258,19 +198,19 @@ class CloudSynthesisDialog(BaseFramelessWizardDialog):
             return
 
         self.is_running = True
-        self.btn_dispatch.config(state=tk.DISABLED, text="⏳ กำลังสั่งการบน Cloud...")
+        kit.set_primary_busy(self.btn_dispatch, True, self.DISPATCH_IDLE, self.DISPATCH_BUSY)
 
         def worker():
             self._log("\n" + "=" * 60)
-            self._log(f"📦 [1/2] เตรียมแพ็กเกจ SoC Auto-Wrapper สำหรับ '{self.cpu_name}'...")
+            self._log(f"[1/2] เตรียมแพ็กเกจ SoC Auto-Wrapper สำหรับ '{self.cpu_name}'...")
             try:
                 from core.cloud_synthesis import prepare_cloud_synthesis_package
                 prepare_cloud_synthesis_package(self.project_dir, self.cpu_name, arch=self.cpu_arch, cpu_hdl_path=self.cpu_hdl_path)
                 self._log("✓ สร้างโค้ด SoC Top และ Constraints เรียบร้อย")
             except Exception as e:
-                self._log(f"⚠️ เตรียมแพ็กเกจล้มเหลว: {e}")
+                self._log(f"เตรียมแพ็กเกจล้มเหลว: {e}")
 
-            self._log(f"🚀 [2/2] เริ่มส่งคำสั่ง Cloud Synthesis ไปยัง GitHub Actions ({repo})...")
+            self._log(f"[2/2] เริ่มส่งคำสั่ง Cloud Synthesis ไปยัง GitHub Actions ({repo})...")
 
             ok, msg = trigger_cloud_synthesis_workflow(
                 repo_slug=repo,
@@ -279,12 +219,12 @@ class CloudSynthesisDialog(BaseFramelessWizardDialog):
                 board_target=self.board_name,
             )
             if not ok:
-                self._log(f"❌ {msg}")
+                self._log(f"✗ {msg}")
                 self.after(0, lambda: self._on_finish(False, msg))
                 return
 
-            self._log(f"✅ {msg}")
-            self._log("⏳ กำลังรอเวิร์กโฟลว์เริ่มทำงานบน GitHub Runners (ตรวจสอบทุก 6 วินาที)...")
+            self._log(f"✓ {msg}")
+            self._log("กำลังรอเวิร์กโฟลว์เริ่มทำงานบน GitHub Runners (ตรวจสอบทุก 6 วินาที)...")
 
             # Polling loop
             start_time = time.time()
@@ -306,7 +246,7 @@ class CloudSynthesisDialog(BaseFramelessWizardDialog):
 
                 if status == "completed":
                     if conclusion == "success":
-                        self._log("🎉 เวิร์กโฟลว์สังเคราะห์ Bitstream บน Cloud สำเร็จสมบูรณ์!")
+                        self._log("เวิร์กโฟลว์บน GitHub Actions สังเคราะห์ Bitstream สำเร็จ")
                         # Download artifact
                         app_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
                         dest_bit = os.path.join(app_root, "bitstreams", f"nexys_a7_{self.cpu_name}.bit")
@@ -325,7 +265,7 @@ class CloudSynthesisDialog(BaseFramelessWizardDialog):
                         return
                     else:
                         err_str = f"การสังเคราะห์บน Cloud ล้มเหลว (ผลลัพธ์: {conclusion})\nดูรายละเอียดได้ที่: {html_url}"
-                        self._log(f"❌ {err_str}")
+                        self._log(f"✗ {err_str}")
                         self.after(0, lambda: self._on_finish(False, err_str))
                         return
 
@@ -335,8 +275,8 @@ class CloudSynthesisDialog(BaseFramelessWizardDialog):
 
     def _on_bitstream_downloaded(self, bit_path: str):
         self.is_running = False
-        self.btn_dispatch.config(state=tk.NORMAL, text="🚀 เริ่มสังเคราะห์บน Cloud (GitHub Dispatch)")
-        self._log(f"\n✅ ได้รับไฟล์ Bitstream สำเร็จรูป: {bit_path}")
+        kit.set_primary_busy(self.btn_dispatch, False, self.DISPATCH_IDLE, self.DISPATCH_BUSY)
+        self._log(f"\n✓ ได้รับไฟล์ Bitstream สำเร็จรูป: {bit_path}")
         if self.on_bitstream_ready:
             self.on_bitstream_ready(bit_path)
         messagebox.showinfo(
@@ -348,7 +288,7 @@ class CloudSynthesisDialog(BaseFramelessWizardDialog):
 
     def _on_finish(self, ok: bool, msg: str):
         self.is_running = False
-        self.btn_dispatch.config(state=tk.NORMAL, text="🚀 เริ่มสังเคราะห์บน Cloud (GitHub Dispatch)")
+        kit.set_primary_busy(self.btn_dispatch, False, self.DISPATCH_IDLE, self.DISPATCH_BUSY)
         self._log(f"\n[{'เสร็จสมบูรณ์' if ok else 'แจ้งเตือน'}] {msg}")
         if not ok:
             messagebox.showerror("สถานะ Cloud Synthesis", msg, parent=self)

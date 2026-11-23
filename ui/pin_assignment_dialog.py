@@ -35,6 +35,7 @@ from config.theme import (
 )
 from core.hdl_analyzer import extract_cpu_ports, inspect_cpu_hardware_ports, invalidate_hdl_cache
 from ui.installer_wizard import BaseFramelessWizardDialog
+from ui import dialog_kit as kit
 from ui.widgets import SpotifyPillButton
 
 
@@ -127,104 +128,63 @@ class PinAssignmentDialog(BaseFramelessWizardDialog):
         # Active tab state: 'pins' | 'addresses'
         self.active_tab = "pins"
 
-        super().__init__(parent, "FPGA Studio — การกำหนดขาพอร์ตและแอดเดรสฮาร์ดแวร์ (Pin & Address Configuration)", 820, 720)
+        super().__init__(parent, "กำหนดขาพอร์ตและแอดเดรส", 820, 740)
         self._build_ui()
 
     def _build_ui(self):
         for w in self.container.winfo_children():
             w.destroy()
+        pad = 20
 
-        # 1. Top Banner Header (Frameless Import-Wizard style)
-        header = tk.Frame(self.container, bg=BG_ACTIVITY, height=66)
-        header.pack(fill="x")
-        header.pack_propagate(False)
-
-        h_inner = tk.Frame(header, bg=BG_ACTIVITY)
-        h_inner.pack(fill="both", expand=True, padx=20, pady=8)
-
-        tk.Label(h_inner, text="📐", font=(FONT_ICON, 18), bg=BG_ACTIVITY, fg=ACCENT_GREEN).pack(side="left", padx=(0, 12))
-        tb = tk.Frame(h_inner, bg=BG_ACTIVITY)
-        tb.pack(side="left", fill="y")
-        tk.Label(tb, text="กำหนดขาพอร์ตและแอดเดรสฮาร์ดแวร์ (Pin & Address Configuration)",
-                 font=(FONT_UI, 11, "bold"), bg=BG_ACTIVITY, fg=TXT_BRIGHT).pack(anchor="w")
-        tk.Label(tb, text="ตรวจสอบและปรับเปลี่ยนการจับคู่พอร์ต HDL กับช่วงแอดเดรสหน่วยความจำ (MMIO)",
-                 font=(FONT_UI, 8), bg=BG_ACTIVITY, fg=TXT_MUTED).pack(anchor="w")
-
-        # 2. Target CPU Overview Card (Elevated Dark Box)
-        card = tk.Frame(self.container, bg=BG_ELEVATED, padx=14, pady=8)
-        card.pack(fill="x", padx=20, pady=(8, 6))
-
-        top_info = tk.Frame(card, bg=BG_ELEVATED)
-        top_info.pack(fill="x")
-
+        # ---- which module is being configured
+        info = tk.Frame(self.container, bg=BG_BLACK, padx=pad, pady=14)
+        info.pack(fill="x")
         fname = os.path.basename(self.target_file_path) if self.target_file_path else "Built-in Core"
-        tk.Label(top_info, text=f"โมดูล CPU: {self.cpu_name.upper()} ({fname})",
-                 font=(FONT_UI, 9, "bold"), bg=BG_ELEVATED, fg=TXT_BRIGHT).pack(side="left")
-
-        # Status badge
+        top = tk.Frame(info, bg=BG_BLACK)
+        top.pack(fill="x")
+        tk.Label(top, text=f"{self.cpu_name.upper()}  ({fname})", font=(FONT_UI, 12, "bold"),
+                 bg=BG_BLACK, fg=TXT_BRIGHT).pack(side="left")
         if self.is_alu_var.get():
-            badge_txt = "STANDALONE ALU (UNMAPPED)"
-            badge_fg = ACCENT_AMBER
+            badge_txt, badge_fg = "ALU เดี่ยว ไม่ต่อ bus", ACCENT_AMBER
         elif len(self.all_ports) == 0:
-            badge_txt = "CLOSED TESTBENCH"
-            badge_fg = TXT_MUTED
+            badge_txt, badge_fg = "testbench แบบปิด", TXT_MUTED
         else:
-            badge_txt = "BUS CONNECTED (MMIO SOC)"
-            badge_fg = ACCENT_GREEN
-
-        tk.Label(top_info, text=f"[{badge_txt}]", font=(FONT_CODE, 8, "bold"), bg=BG_ELEVATED, fg=badge_fg).pack(side="right")
+            badge_txt, badge_fg = "ต่อ bus ผ่าน MMIO", ACCENT_GREEN
+        tk.Label(top, text=badge_txt, font=(FONT_UI, 9), bg=BG_BLACK, fg=badge_fg).pack(side="right")
 
         if self.detailed:
             sample_p = [f"{p['name']}({'in' if p['dir']=='input' else 'out'}:{p['width']})" for p in self.detailed[:8]]
-            ports_desc = f"พอร์ตที่ตรวจพบในไฟล์: {len(self.all_ports)} ขาพอร์ต ({', '.join(sample_p)}{'...' if len(self.detailed)>8 else ''})"
+            ports_desc = f"{len(self.all_ports)} พอร์ต: {', '.join(sample_p)}{'...' if len(self.detailed) > 8 else ''}"
         elif self.all_ports:
-            ports_desc = f"พอร์ตที่ตรวจพบในไฟล์: {len(self.all_ports)} ขาพอร์ต ({', '.join(self.all_ports[:10])}{'...' if len(self.all_ports)>10 else ''})"
+            ports_desc = f"{len(self.all_ports)} พอร์ต: {', '.join(self.all_ports[:10])}{'...' if len(self.all_ports) > 10 else ''}"
         else:
-            ports_desc = "วงจรจำลองแบบปิด (0 พอร์ตภายนอก / Self-Contained Model)"
-        tk.Label(card, text=ports_desc, font=(FONT_CODE, 8), bg=BG_ELEVATED, fg=TXT_MUTED, wraplength=720, justify="left").pack(anchor="w", pady=(2, 0))
+            ports_desc = "ไม่มีพอร์ตภายนอก (วงจรจำลองแบบปิด)"
+        tk.Label(info, text=ports_desc, font=(FONT_CODE, 8), bg=BG_BLACK, fg=TXT_MUTED,
+                 wraplength=760, justify="left").pack(anchor="w", pady=(4, 0))
 
-        # 3. Tab Buttons Header (Capsule Switches)
-        tab_bar = tk.Frame(self.container, bg=BG_BLACK, height=36)
-        tab_bar.pack(fill="x", padx=20, pady=(4, 6))
+        # ---- underlined tabs
+        tab_bar = tk.Frame(self.container, bg=BG_BLACK, padx=pad)
+        tab_bar.pack(fill="x")
+        for key, text in (("pins", "การจับคู่ขาพอร์ต"), ("addresses", "แอดเดรส MMIO")):
+            on = key == self.active_tab
+            cell = tk.Frame(tab_bar, bg=BG_BLACK, cursor="hand2")
+            cell.pack(side="left", padx=(0, 22))
+            lbl = tk.Label(cell, text=text, font=(FONT_UI, 9, "bold"), bg=BG_BLACK,
+                           fg=TXT_BRIGHT if on else TXT_MUTED, cursor="hand2")
+            lbl.pack(pady=(0, 6))
+            tk.Frame(cell, height=2, bg=ACCENT_GREEN if on else BG_BLACK).pack(fill="x")
+            for w in (cell, lbl):
+                w.bind("<Button-1>", lambda e, k=key: self._switch_tab(k))
+        tk.Frame(self.container, bg=BORDER_COLOR, height=1).pack(fill="x", padx=pad)
 
-        self.btn_tab_pins = tk.Button(
-            tab_bar, text="🔌  1. การจับคู่ขาพอร์ตฮาร์ดแวร์ (Pin Mapping)",
-            command=lambda: self._switch_tab("pins"),
-            font=(FONT_UI, 8, "bold"), bg=BG_ELEVATED if self.active_tab == "pins" else BG_POPUP,
-            fg=TXT_BRIGHT if self.active_tab == "pins" else TXT_MUTED,
-            bd=0, highlightthickness=1,
-            highlightbackground=ACCENT_GREEN if self.active_tab == "pins" else BORDER_COLOR,
-            padx=14, pady=4, cursor="hand2"
-        )
-        self.btn_tab_pins.pack(side="left", padx=(0, 6))
+        # ---- footer (packed first so it is never pushed off)
+        bbar = tk.Frame(self.container, bg=BG_BLACK, padx=pad, pady=14)
+        bbar.pack(fill="x", side="bottom")
+        kit.button(bbar, "บันทึก", self._save_all, kind="primary").pack(side="left")
+        kit.button(bbar, "ยกเลิก", self.destroy, kind="link").pack(side="right")
 
-        self.btn_tab_mmio = tk.Button(
-            tab_bar, text="🗺️  2. ช่วงแอดเดรสหน่วยความจำ (MMIO Address Space)",
-            command=lambda: self._switch_tab("addresses"),
-            font=(FONT_UI, 8, "bold"), bg=BG_ELEVATED if self.active_tab == "addresses" else BG_POPUP,
-            fg=TXT_BRIGHT if self.active_tab == "addresses" else TXT_MUTED,
-            bd=0, highlightthickness=1,
-            highlightbackground=ACCENT_GREEN if self.active_tab == "addresses" else BORDER_COLOR,
-            padx=14, pady=4, cursor="hand2"
-        )
-        self.btn_tab_mmio.pack(side="left")
-
-        # 4. Bottom Action Bar (Packed FIRST with side="bottom" to guarantee it is NEVER pushed out or clipped)
-        bbar = tk.Frame(self.container, bg=BG_BLACK, height=52)
-        bbar.pack(fill="x", side="bottom", padx=20, pady=(10, 16))
-
-        SpotifyPillButton(bbar, text="ยกเลิก (Cancel)", command=self.destroy,
-                          bg_parent=BG_BLACK, fill_col=BG_POPUP, fg_col=TXT_MUTED,
-                          height=34, pad_x=18).pack(side="left")
-
-        SpotifyPillButton(bbar, text="💾  บันทึกการกำหนดค่า (Save & Apply Changes)", command=self._save_all,
-                          bg_parent=BG_BLACK, fill_col=ACCENT_GREEN, fg_col="#000000",
-                          height=34, pad_x=24).pack(side="right")
-
-        # 5. Content Area (Fills remaining middle space)
         self.content_frame = tk.Frame(self.container, bg=BG_BLACK)
-        self.content_frame.pack(fill="both", expand=True, padx=20, pady=(0, 6))
-
+        self.content_frame.pack(fill="both", expand=True, padx=pad, pady=(12, 0))
         if self.active_tab == "pins":
             self._render_pins_tab()
         else:
@@ -235,101 +195,67 @@ class PinAssignmentDialog(BaseFramelessWizardDialog):
         self._build_ui()
 
     def _render_pins_tab(self):
-        """Renders Pin Mapping view with comfortable line spacing (no overlapping text)."""
-        # Standalone ALU toggle
-        alu_box = tk.Frame(self.content_frame, bg=BG_SIDEBAR, padx=12, pady=6, bd=1, relief="solid")
-        alu_box.pack(fill="x", pady=(0, 6))
-        tk.Checkbutton(alu_box, text="⚙️ กำหนดให้เป็น Standalone Pure ALU Core (วงจรคำนวณเดี่ยว — ไม่มี Memory Bus และตัดการเชื่อมต่อ I/O บอร์ด)",
-                       variable=self.is_alu_var, command=self._on_alu_toggle,
-                       font=(FONT_UI, 8, "bold"), bg=BG_SIDEBAR, fg=ACCENT_AMBER,
-                       selectcolor=BG_POPUP, activebackground=BG_SIDEBAR).pack(anchor="w")
+        tk.Checkbutton(
+            self.content_frame,
+            text="ใช้เป็น ALU เดี่ยว (ไม่มี memory bus และไม่ต่อ I/O ของบอร์ด)",
+            variable=self.is_alu_var, command=self._on_alu_toggle,
+            font=(FONT_UI, 9), bg=BG_BLACK, fg=TXT_PRIMARY, selectcolor=BG_EDITOR,
+            activebackground=BG_BLACK, activeforeground=TXT_BRIGHT, bd=0, highlightthickness=0,
+        ).pack(anchor="w", pady=(0, 8))
 
         port_options = ["(ไม่ระบุ / Unmapped)"] + self.all_ports
-
         gpio_options = ["MMIO 0xF0000000 (Nexys A7 Bus)", "(ไม่ระบุ / Unmapped)"] + self.all_ports
         uart_options = ["MMIO 0xF0000010 (Nexys A7 Bus)", "(ไม่ระบุ / Unmapped)"] + self.all_ports
-
         rows = [
-            ("ขาสัญญาณ Address Bus (Memory Address Out):", self.addr_var, port_options, "สายส่ง Data Address จาก CPU ไปยัง RAM / MMIO (32-bit เช่น ram_addr_o)"),
-            ("ขาสัญญาณ Write Enable (Memory Write Strobe):", self.we_var, port_options, "สายควบคุมการเขียนข้อมูล (WE / Write Enable เช่น ram_we_o)"),
-            ("ขาสัญญาณ Write Data (Memory Data Out):", self.wdata_var, port_options, "สายส่งข้อมูลจาก CPU ไปยัง RAM หรืออุปกรณ์ (32-bit เช่น ram_data_o)"),
-            ("ขาสัญญาณ Read Data (Memory Data In):", self.rdata_var, port_options, "สายรับข้อมูลจาก RAM หรืออุปกรณ์กลับเข้า CPU (32-bit เช่น ram_data_i)"),
-            ("ขาสัญญาณนาฬิกา (System Clock):", self.clk_var, port_options, "ขาสัญญาณ Clock สำหรับซิงโครไนซ์วงจร เช่น clk"),
-            ("ขาสัญญาณรีเซ็ต (System Reset):", self.rst_var, port_options, "ขาสัญญาณ Reset (Active High หรือ Low เช่น rst, rst_n)"),
-            ("ขาต่อตรง GPIO LEDs/Switches (ตัวเลือก):", self.gpio_var, gpio_options, "ค่าเริ่มต้น: เชื่อมต่อผ่าน MMIO 0xF0000000 (เลือกเฉพาะกรณี CPU ต่อขาตรง)"),
-            ("ขาต่อตรง UART TX (ตัวเลือก):", self.uart_var, uart_options, "ค่าเริ่มต้น: เชื่อมต่อผ่าน MMIO 0xF0000010 (เลือกเฉพาะกรณี CPU ต่อขาตรง)"),
+            ("Address bus", self.addr_var, port_options, "แอดเดรสจาก CPU ไป RAM/MMIO เช่น ram_addr_o"),
+            ("Write enable", self.we_var, port_options, "สัญญาณสั่งเขียน เช่น ram_we_o"),
+            ("Write data", self.wdata_var, port_options, "ข้อมูลจาก CPU ไป RAM เช่น ram_data_o"),
+            ("Read data", self.rdata_var, port_options, "ข้อมูลจาก RAM กลับเข้า CPU เช่น ram_data_i"),
+            ("Clock", self.clk_var, port_options, "เช่น clk"),
+            ("Reset", self.rst_var, port_options, "active high หรือ low เช่น rst, rst_n"),
+            ("GPIO LED/สวิตช์", self.gpio_var, gpio_options, "ปกติต่อผ่าน MMIO เลือกพอร์ตเฉพาะเมื่อ CPU ต่อขาตรง"),
+            ("UART TX", self.uart_var, uart_options, "ปกติต่อผ่าน MMIO เลือกพอร์ตเฉพาะเมื่อ CPU ต่อขาตรง"),
         ]
-
+        grid = tk.Frame(self.content_frame, bg=BG_BLACK)
+        grid.pack(fill="x")
+        grid.columnconfigure(1, weight=1)
         self.combos = []
-        for label_text, var, options, tip in rows:
-            # Row container with comfortable line spacing
-            r = tk.Frame(self.content_frame, bg=BG_BLACK)
-            r.pack(fill="x", pady=3)
-
-            # Label box with fixed width and natural height to prevent text submerging/overlap
-            lbl_box = tk.Frame(r, bg=BG_BLACK, width=340)
-            lbl_box.pack(side="left", padx=(0, 8))
-
-            tk.Label(lbl_box, text=label_text, font=(FONT_UI, 8, "bold"),
-                     bg=BG_BLACK, fg=TXT_PRIMARY, anchor="w").pack(fill="x", anchor="w")
-            tk.Label(lbl_box, text=tip, font=(FONT_UI, 8),
-                     bg=BG_BLACK, fg=TXT_MUTED, anchor="w").pack(fill="x", anchor="w", pady=(1, 0))
-
-            combo = ttk.Combobox(r, textvariable=var, values=options, state="readonly", width=33, font=(FONT_CODE, 8))
-            combo.pack(side="left", padx=(0, 8), pady=2)
+        for i, (label_text, var, options, tip) in enumerate(rows):
+            lab = tk.Frame(grid, bg=BG_BLACK)
+            lab.grid(row=i, column=0, sticky="w", padx=(0, 20), pady=3)
+            tk.Label(lab, text=label_text, font=(FONT_UI, 9), bg=BG_BLACK, fg=TXT_PRIMARY, anchor="w").pack(anchor="w")
+            tk.Label(lab, text=tip, font=(FONT_UI, 8), bg=BG_BLACK, fg=TXT_MUTED, anchor="w").pack(anchor="w")
+            combo = ttk.Combobox(grid, textvariable=var, values=options, state="readonly", font=(FONT_CODE, 9))
+            combo.grid(row=i, column=1, sticky="ew", pady=3)
             self.combos.append(combo)
-
-            cur_val = var.get()
-            if "MMIO" in cur_val:
-                tk.Label(r, text="✓ MMIO Active", font=(FONT_CODE, 8, "bold"), bg=BG_BLACK, fg=ACCENT_GREEN).pack(side="left")
-            elif cur_val and not cur_val.startswith("(") and cur_val != "(ไม่ระบุ / Unmapped)":
-                tk.Label(r, text="✓ Pin Mapped", font=(FONT_CODE, 8, "bold"), bg=BG_BLACK, fg=ACCENT_GREEN).pack(side="left")
-
         self._on_alu_toggle()
 
     def _render_mmio_tab(self):
-        """Renders MMIO Address Space Mapping view (Editable Hex addresses)."""
-        card_desc = tk.Frame(self.content_frame, bg=BG_SIDEBAR, padx=12, pady=8)
-        card_desc.pack(fill="x", pady=(0, 8))
-        tk.Label(card_desc, text="กำหนดช่วงแอดเดรสสำหรับอุปกรณ์ต่อพ่วงบนบอร์ดเสมือน Nexys A7 (MMIO Base Addresses):",
-                 font=(FONT_UI, 8, "bold"), bg=BG_SIDEBAR, fg=TXT_BRIGHT).pack(anchor="w")
-        tk.Label(card_desc, text="สำหรับ CPU ที่มี Memory Bus (เช่น OpenMIPS): เมื่อ CPU เขียน/อ่านแอดเดรสเหล่านี้ จะเชื่อมต่อกับอุปกรณ์โดยอัตโนมัติ",
-                 font=(FONT_UI, 8), bg=BG_SIDEBAR, fg=TXT_MUTED).pack(anchor="w", pady=(2, 0))
-
+        tk.Label(self.content_frame,
+                 text="CPU ที่มี memory bus จะอ่าน/เขียนอุปกรณ์บนบอร์ดผ่านแอดเดรสเหล่านี้",
+                 font=(FONT_UI, 9), bg=BG_BLACK, fg=TXT_MUTED, anchor="w").pack(fill="x", pady=(0, 8))
         mmio_items = [
-            ("16-bit Discrete LEDs (LD0..LD15)", self.mmio_led_var, "0xF0000000", "เขียน 16-bit: แสดงผลออกไฟ LED 16 ดวงบนบอร์ด"),
-            ("16-bit Slide Switches (SW0..SW15)", self.mmio_sw_var, "0xF0000004", "อ่าน 16-bit: สถานะสวิตช์เลื่อน 16 ตัวบนบอร์ด"),
-            ("8-Digit 7-Segment Display", self.mmio_seg7_var, "0xF0000008", "เขียน 32-bit: แสดงตัวเลขฐาน 16 บนจอ 7-Segment 8 หลัก"),
-            ("Push Buttons (BTNC/U/L/R/D)", self.mmio_btn_var, "0xF000000C", "อ่าน 6-bit: ปุ่มกด 5 ทิศทางและปุ่มรีเซ็ต"),
-            ("USB-UART Serial (TX/RX + Status +4)", self.mmio_uart_var, "0xF0000010", "ส่ง/รับอักขระ Serial Monitor 115200 8-N-1 (Status = Base + 4)"),
-            ("Dual RGB LEDs (LD16, LD17)", self.mmio_rgb_var, "0xF0000018", "เขียน 24-bit: ควบคุมไฟสี RGB ทั้ง 2 ดวง ([23:12]=LD16, [11:0]=LD17)"),
-            ("VGA Graphic Framebuffer", self.mmio_vga_var, "0xFF000000", "พื้นที่หน่วยความจำแสดงภาพ VGA (640x480 @ 60Hz)"),
+            ("LED 16 ดวง (LD0-LD15)", self.mmio_led_var, "0xF0000000", "เขียน 16 บิต"),
+            ("สวิตช์ 16 ตัว (SW0-SW15)", self.mmio_sw_var, "0xF0000004", "อ่าน 16 บิต"),
+            ("7-Segment 8 หลัก", self.mmio_seg7_var, "0xF0000008", "เขียน 32 บิต แสดงเลขฐาน 16"),
+            ("ปุ่มกด (BTNC/U/L/R/D)", self.mmio_btn_var, "0xF000000C", "อ่าน 6 บิต รวมปุ่มรีเซ็ต"),
+            ("USB-UART", self.mmio_uart_var, "0xF0000010", "115200 8-N-1, status อยู่ที่ base + 4"),
+            ("RGB LED 2 ดวง (LD16, LD17)", self.mmio_rgb_var, "0xF0000018", "เขียน 24 บิต: [23:12]=LD16, [11:0]=LD17"),
+            ("VGA framebuffer", self.mmio_vga_var, "0xFF000000", "640x480 @ 60Hz"),
         ]
-
-        for title, var, default_hex, desc in mmio_items:
-            r = tk.Frame(self.content_frame, bg=BG_ELEVATED, padx=12, pady=5)
-            r.pack(fill="x", pady=2)
-
-            # 1. Right-side controls (packed to the right first so they never get squished)
-            def _make_reset(v, d):
-                return lambda: v.set(d)
-            b_reset = tk.Button(r, text="ค่าเริ่มต้น", font=(FONT_UI, 7), bg=BG_POPUP, fg=TXT_MUTED,
-                                bd=0, highlightthickness=0, padx=8, pady=3, cursor="hand2",
-                                command=_make_reset(var, default_hex))
-            b_reset.pack(side="right", padx=(8, 0))
-
-            e = tk.Entry(r, textvariable=var, font=(FONT_CODE, 9, "bold"), bg=BG_POPUP, fg=ACCENT_GREEN,
-                         insertbackground=TXT_BRIGHT, relief="flat", bd=2, width=13)
-            e.pack(side="right", padx=(4, 0))
-
-            tk.Label(r, text="Address:", font=(FONT_CODE, 8), bg=BG_ELEVATED, fg=TXT_PRIMARY).pack(side="right", padx=(8, 4))
-
-            # 2. Left-side info labels (natural expansion, generous height, no submerged text)
-            info_box = tk.Frame(r, bg=BG_ELEVATED)
-            info_box.pack(side="left", fill="both", expand=True)
-
-            tk.Label(info_box, text=title, font=(FONT_UI, 8, "bold"), bg=BG_ELEVATED, fg=TXT_BRIGHT, anchor="w").pack(fill="x", anchor="w")
-            tk.Label(info_box, text=desc, font=(FONT_UI, 8), bg=BG_ELEVATED, fg=TXT_MUTED, anchor="w").pack(fill="x", anchor="w", pady=(2, 0))
+        grid = tk.Frame(self.content_frame, bg=BG_BLACK)
+        grid.pack(fill="x")
+        grid.columnconfigure(0, weight=1)
+        for i, (title, var, default_hex, desc) in enumerate(mmio_items):
+            lab = tk.Frame(grid, bg=BG_BLACK)
+            lab.grid(row=i, column=0, sticky="w", pady=4)
+            tk.Label(lab, text=title, font=(FONT_UI, 9), bg=BG_BLACK, fg=TXT_PRIMARY, anchor="w").pack(anchor="w")
+            tk.Label(lab, text=desc, font=(FONT_UI, 8), bg=BG_BLACK, fg=TXT_MUTED, anchor="w").pack(anchor="w")
+            tk.Entry(grid, textvariable=var, font=(FONT_CODE, 9), bg=BG_EDITOR, fg=TXT_BRIGHT,
+                     insertbackground=TXT_BRIGHT, bd=0, highlightthickness=1, highlightbackground=BORDER_COLOR,
+                     width=13).grid(row=i, column=1, padx=(12, 0), ipady=4)
+            kit.button(grid, "ค่าเริ่มต้น", (lambda v=var, d=default_hex: v.set(d)), kind="link",
+                       size=8).grid(row=i, column=2, padx=(8, 0))
 
     def _on_alu_toggle(self):
         if not hasattr(self, "combos") or not self.combos:

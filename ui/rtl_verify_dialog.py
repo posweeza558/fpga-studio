@@ -22,6 +22,7 @@ from config.theme import (
     BORDER_COLOR,
     ACCENT_GREEN,
     ACCENT_AMBER,
+    BG_HOVER,
     ACCENT_RED,
     TXT_BRIGHT,
     TXT_PRIMARY,
@@ -41,6 +42,8 @@ from core.rtl_cosim import (
     detect_verilog_simulator,
 )
 from ui.installer_wizard import BaseFramelessWizardDialog
+from ui import dialog_kit as kit
+from ui.widgets import attach_tooltip
 from ui.widgets import SpotifyPillButton, SpotifyAutoScrollbar
 
 
@@ -64,7 +67,7 @@ class RTLVerifyDialog(BaseFramelessWizardDialog):
 
         super().__init__(
             parent,
-            "FPGA Studio — วิเคราะห์ 5-Stage Pipeline & ทดสอบ RTL Testbench",
+            "วิเคราะห์ Pipeline และทดสอบ RTL",
             940,
             680,
         )
@@ -87,301 +90,172 @@ class RTLVerifyDialog(BaseFramelessWizardDialog):
             w.destroy()
 
         pipe = self.cosim_res["pipeline"]
+        pad = 20
 
-        # 1. Top Header Banner
-        header = tk.Frame(self.container, bg=BG_ACTIVITY, height=64)
+        # ---- header: what was analysed
+        header = tk.Frame(self.container, bg=BG_BLACK, padx=pad, pady=14)
         header.pack(fill="x")
-        header.pack_propagate(False)
-
-        h_in = tk.Frame(header, bg=BG_ACTIVITY)
-        h_in.pack(fill="both", expand=True, padx=20, pady=8)
-
-        tk.Label(h_in, text="🔬", font=(FONT_ICON, 18), bg=BG_ACTIVITY, fg=ACCENT_GREEN).pack(side="left", padx=(0, 12))
-        tb = tk.Frame(h_in, bg=BG_ACTIVITY)
-        tb.pack(side="left", fill="y")
-        tk.Label(
-            tb,
-            text=f"วิเคราะห์ 5-Stage Pipeline & RTL Verification  •  {self.cpu_name}",
-            font=(FONT_UI, 11, "bold"),
-            bg=BG_ACTIVITY,
-            fg=TXT_BRIGHT,
-        ).pack(anchor="w")
+        tk.Label(header, text=self.cpu_name, font=(FONT_UI, 12, "bold"),
+                 bg=BG_BLACK, fg=TXT_BRIGHT, anchor="w").pack(fill="x")
         from core.hdl_analyzer import inspect_cpu_hardware_ports
         caps = inspect_cpu_hardware_ports(self.cpu_hdl_path) if self.cpu_hdl_path else {}
         rtl_topo = caps.get("rtl_topology") or "5-Stage Pipelined RTL"
         tk.Label(
-            tb,
-            text=(
-                f"สถาปัตยกรรม: {self.arch.upper()} ({rtl_topo})   •   ขนาดโปรแกรม ROM: {len(self.instructions)} คำสั่ง   •   "
-                f"อินพุต SW=0x{self.sw_init:04X}, BTN=0x{self.btn_init:02X}"
-            ),
-            font=(FONT_UI, 8),
-            bg=BG_ACTIVITY,
-            fg=TXT_MUTED,
-        ).pack(anchor="w", pady=(2, 0))
+            header,
+            text=(f"{self.arch.upper()} · {rtl_topo} · โปรแกรม {len(self.instructions)} คำสั่ง · "
+                  f"SW=0x{self.sw_init:04X}  BTN=0x{self.btn_init:02X}"),
+            font=(FONT_UI, 9), bg=BG_BLACK, fg=TXT_MUTED, anchor="w",
+        ).pack(fill="x", pady=(2, 0))
 
-        # 2. Six Hardware Performance Metric Cards
-        cards_row = tk.Frame(self.container, bg=BG_BLACK, padx=18, pady=10)
-        cards_row.pack(fill="x")
-
+        # ---- one dense stats line instead of six identical metric cards
+        stats = tk.Frame(self.container, bg=BG_BLACK, padx=pad)
+        stats.pack(fill="x", pady=(0, 4))
         total_fwds = pipe["ex_forwards"] + pipe["mem_forwards"]
         ctrl_val = pipe["delay_slots"] if self.arch == "mips" else pipe["branch_flushes"]
-        ctrl_lbl = "Delay Slots (MIPS)" if self.arch == "mips" else "Branch Flushes"
-        cpi_col = ACCENT_GREEN if pipe["cpi"] <= 1.35 else ACCENT_AMBER
-
-        metrics = [
-            ("คำสั่งที่รันจริง (Insts)", f"{pipe['retired_instructions']}", TXT_BRIGHT),
-            ("รอบนาฬิกาจริง (Cycles)", f"{pipe['total_cycles']}", ACCENT_GREEN),
-            ("ค่าเฉลี่ย CPI", f"{pipe['cpi']:.2f}", cpi_col),
-            ("Load-Use Stalls", f"{pipe['load_use_stalls']}", ACCENT_AMBER if pipe["load_use_stalls"] else TXT_BRIGHT),
-            ("Data Forwarding", f"{total_fwds}", ACCENT_GREEN),
-            (ctrl_lbl, f"{ctrl_val}  ({pipe['runtime_25mhz_us']:.1f} µs)", TXT_BRIGHT),
+        ctrl_lbl = "delay slot" if self.arch == "mips" else "branch flush"
+        div_stalls = pipe.get("div_stalls", 0)
+        items = [
+            (f"{pipe['retired_instructions']}", "คำสั่ง", TXT_BRIGHT),
+            (f"{pipe['total_cycles']}", "รอบ", TXT_BRIGHT),
+            (f"{pipe['cpi']:.2f}", "CPI", ACCENT_AMBER if pipe["cpi"] > 1.35 else TXT_BRIGHT),
+            (f"{pipe['load_use_stalls']}", "load-use stall", ACCENT_AMBER if pipe["load_use_stalls"] else TXT_BRIGHT),
+            (f"{total_fwds}", "forwarding", TXT_BRIGHT),
+            (f"{ctrl_val}", ctrl_lbl, TXT_BRIGHT),
         ]
+        if div_stalls:
+            items.append((f"{div_stalls}", "divider stall", ACCENT_AMBER))
+        items.append((f"{pipe['runtime_25mhz_us']:.1f} µs", "ที่ 25 MHz", TXT_BRIGHT))
+        for i, (val, lbl, col) in enumerate(items):
+            cell = tk.Frame(stats, bg=BG_BLACK)
+            cell.pack(side="left", padx=(0 if i == 0 else 18, 0))
+            tk.Label(cell, text=val, font=(FONT_UI, 10, "bold"), bg=BG_BLACK, fg=col).pack(side="left")
+            tk.Label(cell, text=lbl, font=(FONT_UI, 9), bg=BG_BLACK, fg=TXT_MUTED).pack(side="left", padx=(5, 0))
+            if lbl == "forwarding":
+                attach_tooltip(cell, f"EX→EX {pipe['ex_forwards']} ครั้ง, MEM→EX {pipe['mem_forwards']} ครั้ง")
 
-        for idx, (m_title, m_val, m_col) in enumerate(metrics):
-            c = tk.Frame(
-                cards_row,
-                bg="#161616",
-                padx=10,
-                pady=8,
-                highlightthickness=1,
-                highlightbackground="#282828",
-            )
-            c.pack(side="left", fill="both", expand=True, padx=(0 if idx == 0 else 6, 0))
-            tk.Label(c, text=m_title, font=(FONT_UI, 8), bg="#161616", fg=TXT_MUTED).pack(anchor="w")
-            tk.Label(c, text=m_val, font=(FONT_CODE, 11, "bold"), bg="#161616", fg=m_col).pack(anchor="w", pady=(3, 0))
-
-        # 3. Clean Hardware & Pipeline Summary Bar (Single-line layout, no word-wrap splitting Thai text)
+        # ---- MMIO output values (data, so monospace), plus the RTL co-sim verdict if it ran
         rgb_vals = pipe.get("rgb_value", [0, 0])
         rgb_hex = ((rgb_vals[0] & 0xFFF) << 12) | (rgb_vals[1] & 0xFFF) if len(rgb_vals) >= 2 else 0
-
-        banner = tk.Frame(
-            self.container,
-            bg="#151917",
-            padx=14,
-            pady=8,
-            highlightthickness=1,
-            highlightbackground="#28352D",
-        )
-        banner.pack(fill="x", padx=18, pady=(0, 8))
-
+        out_row = tk.Frame(self.container, bg=BG_BLACK, padx=pad)
+        out_row.pack(fill="x", pady=(6, 0))
+        tk.Label(out_row, text="เอาต์พุต", font=(FONT_UI, 9), bg=BG_BLACK, fg=TXT_MUTED).pack(side="left")
         tk.Label(
-            banner,
-            text=(
-                f"●  สถานะพอร์ตเอาต์พุต (MMIO Output)   •   "
-                f"LED = 0x{pipe['led_value'] & 0xFFFF:04X}   •   "
-                f"7-SEG = 0x{pipe['seg7_value'] & 0xFFFFFFFF:08X}   •   "
-                f"RGB = 0x{rgb_hex:06X}"
-            ),
-            font=(FONT_CODE, 9, "bold"),
-            bg="#151917",
-            fg=ACCENT_GREEN,
-            anchor="w",
-        ).pack(fill="x")
-
-        div_stalls = pipe.get("div_stalls", 0)
-        div_txt = f"   •   Divider Stalls = {div_stalls} รอบ" if div_stalls else ""
-        tk.Label(
-            banner,
-            text=(
-                f"EX→EX Forwarding = {pipe['ex_forwards']} ครั้ง   •   "
-                f"MEM→EX Forwarding = {pipe['mem_forwards']} ครั้ง{div_txt}"
-            ),
-            font=(FONT_UI, 8),
-            bg="#151917",
-            fg=TXT_MUTED,
-            anchor="w",
-        ).pack(fill="x", pady=(3, 0))
-
+            out_row,
+            text=(f"LED 0x{pipe['led_value'] & 0xFFFF:04X}    "
+                  f"7-SEG 0x{pipe['seg7_value'] & 0xFFFFFFFF:08X}    RGB 0x{rgb_hex:06X}"),
+            font=(FONT_CODE, 9), bg=BG_BLACK, fg=TXT_PRIMARY,
+        ).pack(side="left", padx=(12, 0))
         if self.cosim_res.get("ran_rtl"):
-            rtl_msg = self.cosim_res.get("message", "")
             msg_col = ACCENT_GREEN if self.cosim_res.get("passed") else ACCENT_AMBER
-            tk.Label(
-                banner,
-                text=f"🔬 {rtl_msg}",
-                font=(FONT_UI, 8, "bold"),
-                bg="#151917",
-                fg=msg_col,
-                anchor="w",
-            ).pack(fill="x", pady=(3, 0))
+            tk.Label(self.container, text=self.cosim_res.get("message", ""), font=(FONT_UI, 9),
+                     bg=BG_BLACK, fg=msg_col, anchor="w", padx=pad).pack(fill="x", pady=(4, 0))
 
-        # 4. Tab Bar for Hazard Events vs. 5-Stage Waterfall Timeline + Quick Actions
-        tab_strip = tk.Frame(self.container, bg=BG_BLACK, padx=18, pady=4)
-        tab_strip.pack(fill="x")
+        # ---- underlined panel tabs
+        tab_strip = tk.Frame(self.container, bg=BG_BLACK, padx=pad)
+        tab_strip.pack(fill="x", pady=(14, 0))
+        self._tabs = {}
+        for key, text in (("hazards", f"Hazards และ Forwarding  {len(pipe['hazard_events'])}"),
+                          ("timeline", f"ไทม์ไลน์ Pipeline  {len(pipe['timeline'])} รอบ")):
+            cell = tk.Frame(tab_strip, bg=BG_BLACK, cursor="hand2")
+            cell.pack(side="left", padx=(0, 22))
+            lbl = tk.Label(cell, text=text, font=(FONT_UI, 9, "bold"), bg=BG_BLACK, cursor="hand2")
+            lbl.pack(pady=(0, 6))
+            bar = tk.Frame(cell, height=2)
+            bar.pack(fill="x")
+            for w in (cell, lbl):
+                w.bind("<Button-1>", lambda e, k=key: self._switch_tab(k))
+            self._tabs[key] = (lbl, bar)
+        tk.Frame(self.container, bg=BORDER_COLOR, height=1).pack(fill="x", padx=pad)
+        self._paint_tabs()
 
-        self.btn_tab_haz = SpotifyPillButton(
-            tab_strip,
-            text=f"⚡ รายการ Hazards & Forwarding ({len(pipe['hazard_events'])})",
-            bg_parent=BG_BLACK,
-            fill_col=BG_PILL_ACT if self.active_tab == "hazards" else BG_PILL_INACT,
-            fg_col=TXT_ON_PILL if self.active_tab == "hazards" else TXT_BRIGHT,
-            font_spec=(FONT_UI, 9, "bold"),
-            pad_x=14,
-            height=30,
-            command=lambda: self._switch_tab("hazards"),
-        )
-        self.btn_tab_haz.pack(side="left", padx=(0, 8))
-
-        self.btn_tab_time = SpotifyPillButton(
-            tab_strip,
-            text=f"⏱️ ไทม์ไลน์ 5-Stage Waterfall ({len(pipe['timeline'])} Cycles)",
-            bg_parent=BG_BLACK,
-            fill_col=BG_PILL_ACT if self.active_tab == "timeline" else BG_PILL_INACT,
-            fg_col=TXT_ON_PILL if self.active_tab == "timeline" else TXT_BRIGHT,
-            font_spec=(FONT_UI, 9, "bold"),
-            pad_x=14,
-            height=30,
-            command=lambda: self._switch_tab("timeline"),
-        )
-        self.btn_tab_time.pack(side="left")
-
-        # Quick-access GTKWave & Export buttons in the tab bar (Always visible even on low-resolution/high-DPI screens)
-        btn_tab_gtkwave = SpotifyPillButton(
-            tab_strip,
-            text="📈 ดูกราฟสัญญาณ (GTKWave)...",
-            bg_parent=BG_BLACK,
-            fill_col="#1E3A8A",
-            fg_col=TXT_ON_WHITE,
-            hover_fill="#2563EB",
-            font_spec=(FONT_UI, 9, "bold"),
-            pad_x=14,
-            height=30,
-            command=self._on_open_gtkwave,
-        )
-        btn_tab_gtkwave.pack(side="right")
-
-        btn_tab_export = SpotifyPillButton(
-            tab_strip,
-            text="📦 ส่งออก RTL Testbench...",
-            bg_parent=BG_BLACK,
-            fill_col=BG_ELEVATED,
-            fg_col=TXT_BRIGHT,
-            font_spec=(FONT_UI, 9, "bold"),
-            pad_x=12,
-            height=30,
-            command=self._on_export_testbench,
-        )
-        btn_tab_export.pack(side="right", padx=(0, 8))
-
-        # 5. Footer Action Bar (PACK BEFORE body_frame so expand=True does not hide it!)
-        footer = tk.Frame(self.container, bg=BG_ACTIVITY, height=52, padx=18)
+        # ---- footer actions (packed before the table so they are never pushed off)
+        footer = tk.Frame(self.container, bg=BG_BLACK, padx=pad, pady=14)
         footer.pack(fill="x", side="bottom")
-        footer.pack_propagate(False)
+        kit.button(footer, "ส่งออก RTL Testbench...", self._on_export_testbench).pack(side="left")
+        kit.button(footer, "เปิดใน GTKWave", self._on_open_gtkwave).pack(side="left", padx=(8, 0))
+        kit.button(footer, "วิเคราะห์ใหม่", self._rerun_and_refresh).pack(side="right")
 
-        btn_rerun = SpotifyPillButton(
-            footer,
-            text="🔄 วิเคราะห์ใหม่",
-            bg_parent=BG_ACTIVITY,
-            fill_col=BG_ELEVATED,
-            fg_col=TXT_BRIGHT,
-            font_spec=(FONT_UI, 9, "bold"),
-            pad_x=14,
-            height=30,
-            command=self._rerun_and_refresh,
-        )
-        btn_rerun.pack(side="right", pady=11)
-
-        # 6. Table Body Area (PACK AFTER footer so it expands only within the middle space)
-        self.body_frame = tk.Frame(
-            self.container,
-            bg=BG_EDITOR,
-            highlightthickness=1,
-            highlightbackground=BORDER_COLOR,
-        )
-        self.body_frame.pack(fill="both", expand=True, padx=18, pady=(6, 10))
+        # ---- table
+        self.body_frame = tk.Frame(self.container, bg=BG_EDITOR, highlightthickness=1,
+                                   highlightbackground=BORDER_COLOR)
+        self.body_frame.pack(fill="both", expand=True, padx=pad, pady=(10, 0))
         self._populate_active_table()
+
+    def _paint_tabs(self):
+        for key, (lbl, bar) in self._tabs.items():
+            on = key == self.active_tab
+            lbl.config(fg=TXT_BRIGHT if on else TXT_MUTED)
+            bar.config(bg=ACCENT_GREEN if on else BG_BLACK)
 
     def _switch_tab(self, tab_name):
         self.active_tab = tab_name
-        self.btn_tab_haz.set_style(
-            fill_col=BG_PILL_ACT if tab_name == "hazards" else BG_PILL_INACT,
-            fg_col=TXT_ON_PILL if tab_name == "hazards" else TXT_BRIGHT,
-        )
-        self.btn_tab_time.set_style(
-            fill_col=BG_PILL_ACT if tab_name == "timeline" else BG_PILL_INACT,
-            fg_col=TXT_ON_PILL if tab_name == "timeline" else TXT_BRIGHT,
-        )
+        self._paint_tabs()
         self._populate_active_table()
 
     def _populate_active_table(self):
         for w in self.body_frame.winfo_children():
             w.destroy()
 
+        style = ttk.Style(self)
+        # proportional font: the description column is Thai prose, not code
+        style.configure("Data.Treeview", background=BG_EDITOR, fieldbackground=BG_EDITOR,
+                        foreground=TXT_PRIMARY, rowheight=28, font=(FONT_UI, 9), borderwidth=0)
+        style.map("Data.Treeview", background=[("selected", BG_HOVER)], foreground=[("selected", TXT_BRIGHT)])
+
         pipe = self.cosim_res["pipeline"]
         scroll = SpotifyAutoScrollbar(self.body_frame, bg_track=BG_EDITOR)
 
         if self.active_tab == "hazards":
             cols = ("cycle", "pc", "asm", "type", "detail")
-            tree = ttk.Treeview(self.body_frame, columns=cols, show="headings", yscrollcommand=scroll.set)
+            tree = ttk.Treeview(self.body_frame, columns=cols, show="headings", style="Data.Treeview",
+                                yscrollcommand=scroll.set)
             scroll.command = tree.yview
+            for c, t in zip(cols, ("รอบ", "PC", "Assembly", "เหตุการณ์", "รายละเอียด")):
+                tree.heading(c, text=t, anchor="w")
+            tree.column("cycle", width=56, anchor="w", stretch=False)
+            tree.column("pc", width=72, anchor="w", stretch=False)
+            tree.column("asm", width=170, anchor="w", stretch=False)
+            tree.column("type", width=240, anchor="w", stretch=False)
+            tree.column("detail", width=320, anchor="w", stretch=True)
 
-            tree.heading("cycle", text="Cycle")
-            tree.heading("pc", text="PC")
-            tree.heading("asm", text="Assembly")
-            tree.heading("type", text="Hazard / Bypass Event")
-            tree.heading("detail", text="คำอธิบายการทำงานของฮาร์ดแวร์")
-
-            tree.column("cycle", width=62, anchor="center")
-            tree.column("pc", width=72, anchor="center")
-            tree.column("asm", width=165, anchor="w")
-            tree.column("type", width=205, anchor="w")
-            tree.column("detail", width=375, anchor="w")
-
-            tree.tag_configure("stall", background="#2B1E0D", foreground=ACCENT_AMBER)
-            tree.tag_configure("flush", background="#2D1418", foreground=ACCENT_RED)
-            tree.tag_configure("fwd", background=BG_EDITOR, foreground=ACCENT_GREEN)
-            tree.tag_configure("empty", background=BG_EDITOR, foreground=TXT_MUTED)
+            # colour only the rows that cost cycles; forwarding is the normal case
+            tree.tag_configure("stall", foreground=ACCENT_AMBER)
+            tree.tag_configure("flush", foreground=ACCENT_RED)
+            tree.tag_configure("fwd", foreground=TXT_PRIMARY)
+            tree.tag_configure("empty", foreground=TXT_MUTED)
 
             events = pipe["hazard_events"]
             if not events:
-                tree.insert(
-                    "",
-                    tk.END,
-                    values=("-", "-", "-", "No Hazards Detected", "ไม่พบ Stall หรือ Data Hazard ในช่วงคำสั่งที่รัน"),
-                    tags=("empty",),
-                )
+                tree.insert("", tk.END, values=("", "", "", "ไม่พบ hazard",
+                                                "ไม่มี stall หรือ data hazard ในช่วงคำสั่งที่รัน"), tags=("empty",))
             else:
                 for ev in events:
                     tp = ev["type"]
                     tag = "stall" if "Load-Use" in tp else ("flush" if "Flush" in tp else "fwd")
                     tree.insert("", tk.END, values=(ev["cycle"], ev["pc"], ev["asm"], tp, ev["detail"]), tags=(tag,))
-            tree.pack(side="left", fill="both", expand=True)
         else:
             cols = ("cycle", "if", "id", "ex", "mem", "wb", "note")
-            tree = ttk.Treeview(self.body_frame, columns=cols, show="headings", yscrollcommand=scroll.set)
+            tree = ttk.Treeview(self.body_frame, columns=cols, show="headings", style="Data.Treeview",
+                                yscrollcommand=scroll.set)
             scroll.command = tree.yview
+            for c, t in zip(cols, ("รอบ", "IF", "ID", "EX", "MEM", "WB", "สัญญาณ")):
+                tree.heading(c, text=t, anchor="w")
+            tree.column("cycle", width=50, anchor="w", stretch=False)
+            for c in ("if", "id", "ex", "mem", "wb"):
+                tree.column(c, width=128, anchor="w", stretch=False)
+            tree.column("note", width=170, anchor="w", stretch=True)
 
-            tree.heading("cycle", text="Clk")
-            tree.heading("if", text="1. IF")
-            tree.heading("id", text="2. ID")
-            tree.heading("ex", text="3. EX")
-            tree.heading("mem", text="4. MEM")
-            tree.heading("wb", text="5. WB")
-            tree.heading("note", text="Pipeline Signal")
-
-            tree.column("cycle", width=50, anchor="center")
-            tree.column("if", width=130, anchor="w")
-            tree.column("id", width=130, anchor="w")
-            tree.column("ex", width=135, anchor="w")
-            tree.column("mem", width=130, anchor="w")
-            tree.column("wb", width=130, anchor="w")
-            tree.column("note", width=170, anchor="w")
-
-            tree.tag_configure("stall", background="#2B1E0D", foreground=ACCENT_AMBER)
-            tree.tag_configure("flush", background="#2D1418", foreground=ACCENT_RED)
-            tree.tag_configure("even", background=BG_EDITOR, foreground=TXT_PRIMARY)
-            tree.tag_configure("odd", background="#181818", foreground=TXT_PRIMARY)
-
-            for idx, row in enumerate(pipe["timeline"]):
+            tree.tag_configure("stall", foreground=ACCENT_AMBER)
+            tree.tag_configure("flush", foreground=ACCENT_RED)
+            tree.tag_configure("row", foreground=TXT_PRIMARY)
+            for row in pipe["timeline"]:
                 note = row["note"]
-                tag = "stall" if "STALL" in note else ("flush" if "FLUSH" in note else ("even" if idx % 2 == 0 else "odd"))
-                tree.insert(
-                    "",
-                    tk.END,
-                    values=(row["cycle"], row["IF"], row["ID"], row["EX"], row["MEM"], row["WB"], note),
-                    tags=(tag,),
-                )
-            tree.pack(side="left", fill="both", expand=True)
+                tag = "stall" if "STALL" in note else ("flush" if "FLUSH" in note else "row")
+                tree.insert("", tk.END,
+                            values=(row["cycle"], row["IF"], row["ID"], row["EX"], row["MEM"], row["WB"], note),
+                            tags=(tag,))
+        scroll.pack(side="right", fill="y")
+        tree.pack(side="left", fill="both", expand=True)
 
     def _rerun_and_refresh(self):
         self._run_analysis()
